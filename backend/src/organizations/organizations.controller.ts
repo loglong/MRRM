@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Put, Body, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { OrganizationsService } from './organizations.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { CreateOrganizationDto, UpdateOrganizationDto } from './dto';
 
 @ApiTags('organizations')
 @ApiBearerAuth()
@@ -29,14 +30,21 @@ export class OrganizationsController {
   }
 
   @Post()
-  @ApiOperation({ summary: 'Create new organization' })
-  async create(@Body() data: any) {
+  @ApiOperation({ summary: 'Create new organization (system admin only)' })
+  async create(@Body() data: CreateOrganizationDto) {
     return this.orgsService.create(data);
   }
 
   @Put(':id')
-  @ApiOperation({ summary: 'Update organization' })
-  async update(@Param('id') id: string, @Body() data: any) {
+  @ApiOperation({ summary: 'Update organization (system admin only)' })
+  async update(@Param('id') id: string, @Body() data: UpdateOrganizationDto) {
     return this.orgsService.update(id, data);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Soft delete organization (system admin only)' })
+  async delete(@Param('id') id: string) {
+    return this.orgsService.delete(id);
   }
 }
