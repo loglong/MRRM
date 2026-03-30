@@ -134,17 +134,17 @@ export class UsersService {
   }
 
   async incrementFailedLogin(id: string): Promise<void> {
+    // First increment the counter
     await this.prisma.user.update({
       where: { id },
       data: {
         failedLoginAttempts: { increment: 1 },
-        lockedUntil: undefined, // Will be set if needed
       },
     });
 
     // Lock account after 5 failed attempts
     const user = await this.prisma.user.findUnique({ where: { id } });
-    if (user && user.failedLoginAttempts >= 4) {
+    if (user && user.failedLoginAttempts >= 5) {
       const lockedUntil = new Date();
       lockedUntil.setMinutes(lockedUntil.getMinutes() + 30); // Lock for 30 minutes
       await this.prisma.user.update({

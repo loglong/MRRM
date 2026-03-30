@@ -5,6 +5,7 @@ import { Auth0Client } from './auth0.client';
 import { Logger } from '../common/logger';
 import * as bcrypt from 'bcrypt';
 import { LoginDto, RegisterDto } from './dto';
+import { LockedException } from './exceptions/locked.exception';
 
 export { LoginDto, RegisterDto };
 
@@ -36,7 +37,7 @@ export class AuthService {
 
     // Check if user is locked
     if (user.lockedUntil && user.lockedUntil > new Date()) {
-      throw new UnauthorizedException('Account is temporarily locked');
+      throw new LockedException(user.lockedUntil);
     }
 
     // Verify password

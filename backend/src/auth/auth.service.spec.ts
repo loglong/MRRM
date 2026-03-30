@@ -4,6 +4,7 @@ import { AuthService, LoginDto, AuthResponse } from './auth.service';
 import { UsersService } from '../users/users.service';
 import { Auth0Client } from './auth0.client';
 import { UnauthorizedException, BadRequestException } from '@nestjs/common';
+import { LockedException } from './exceptions/locked.exception';
 import * as bcrypt from 'bcrypt';
 
 // Mock bcrypt
@@ -82,7 +83,7 @@ describe('AuthService', () => {
       expect(usersService.incrementFailedLogin).toHaveBeenCalledWith(mockUser.id);
     });
 
-    it('should throw UnauthorizedException when account is locked', async () => {
+    it('should throw LockedException when account is locked', async () => {
       const lockedUser = {
         ...mockUser,
         lockedUntil: new Date(Date.now() + 30 * 60 * 1000), // Locked for 30 minutes
@@ -91,7 +92,7 @@ describe('AuthService', () => {
 
       await expect(
         authService.validateUser('test@example.com', 'password123'),
-      ).rejects.toThrow(UnauthorizedException);
+      ).rejects.toThrow(LockedException);
     });
   });
 
