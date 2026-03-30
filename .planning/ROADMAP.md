@@ -7,7 +7,7 @@
 ## Phases
 
 - [x] **Phase 1: Foundation** - 认证、权限、机构管理、审计日志基础设施 (6/8 plans)
-- [ ] **Phase 2: Core Patient Objects** - 患者档案、需求管理、路径管理
+- [ ] **Phase 2: Core Patient Objects** - 患者档案、需求管理、路径管理 (3 plans)
 - [ ] **Phase 3: Patient Engagement Operations** - 触点管理、随访管理
 - [ ] **Phase 4: Analytics and Journey** - 患者旅程中心、报表中心、体验管理中心
 - [ ] **Phase 5: Health and Integration** - 健康管理中心、系统集成
@@ -42,7 +42,11 @@
   5. 系统管理员可以配置技术路径模板（路径名称、步骤序列、每步执行内容、执行周期、负责角色）
   6. 用户可以将路径模板分配给患者的需求，系统追踪路径执行进度（已完成、当前、待执行步骤）
   7. 路径执行超时或遗漏时系统产生提醒
-**Plans**: 8 plans (01-08)
+**Plans**: 3 plans (01-03)
+**Plan List**:
+- [x] 02-01-PLAN.md - Patient management (PATIENT-01~05)
+- [ ] 02-02-PLAN.md - Path template + instance + notifications (PATH-01~05)
+- [ ] 02-03-PLAN.md - Demand CRUD + status flow (DEMAND-01~05)
 
 ### Phase 3: Patient Engagement Operations
 **Goal**: 用户可以记录患者触点交互，制定和执行随访计划
@@ -90,8 +94,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation | 6/8 | In Progress|  |
-| 2. Core Patient Objects | 0/8 plans (01-08) | Not started | - |
+| 1. Foundation | 6/8 | In Progress| |
+| 2. Core Patient Objects | 1/3 plans (01-03) | Not started | 02-01 (Patient module) |
 | 3. Patient Engagement Operations | 0/8 plans (01-08) | Not started | - |
 | 4. Analytics and Journey | 0/8 plans (01-08) | Not started | - |
 | 5. Health and Integration | 0/8 plans (01-08) | Not started | - |
