@@ -1,4 +1,7 @@
-version: '3.9'
+# MRRM Local Development with Hot Reload
+# Usage: docker-compose -f docker-compose.yml -f compose-dev.yaml up
+
+version: '3.8'
 
 services:
   # PostgreSQL 18 - Primary Database
@@ -47,8 +50,8 @@ services:
     container_name: mrrm-rabbitmq
     restart: unless-stopped
     environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_USER: mrrm
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-mrrm_password}
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -62,19 +65,19 @@ services:
     networks:
       - mrrm-network
 
-  # Backend - NestJS API
+  # Backend - NestJS API with Hot Reload
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile.backend
+      dockerfile: Dockerfile.dev
     container_name: mrrm-backend
     restart: unless-stopped
     environment:
       NODE_ENV: development
       PORT: 3000
-      DATABASE_URL: postgresql://mrrm:mrrm_password@postgres:5432/mrrm?schema=public
+      DATABASE_URL: postgresql://mrrm:${POSTGRES_PASSWORD:-mrrm_password}@postgres:5432/mrrm?schema=public
       REDIS_URL: redis://redis:6379/0
-      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      RABBITMQ_URL: amqp://mrrm:${RABBITMQ_PASSWORD:-mrrm_password}@rabbitmq:5672
       JWT_SECRET: dev-jwt-secret-change-in-production
       JWT_EXPIRES_IN: 7d
       AUTHING_APP_ID: ${AUTHING_APP_ID:-}
@@ -85,8 +88,10 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./backend/src:/app/src:ro
-      - ./backend/prisma:/app/prisma:ro
+      - ./backend:/app
+      - /app/node_modules
+      - /app/dist
+    command: npx ts-node-dev --respawn --transpile-only --ignore-watch node_modules --exit-child src/main.ts
     depends_on:
       postgres:
         condition: service_healthy
@@ -102,20 +107,23 @@ services:
     networks:
       - mrrm-network
 
-  # Frontend - Vite Dev Server
+  # Frontend - Vite Dev Server with Hot Reload
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile.frontend
+      dockerfile: Dockerfile.dev
     container_name: mrrm-frontend
     restart: unless-stopped
     environment:
       VITE_API_BASE_URL: http://localhost:3000/api/v1
+      VITE_WS_URL: ws://localhost:3000
     ports:
       - "5173:5173"
     volumes:
-      - ./frontend/src:/app/src:ro
-      - ./frontend/index.html:/app/index.html:ro
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/dist
+    command: npm run dev -- --host --port 5173
     depends_on:
       backend:
         condition: service_healthy

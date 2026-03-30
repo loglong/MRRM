@@ -1,0 +1,23 @@
+# Development Dockerfile with Hot Reload for NestJS Backend
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install dependencies
+COPY package*.json ./
+RUN npm ci --ignore-scripts
+
+# Copy prisma schema
+COPY prisma ./prisma
+
+# Generate Prisma client
+RUN npx prisma generate
+
+# Copy source code
+COPY . .
+
+# Expose port
+EXPOSE 3000
+
+# Start with hot reload using NestJS CLI watch mode
+CMD ["npm", "run", "start:dev"]
