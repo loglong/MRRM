@@ -1,21 +1,31 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Form, Input, Button, Card } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { useNavigate, Link } from 'react-router-dom';
+import { Form, Input, Button, Card, Checkbox, Divider, message } from 'antd';
+import { UserOutlined, LockOutlined, GoogleOutlined } from '@ant-design/icons';
 import { useAuth } from '../hooks/useAuth';
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  const handleSSOLogin = () => {
+    // Redirect to Authing SSO
+    window.location.href = '/api/v1/auth/authing/sso-url';
+  };
 
   const onFinish = async (values: { email: string; password: string }) => {
     setLoading(true);
     try {
-      await login(values.email, values.password);
+      await login(values.email, values.password, rememberMe);
       navigate('/dashboard');
-    } catch {
-      // Error handled in context
+    } catch (error: any) {
+      // Check for account locked error
+      if (error?.response?.data?.lockedUntil) {
+        const lockedUntil = new Date(error.response.data.lockedUntil);
+        message.error(`Account locked until ${lockedUntil.toLocaleTimeString()}`);
+      }
     } finally {
       setLoading(false);
     }
@@ -43,7 +53,7 @@ export default function LoginPage() {
           onFinish={onFinish}
           layout="vertical"
           requiredMark={false}
-          initialValues={{ email: 'admin@mrrm.local', password: 'admin123' }}
+          initialValues={{ email: 'admin@mrrm.local', password: 'Admin123!' }}
         >
           <Form.Item
             name="email"
@@ -69,11 +79,43 @@ export default function LoginPage() {
             />
           </Form.Item>
           <Form.Item>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Checkbox checked={rememberMe} onChange={(e) => setRememberMe(e.target.checked)}>
+                Remember me
+              </Checkbox>
+              <Link to="/forgot-password" style={{ fontSize: 14 }}>
+                Forgot password?
+              </Link>
+            </div>
+          </Form.Item>
+          <Form.Item>
             <Button type="primary" htmlType="submit" loading={loading} block size="large">
               Login
             </Button>
           </Form.Item>
+          <Divider plain style={{ margin: '16px 0', fontSize: 12 }}>
+            or continue with
+          </Divider>
+          <Form.Item>
+            <Button
+              icon={<GoogleOutlined />}
+              onClick={handleSSOLogin}
+              block
+              size="large"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              SSO Login (Authing)
+            </Button>
+          </Form.Item>
         </Form>
+        <div style={{ textAlign: 'center', marginTop: 16 }}>
+          <span style={{ color: '#666' }}>Don't have an account? </span>
+          <Link to="/register">Register</Link>
+        </div>
       </Card>
     </div>
   );
