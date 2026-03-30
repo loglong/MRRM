@@ -1,0 +1,524 @@
+// Prisma Schema for MRRM - Multi-tenant Medical Patient Relationship Management
+// PostgreSQL with Row-Level Security via Prisma Middleware
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// Base Entity Pattern - All tenant-aware entities include these fields
+// ============================================================================
+
+// BaseEntity is applied via composition in application code, not Prisma
+// All user-facing models MUST have orgId field for RLS enforcement
+
+// ============================================================================
+// Organization (Tenant)
+// ============================================================================
+
+model Organization {
+  id        String   @id @default(uuid())
+  name      String
+  code      String   @unique // Unique organization code for API contexts
+  status    OrgStatus @default(ACTIVE)
+  domain    String?  // Optional domain for SSO mapping
+  metadata  Json?    // Flexible metadata storage
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  users             User[]
+  roles             Role[]
+  patients          Patient[]
+  demands           Demand[]
+  paths             Path[]
+  touchpoints       Touchpoint[]
+  followupPlans     FollowupPlan[]
+  followupRecords   FollowupRecord[]
+  auditLogs         AuditLog[]
+  journeyMilestones JourneyMilestone[]
+
+  @@index([code])
+  @@index([status])
+  @@map("organizations")
+}
+
+enum OrgStatus {
+  ACTIVE
+  SUSPENDED
+  PENDING_VERIFICATION
+}
+
+// ============================================================================
+// User Management
+// ============================================================================
+
+model User {
+  id                  String    @id @default(uuid())
+  email               String
+  passwordHash        String?   @map("password_hash")
+  name                String
+  phone               String?   @db.VarChar(20)
+  avatar              String?
+  orgId               String    @map("org_id")
+  status              UserStatus @default(ACTIVE)
+  failedLoginAttempts Int       @default(0) @map("failed_login_attempts")
+  lockedUntil         DateTime? @map("locked_until")
+  lastLoginAt         DateTime? @map("last_login_at")
+  metadata            Json?
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  organization        Organization @relation(fields: [orgId], references: [id])
+  roles               UserRole[]
+  auditLogs           AuditLog[]
+  patientAssignments Patient[]    @relation("AssignedUser")
+
+  @@unique([orgId, email])
+  @@index([orgId])
+  @@index([status])
+  @@map("users")
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  LOCKED
+  PENDING_VERIFICATION
+}
+
+// ============================================================================
+// Role-Based Access Control
+// ============================================================================
+
+model Role {
+  id          String   @id @default(uuid())
+  name        String
+  code        String   @unique // System code for programmatic access
+  description String?
+  orgId       String   @map("org_id")
+  isSystem    Boolean  @default(false) @map("is_system") // System roles cannot be deleted
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  organization Organization     @relation(fields: [orgId], references: [id])
+  users        UserRole[]
+  permissions  RolePermission[]
+
+  @@unique([orgId, code])
+  @@index([orgId])
+  @@map("roles")
+}
+
+model Permission {
+  id        String         @id @default(uuid())
+  code      String         @unique // e.g., "patient:read", "demand:create"
+  name      String
+  type      PermissionType
+  menuPath  String?        @map("menu_path") // For menu-type permissions
+  sortOrder Int            @default(0) @map("sort_order")
+  createdAt DateTime       @default(now()) @map("created_at")
+
+  // Relations
+  roles RolePermission[]
+
+  @@map("permissions")
+}
+
+enum PermissionType {
+  MENU
+  BUTTON
+  API
+}
+
+model UserRole {
+  userId String @map("user_id")
+  roleId String @map("role_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@id([userId, roleId])
+  @@map("user_roles")
+}
+
+model RolePermission {
+  roleId       String @map("role_id")
+  permissionId String @map("permission_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+// ============================================================================
+// Audit Logging
+// ============================================================================
+
+model AuditLog {
+  id            String    @id @default(uuid())
+  userId        String?   @map("user_id")
+  orgId         String    @map("org_id")
+  action        String    // e.g., "CREATE", "UPDATE", "DELETE", "LOGIN"
+  entityType    String    @map("entity_type") // e.g., "Patient", "Demand"
+  entityId      String?   @map("entity_id")
+  ipAddress     String?   @map("ip_address")
+  userAgent     String?   @map("user_agent")
+  requestBody   Json?     @map("request_body")
+  responseStatus Int?     @map("response_status")
+  errorMessage  String?   @map("error_message")
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  user        User?        @relation(fields: [userId], references: [id])
+  organization Organization @relation(fields: [orgId], references: [id])
+
+  @@index([orgId, createdAt])
+  @@index([userId])
+  @@index([entityType, entityId])
+  @@map("audit_logs")
+}
+
+// ============================================================================
+// Patient Core Entity
+// ============================================================================
+
+model Patient {
+  id              String    @id @default(uuid())
+  name            String
+  phone           String?   @db.VarChar(20)
+  email           String?
+  gender          Gender?
+  birthDate       DateTime? @map("birth_date") @db.Date
+  idCard          String?   @map("id_card") // Encrypted field
+  medicalRecordNo String?   @map("medical_record_no") // Encrypted field @db.VarChar(50)
+  orgId           String    @map("org_id")
+  status          PatientStatus @default(ACTIVE)
+  assignedUserId  String?   @map("assigned_user_id")
+  lastVisitAt     DateTime? @map("last_visit_at")
+  nextVisitAt     DateTime? @map("next_visit_at")
+  tags            String[]  // Array of tag strings
+  metadata        Json?
+  encryptedFields Json?     @map("encrypted_fields") // AES-256 encrypted sensitive data
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  organization     Organization      @relation(fields: [orgId], references: [id])
+  assignedUser     User?              @relation("AssignedUser", fields: [assignedUserId], references: [id])
+  demands          Demand[]
+  touchpoints      Touchpoint[]
+  followupPlans    FollowupPlan[]
+  followupRecords  FollowupRecord[]
+  journeyMilestones JourneyMilestone[]
+
+  @@index([orgId])
+  @@index([status])
+  @@index([assignedUserId])
+  @@map("patients")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  UNKNOWN
+}
+
+enum PatientStatus {
+  ACTIVE
+  INACTIVE
+  CHURNED
+  DECEASED
+}
+
+// ============================================================================
+// Demand (Patient Need/Opportunity)
+// ============================================================================
+
+model Demand {
+  id            String       @id @default(uuid())
+  patientId     String       @map("patient_id")
+  orgId         String       @map("org_id")
+  type          DemandType
+  source        DemandSource
+  title         String
+  description   String?
+  status        DemandStatus @default(OPEN)
+  priority      Priority     @default(MEDIUM)
+  estimatedAmount Decimal?   @map("estimated_amount") @db.Decimal(12, 2)
+  actualAmount  Decimal?     @map("actual_amount") @db.Decimal(12, 2)
+  closeReason   String?      @map("close_reason")
+  closedAt      DateTime?    @map("closed_at")
+  metadata      Json?
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  // Relations
+  patient   Patient   @relation(fields: [patientId], references: [id])
+  organization Organization @relation(fields: [orgId], references: [id])
+
+  @@index([orgId])
+  @@index([patientId])
+  @@index([status])
+  @@map("demands")
+}
+
+enum DemandType {
+  CONSULTATION
+  TREATMENT
+  PURCHASE
+  FOLLOWUP
+  OTHER
+}
+
+enum DemandSource {
+  PHONE
+  WECHAT
+  WEB
+  WALK_IN
+  REFERRAL
+  CAMPAIGN
+  OTHER
+}
+
+enum DemandStatus {
+  OPEN
+  IN_PROGRESS
+  PENDING
+  FULFILLED
+  CANCELLED
+  LOST
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+// ============================================================================
+// Treatment Path
+// ============================================================================
+
+model Path {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  orgId       String    @map("org_id")
+  version     String    @default("1.0")
+  status      PathStatus @default(DRAFT)
+  steps       PathStep[]
+  metadata    Json?
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  organization Organization @relation(fields: [orgId], references: [id])
+
+  @@index([orgId])
+  @@map("paths")
+}
+
+enum PathStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+model PathStep {
+  id              String    @id @default(uuid())
+  pathId          String    @map("path_id")
+  name            String
+  description     String?
+  stepOrder       Int       @map("step_order")
+  stepType        StepType
+  estimatedDays   Int?      @map("estimated_days")
+  timeoutHours    Int?      @map("timeout_hours")
+  triggerAction   String?   @map("trigger_action") // What triggers this step
+  notificationTemplate String? @map("notification_template")
+  metadata        Json?
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  path Path @relation(fields: [pathId], references: [id], onDelete: Cascade)
+
+  @@index([pathId])
+  @@map("path_steps")
+}
+
+enum StepType {
+  START
+  TASK
+  AUTOMATED_ACTION
+  WAIT
+  DECISION
+  END
+}
+
+// ============================================================================
+// Touchpoint (Patient Interaction Record)
+// ============================================================================
+
+model Touchpoint {
+  id            String         @id @default(uuid())
+  patientId     String         @map("patient_id")
+  orgId         String         @map("org_id")
+  type          TouchpointType
+  channel       TouchpointChannel
+  title         String
+  content       String?
+  sentiment     Sentiment?
+  duration      Int?           // Duration in seconds
+  outcome       String?
+  followupRequired Boolean      @default(false) @map("followup_required")
+  followupDate  DateTime?      @map("followup_date")
+  metadata      Json?
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @updatedAt @map("updated_at")
+
+  // Relations
+  patient     Patient     @relation(fields: [patientId], references: [id])
+  organization Organization @relation(fields: [orgId], references: [id])
+
+  @@index([orgId])
+  @@index([patientId])
+  @@index([type])
+  @@index([createdAt])
+  @@map("touchpoints")
+}
+
+enum TouchpointType {
+  VISIT
+  CALL
+  MESSAGE
+  EMAIL
+  WECHAT
+  VIDEO
+  SMS
+  OTHER
+}
+
+enum TouchpointChannel {
+  OFFLINE
+  ONLINE
+  MOBILE
+  PHONE
+}
+
+enum Sentiment {
+  POSITIVE
+  NEUTRAL
+  NEGATIVE
+}
+
+// ============================================================================
+// Follow-up Management
+// ============================================================================
+
+model FollowupPlan {
+  id            String         @id @default(uuid())
+  patientId     String         @map("patient_id")
+  orgId         String         @map("org_id")
+  name          String
+  type          FollowupType
+  status        FollowupStatus @default(ACTIVE)
+  frequencyDays Int?           @map("frequency_days")
+  startDate     DateTime       @map("start_date") @db.Date
+  endDate       DateTime?      @map("end_date") @db.Date
+  metadata      Json?
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @updatedAt @map("updated_at")
+
+  // Relations
+  patient   Patient   @relation(fields: [patientId], references: [id])
+  organization Organization @relation(fields: [orgId], references: [id])
+  records   FollowupRecord[]
+
+  @@index([orgId])
+  @@index([patientId])
+  @@map("followup_plans")
+}
+
+enum FollowupType {
+  ROUTINE
+  POST_TREATMENT
+  PRE_APPOINTMENT
+  CUSTOM
+}
+
+enum FollowupStatus {
+  ACTIVE
+  PAUSED
+  COMPLETED
+  CANCELLED
+}
+
+model FollowupRecord {
+  id              String    @id @default(uuid())
+  planId          String    @map("plan_id")
+  patientId       String    @map("patient_id")
+  orgId           String    @map("org_id")
+  scheduledAt     DateTime @map("scheduled_at")
+  completedAt     DateTime? @map("completed_at")
+  status          FollowupRecordStatus @default(PENDING)
+  outcome         String?
+  notes           String?
+  completedById   String?   @map("completed_by_id")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  plan      FollowupPlan @relation(fields: [planId], references: [id])
+  patient   Patient      @relation(fields: [patientId], references: [id])
+  organization Organization @relation(fields: [orgId], references: [id])
+
+  @@index([orgId])
+  @@index([planId])
+  @@index([patientId])
+  @@map("followup_records")
+}
+
+enum FollowupRecordStatus {
+  PENDING
+  COMPLETED
+  MISSED
+  CANCELLED
+  RESCHEDULED
+}
+
+// ============================================================================
+// Patient Journey Milestones
+// ============================================================================
+
+model JourneyMilestone {
+  id          String   @id @default(uuid())
+  patientId   String   @map("patient_id")
+  orgId       String   @map("org_id")
+  milestone   String
+  category    String
+  description String?
+  occurredAt  DateTime @map("occurred_at")
+  metadata    Json?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  // Relations
+  patient     Patient     @relation(fields: [patientId], references: [id])
+  organization Organization @relation(fields: [orgId], references: [id])
+
+  @@index([orgId, patientId])
+  @@map("journey_milestones")
+}
