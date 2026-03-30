@@ -1,0 +1,135 @@
+version: '3.9'
+
+services:
+  # PostgreSQL 18 - Primary Database
+  postgres:
+    image: postgres:18-alpine
+    container_name: mrrm-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: mrrm
+      POSTGRES_PASSWORD: mrrm_password
+      POSTGRES_DB: mrrm
+      POSTGRES_INITDB_ARGS: "-c shared_preload_libraries=pg_stat_statements"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mrrm -d mrrm"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - mrrm-network
+
+  # Redis 8 - Caching & Sessions
+  redis:
+    image: redis:8-alpine
+    container_name: mrrm-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - mrrm-network
+
+  # RabbitMQ 4.2 - Message Queue
+  rabbitmq:
+    image: rabbitmq:4.2-management-alpine
+    container_name: mrrm-rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    networks:
+      - mrrm-network
+
+  # Backend - NestJS API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.backend
+    container_name: mrrm-backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DATABASE_URL: postgresql://mrrm:mrrm_password@postgres:5432/mrrm?schema=public
+      REDIS_URL: redis://redis:6379/0
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+      JWT_SECRET: dev-jwt-secret-change-in-production
+      JWT_EXPIRES_IN: 7d
+      AUTHING_APP_ID: ${AUTHING_APP_ID:-}
+      AUTHING_APP_SECRET: ${AUTHING_APP_SECRET:-}
+      AUTHING_CALLBACK_URL: ${AUTHING_CALLBACK_URL:-http://localhost:3000/api/v1/auth/sso/callback}
+      CORS_ORIGIN: http://localhost:5173
+      LOG_LEVEL: debug
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend/src:/app/src:ro
+      - ./backend/prisma:/app/prisma:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - mrrm-network
+
+  # Frontend - Vite Dev Server
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.frontend
+    container_name: mrrm-frontend
+    restart: unless-stopped
+    environment:
+      VITE_API_BASE_URL: http://localhost:3000/api/v1
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/src:/app/src:ro
+      - ./frontend/index.html:/app/index.html:ro
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - mrrm-network
+
+networks:
+  mrrm-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  rabbitmq_data:
+    driver: local
