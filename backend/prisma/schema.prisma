@@ -79,6 +79,7 @@ model User {
   roles               UserRole[]
   auditLogs           AuditLog[]
   patientAssignments Patient[]    @relation("AssignedUser")
+  notifications       Notification[]
 
   @@unique([orgId, email])
   @@index([orgId])
@@ -230,6 +231,7 @@ model Patient {
   followupPlans    FollowupPlan[]
   followupRecords  FollowupRecord[]
   journeyMilestones JourneyMilestone[]
+  pathInstances    PathInstance[]
 
   @@index([orgId])
   @@index([status])
@@ -285,11 +287,28 @@ model Demand {
   // Relations
   patient   Patient   @relation(fields: [patientId], references: [id])
   organization Organization @relation(fields: [orgId], references: [id])
+  statusHistory DemandStatusHistory[]
 
   @@index([orgId])
   @@index([patientId])
   @@index([status])
   @@map("demands")
+}
+
+model DemandStatusHistory {
+  id         String   @id @default(uuid())
+  demandId   String   @map("demand_id")
+  fromStatus DemandStatus?
+  toStatus   DemandStatus
+  changedBy  String   @map("changed_by")
+  notes      String?
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  // Relations
+  demand Demand @relation(fields: [demandId], references: [id], onDelete: Cascade)
+
+  @@index([demandId])
+  @@map("demand_status_history")
 }
 
 enum DemandType {
@@ -344,6 +363,7 @@ model Path {
 
   // Relations
   organization Organization @relation(fields: [orgId], references: [id])
+  instances    PathInstance[]
 
   @@index([orgId])
   @@map("paths")
@@ -372,6 +392,7 @@ model PathStep {
 
   // Relations
   path Path @relation(fields: [pathId], references: [id], onDelete: Cascade)
+  instanceSteps PathInstanceStep[]
 
   @@index([pathId])
   @@map("path_steps")
@@ -384,6 +405,88 @@ enum StepType {
   WAIT
   DECISION
   END
+}
+
+// ============================================================================
+// Path Instance (Path assigned to patient demand)
+// ============================================================================
+
+model PathInstance {
+  id           String   @id @default(uuid())
+  pathId       String   @map("path_id")
+  path         Path     @relation(fields: [pathId], references: [id])
+  patientId    String   @map("patient_id")
+  patient      Patient  @relation(fields: [patientId], references: [id])
+  demandId     String   @map("demand_id")
+  status       PathInstanceStatus @default(IN_PROGRESS)
+  currentStep  Int      @default(1) @map("current_step")
+  startedAt    DateTime @default(now()) @map("started_at")
+  completedAt  DateTime? @map("completed_at")
+  orgId        String   @map("org_id")
+  steps        PathInstanceStep[]
+
+  @@index([patientId])
+  @@index([demandId])
+  @@index([orgId, status])
+  @@map("path_instances")
+}
+
+model PathInstanceStep {
+  id          String   @id @default(uuid())
+  instanceId  String   @map("instance_id")
+  instance    PathInstance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+  stepId      String   @map("step_id")
+  step        PathStep @relation(fields: [stepId], references: [id])
+  stepOrder   Int      @map("step_order")
+  status      PathStepInstanceStatus @default(PENDING)
+  dueDate     DateTime @map("due_date")
+  completedAt DateTime? @map("completed_at")
+  notes       String?
+
+  @@index([instanceId, stepOrder])
+  @@map("path_instance_steps")
+}
+
+enum PathInstanceStatus {
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum PathStepInstanceStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  SKIPPED
+  OVERDUE
+}
+
+// ============================================================================
+// Notification
+// ============================================================================
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  title     String
+  message   String
+  type      NotificationType
+  link      String?
+  read      Boolean  @default(false)
+  orgId     String   @map("org_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([userId, read])
+  @@index([orgId, createdAt])
+  @@map("notifications")
+}
+
+enum NotificationType {
+  PATH_OVERDUE
+  FOLLOWUP_DUE
+  FOLLOWUP_OVERDUE
+  SYSTEM
 }
 
 // ============================================================================

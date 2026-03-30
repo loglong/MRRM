@@ -7,6 +7,9 @@ import { AuditModule } from './audit/audit.module';
 import { PrismaModule } from './common/prisma/prisma.module';
 import { EncryptionModule } from './common/encryption/encryption.module';
 import { PatientsModule } from './patients/patients.module';
+import { DemandsModule } from './demands/demands.module';
+import { PathsModule } from './paths/paths.module';
+import { NotificationsModule } from './notifications/notifications.module';
 import { RabbitMQModule } from './rabbitmq/rabbitmq.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { OrgIdMiddleware } from './common/middleware/org-id.middleware';
@@ -25,6 +28,9 @@ import { HealthController } from './health/health.controller';
     OrganizationsModule,
     AuditModule,
     PatientsModule,
+    DemandsModule,
+    PathsModule,
+    NotificationsModule,
     RabbitMQModule,
   ],
   controllers: [HealthController],
