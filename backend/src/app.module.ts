@@ -5,6 +5,8 @@ import { UsersModule } from './users/users.module';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { AuditModule } from './audit/audit.module';
 import { PrismaModule } from './common/prisma/prisma.module';
+import { EncryptionModule } from './common/encryption/encryption.module';
+import { PatientsModule } from './patients/patients.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { OrgIdMiddleware } from './common/middleware/org-id.middleware';
 
@@ -15,10 +17,12 @@ import { OrgIdMiddleware } from './common/middleware/org-id.middleware';
       envFilePath: ['.env.local', '.env'],
     }),
     PrismaModule,
+    EncryptionModule,
     AuthModule,
     UsersModule,
     OrganizationsModule,
     AuditModule,
+    PatientsModule,
   ],
 })
 export class AppModule implements NestModule {
