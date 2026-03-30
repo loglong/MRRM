@@ -2,6 +2,7 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { PrismaService } from '../prisma/prisma.service';
 import { Logger } from '../logger';
+import { AuthContext } from '../auth/auth-context';
 
 // Extend Express Request to include orgId
 declare global {
@@ -26,7 +27,7 @@ export class OrgIdMiddleware implements NestMiddleware {
       return next();
     }
 
-    // Extract orgId from header, subdomain, or JWT
+    // Extract orgId from header or JWT (if already validated)
     let orgId = req.headers['x-org-id'] as string;
 
     if (!orgId && (req.user as any)?.orgId) {
@@ -48,13 +49,25 @@ export class OrgIdMiddleware implements NestMiddleware {
     // Set PostgreSQL session variable for RLS
     if (orgId) {
       try {
-        await this.prisma.$executeRaw`
-          SELECT set_config('app.current_org_id', ${orgId}, true)
-        `;
+        await this.prisma.setOrgContext(orgId);
+
+        // Also set AuthContext if user info is available from JWT
+        if ((req.user as any)?.sub && (req.user as any)?.roles) {
+          AuthContext.set({
+            userId: (req.user as any).sub,
+            orgId: (req.user as any).orgId,
+            role: (req.user as any).roles?.[0] || 'USER',
+          });
+        }
       } catch (error) {
         this.logger.warn(`Could not set RLS org_id: ${error}`, 'OrgIdMiddleware');
       }
     }
+
+    // Cleanup AuthContext after request
+    res.on('close', () => {
+      AuthContext.clear();
+    });
 
     next();
   }
