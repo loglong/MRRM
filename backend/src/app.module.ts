@@ -7,8 +7,10 @@ import { AuditModule } from './audit/audit.module';
 import { PrismaModule } from './common/prisma/prisma.module';
 import { EncryptionModule } from './common/encryption/encryption.module';
 import { PatientsModule } from './patients/patients.module';
+import { RabbitMQModule } from './rabbitmq/rabbitmq.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { OrgIdMiddleware } from './common/middleware/org-id.middleware';
+import { HealthController } from './health/health.controller';
 
 @Module({
   imports: [
@@ -23,7 +25,9 @@ import { OrgIdMiddleware } from './common/middleware/org-id.middleware';
     OrganizationsModule,
     AuditModule,
     PatientsModule,
+    RabbitMQModule,
   ],
+  controllers: [HealthController],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
