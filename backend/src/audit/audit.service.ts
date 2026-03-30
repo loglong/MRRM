@@ -10,6 +10,8 @@ export interface AuditLogDto {
   entityId?: string;
   ipAddress?: string;
   userAgent?: string;
+  requestMethod?: string;
+  requestPath?: string;
   requestBody?: any;
   responseStatus?: number;
   errorMessage?: string;
@@ -32,6 +34,8 @@ export class AuditService {
           entityId: dto.entityId,
           ipAddress: dto.ipAddress,
           userAgent: dto.userAgent,
+          requestMethod: dto.requestMethod,
+          requestPath: dto.requestPath,
           requestBody: dto.requestBody,
           responseStatus: dto.responseStatus,
           errorMessage: dto.errorMessage,

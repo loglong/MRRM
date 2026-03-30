@@ -1,16 +1,15 @@
 import { NestFactory } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, Logger } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
-import { Logger } from './common/logger';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { AuditInterceptor } from './audit/interceptors/audit.interceptor';
+import { RabbitMQService } from './rabbitmq/rabbitmq.service';
 
 async function bootstrap() {
-  const logger = new Logger('Bootstrap');
-  const app = await NestFactory.create(AppModule, {
-    bufferLogs: true,
-  });
+  const logger = new Logger();
+  const app = await NestFactory.create(AppModule);
 
   // Cookie parser for httpOnly cookie handling
   app.use(cookieParser());
@@ -29,6 +28,10 @@ async function bootstrap() {
 
   // Global exception filter
   app.useGlobalFilters(new HttpExceptionFilter());
+
+  // Global audit interceptor
+  const rabbitMQService = app.get(RabbitMQService);
+  app.useGlobalInterceptors(new AuditInterceptor(rabbitMQService));
 
   // Global prefix for all routes
   app.setGlobalPrefix('api/v1', {
@@ -59,9 +62,6 @@ async function bootstrap() {
     origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
     credentials: true,
   });
-
-  // Global logger
-  app.useLogger(app.get(Logger));
 
   const port = process.env.PORT || 3000;
   await app.listen(port);

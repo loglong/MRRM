@@ -175,6 +175,8 @@ model AuditLog {
   entityId      String?   @map("entity_id")
   ipAddress     String?   @map("ip_address")
   userAgent     String?   @map("user_agent")
+  requestMethod String?   @map("request_method")
+  requestPath   String?   @map("request_path")
   requestBody   Json?     @map("request_body")
   responseStatus Int?     @map("response_status")
   errorMessage  String?   @map("error_message")
@@ -203,6 +205,11 @@ model Patient {
   birthDate       DateTime? @map("birth_date") @db.Date
   idCard          String?   @map("id_card") // Encrypted field
   medicalRecordNo String?   @map("medical_record_no") // Encrypted field @db.VarChar(50)
+  // Medical information - AES-256 encrypted
+  allergyHistory  String?   @map("allergy_history")
+  pastHistory     String?   @map("past_history")
+  // Patient classification
+  tier            PatientTier @default(REGULAR)
   orgId           String    @map("org_id")
   status          PatientStatus @default(ACTIVE)
   assignedUserId  String?   @map("assigned_user_id")
@@ -211,6 +218,7 @@ model Patient {
   tags            String[]  // Array of tag strings
   metadata        Json?
   encryptedFields Json?     @map("encrypted_fields") // AES-256 encrypted sensitive data
+  deletedAt       DateTime? @map("deleted_at")
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
 
@@ -226,6 +234,9 @@ model Patient {
   @@index([orgId])
   @@index([status])
   @@index([assignedUserId])
+  @@index([phone])
+  @@index([orgId, name])
+  @@index([tier])
   @@map("patients")
 }
 
@@ -241,6 +252,12 @@ enum PatientStatus {
   INACTIVE
   CHURNED
   DECEASED
+}
+
+enum PatientTier {
+  HIGH_VALUE
+  REGULAR
+  LOST_RISK
 }
 
 // ============================================================================
