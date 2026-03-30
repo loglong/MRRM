@@ -14,6 +14,7 @@ import ReportsPage from './pages/ReportsPage';
 import AdminPage from './pages/AdminPage';
 import RolesPage from './pages/admin/RolesPage';
 import PermissionsPage from './pages/admin/PermissionsPage';
+import UsersPage from './pages/admin/UsersPage';
 import ForbiddenPage from './pages/ForbiddenPage';
 import { Spin } from 'antd';
 
@@ -61,6 +62,7 @@ function App() {
           <Route path="admin" element={<AdminPage />} />
           <Route path="admin/roles" element={<RolesPage />} />
           <Route path="admin/permissions" element={<PermissionsPage />} />
+          <Route path="admin/users" element={<UsersPage />} />
           <Route path="forbidden" element={<ForbiddenPage />} />
         </Route>
       </Routes>

@@ -176,4 +176,32 @@ export class UsersService {
 
     this.logger.log(`Roles assigned to user ${userId}`, 'UsersService');
   }
+
+  async delete(id: string): Promise<any> {
+    const user = await this.prisma.user.findUnique({ where: { id } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Soft delete: set status to INACTIVE
+    const deletedUser = await this.prisma.user.update({
+      where: { id },
+      data: { status: 'INACTIVE' },
+      include: { organization: true },
+    });
+
+    this.logger.log(`User soft-deleted: ${user.email}`, 'UsersService');
+    return deletedUser;
+  }
+
+  async changeStatus(id: string, status: 'ACTIVE' | 'INACTIVE'): Promise<any> {
+    const user = await this.prisma.user.update({
+      where: { id },
+      data: { status },
+      include: { organization: true },
+    });
+
+    this.logger.log(`User status changed: ${user.email} -> ${status}`, 'UsersService');
+    return user;
+  }
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Body, Param, Query, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Request, ForbiddenException } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -46,5 +46,29 @@ export class UsersController {
   async assignRoles(@Param('id') id: string, @Body('roleIds') roleIds: string[]) {
     await this.usersService.assignRoles(id, roleIds);
     return { success: true };
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Soft delete user (set inactive)' })
+  async delete(@Param('id') id: string, @Request() req: any) {
+    // Prevent self-deletion
+    if (id === req.user.id) {
+      throw new ForbiddenException('Cannot delete your own account');
+    }
+    return this.usersService.delete(id);
+  }
+
+  @Put(':id/status')
+  @ApiOperation({ summary: 'Activate or deactivate user' })
+  async changeStatus(
+    @Param('id') id: string,
+    @Body('status') status: 'ACTIVE' | 'INACTIVE',
+    @Request() req: any,
+  ) {
+    // Prevent self-deactivation
+    if (id === req.user.id && status === 'INACTIVE') {
+      throw new ForbiddenException('Cannot deactivate your own account');
+    }
+    return this.usersService.changeStatus(id, status);
   }
 }
