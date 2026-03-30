@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { Logger } from './common/logger';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
@@ -10,6 +11,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   });
+
+  // Cookie parser for httpOnly cookie handling
+  app.use(cookieParser());
 
   // Global validation pipe
   app.useGlobalPipes(

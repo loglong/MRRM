@@ -4,12 +4,9 @@ import { UsersService } from '../users/users.service';
 import { Auth0Client } from './auth0.client';
 import { Logger } from '../common/logger';
 import * as bcrypt from 'bcrypt';
+import { LoginDto, RegisterDto } from './dto';
 
-export interface LoginDto {
-  email: string;
-  password: string;
-  orgId?: string;
-}
+export { LoginDto, RegisterDto };
 
 export interface AuthResponse {
   accessToken: string;
@@ -70,6 +67,44 @@ export class AuthService {
       orgId: user.orgId,
       roles: user.roles?.map((r: any) => r.role?.code) || [],
     };
+
+    return {
+      accessToken: this.jwtService.sign(payload),
+      user: {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        orgId: user.orgId,
+      },
+    };
+  }
+
+  async register(dto: RegisterDto): Promise<AuthResponse> {
+    // Check if user already exists
+    const existing = await this.usersService.findByEmail(dto.email, dto.orgId);
+    if (existing) {
+      throw new BadRequestException('User with this email already exists');
+    }
+
+    // Create user with default org if not provided
+    const orgId = dto.orgId || 'default-org';
+
+    const user = await this.usersService.create({
+      email: dto.email,
+      password: dto.password, // Service hashes with bcrypt 12 rounds
+      name: dto.name,
+      phone: dto.phone,
+      orgId,
+    });
+
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      orgId: user.orgId,
+      roles: user.roles?.map((r: any) => r.role?.code) || [],
+    };
+
+    this.logger.log(`User registered: ${user.email}`, 'AuthService');
 
     return {
       accessToken: this.jwtService.sign(payload),
