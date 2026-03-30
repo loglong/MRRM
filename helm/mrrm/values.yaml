@@ -1,0 +1,97 @@
+# Default values for MRRM
+replicaCount: 1
+
+namespace: mrrm
+
+image:
+  backend:
+    repository: mrrm/backend
+    tag: latest
+    pullPolicy: IfNotPresent
+  frontend:
+    repository: mrrm/frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  backend:
+    port: 3000
+  frontend:
+    port: 80
+
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: api.mrrm.example.com
+      path: /
+      pathType: Prefix
+      service: backend
+      servicePort: 3000
+    - host: app.mrrm.example.com
+      path: /
+      pathType: Prefix
+      service: frontend
+      servicePort: 80
+  tls:
+    enabled: true
+    secretName: mrrm-tls-secret
+
+resources:
+  backend:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+  frontend:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+  postgres:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+  redis:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  rabbitmq:
+    requests:
+      cpu: 250m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+storage:
+  postgres:
+    size: 20Gi
+    className: standard-ssd
+  redis:
+    size: 1Gi
+    className: standard-ssd
+  rabbitmq:
+    size: 5Gi
+    className: standard-ssd
+
+# External secrets - provide your own secret values
+# In production, use external-secrets operator or similar
+secrets:
+  postgresPassword: "CHANGE_ME"
+  redisPassword: "CHANGE_ME"
+  rabbitmqPassword: "CHANGE_ME"
+  jwtSecret: "CHANGE_ME"
+  authingAppId: ""
+  authingAppSecret: ""

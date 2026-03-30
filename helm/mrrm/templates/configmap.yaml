@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mrrm-config
+  namespace: {{ .Values.namespace }}
+data:
+  NODE_ENV: "production"
+  PORT: "3000"
+  DATABASE_URL: "postgresql://mrrm:${POSTGRES_PASSWORD}@postgres:5432/mrrm?schema=public"
+  REDIS_URL: "redis://redis:6379/0"
+  RABBITMQ_URL: "amqp://mrrm:${RABBITMQ_PASSWORD}@rabbitmq:5672"
+  CORS_ORIGIN: "https://{{ (index .Values.ingress.hosts 1).host }}"
+  LOG_LEVEL: "info"
