@@ -1,0 +1,29 @@
+{
+  "name": "mrrm-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --fix"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^5.6.1",
+    "@tanstack/react-query": "^5.64.2",
+    "antd": "^5.23.3",
+    "axios": "^1.13.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.2.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.7.3",
+    "vite": "^6.1.0"
+  }
+}
