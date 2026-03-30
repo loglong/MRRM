@@ -1,8 +1,56 @@
-import { Tabs, Table, Button, Tag } from 'antd';
-import { PlusOutlined, UserOutlined, TeamOutlined, SafetyOutlined, FileTextOutlined } from '@ant-design/icons';
+import { Tabs, Table, Button, Tag, Card, Typography, Space, Descriptions } from 'antd';
+import { PlusOutlined, UserOutlined, TeamOutlined, FileTextOutlined, ArrowRightOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
+
+const { Title } = Typography;
 
 export default function AdminPage() {
+  const navigate = useNavigate();
+
   const tabItems = [
+    {
+      key: 'overview',
+      label: <span><UserOutlined /> Overview</span>,
+      children: (
+        <div>
+          <Title level={4}>Administration Overview</Title>
+          <Space direction="vertical" style={{ width: '100%' }} size="large">
+            <Card
+              title="User Management"
+              extra={<Button type="link" onClick={() => navigate('/admin/users')}>Manage Users <ArrowRightOutlined /></Button>}
+            >
+              <Descriptions>
+                <Descriptions.Item label="Manage user accounts, roles, and status.">
+                  Create, edit, and deactivate user accounts within your organization.
+                </Descriptions.Item>
+              </Descriptions>
+            </Card>
+
+            <Card
+              title="Roles & Permissions"
+              extra={<Button type="link" onClick={() => navigate('/admin/roles')}>Manage Roles <ArrowRightOutlined /></Button>}
+            >
+              <Descriptions>
+                <Descriptions.Item label="Role-based access control">
+                  Configure roles with menu and button-level permissions.
+                </Descriptions.Item>
+              </Descriptions>
+            </Card>
+
+            <Card
+              title="Permissions Reference"
+              extra={<Button type="link" onClick={() => navigate('/admin/permissions')}>View Permissions <ArrowRightOutlined /></Button>}
+            >
+              <Descriptions>
+                <Descriptions.Item label="Permission catalog">
+                  Reference list of all available menu and button permissions.
+                </Descriptions.Item>
+              </Descriptions>
+            </Card>
+          </Space>
+        </div>
+      ),
+    },
     {
       key: 'users',
       label: <span><UserOutlined /> Users</span>,
@@ -40,26 +88,6 @@ export default function AdminPage() {
               { title: 'Code', dataIndex: 'code', key: 'code' },
               { title: 'Status', dataIndex: 'status', key: 'status' },
               { title: 'Created', dataIndex: 'createdAt', key: 'createdAt' },
-            ]}
-          />
-        </div>
-      ),
-    },
-    {
-      key: 'roles',
-      label: <span><SafetyOutlined /> Roles</span>,
-      children: (
-        <div>
-          <div style={{ marginBottom: 16 }}>
-            <Button type="primary" icon={<PlusOutlined />}>Add Role</Button>
-          </div>
-          <Table
-            dataSource={[]}
-            rowKey="id"
-            columns={[
-              { title: 'Name', dataIndex: 'name', key: 'name' },
-              { title: 'Code', dataIndex: 'code', key: 'code' },
-              { title: 'System', dataIndex: 'isSystem', key: 'isSystem', render: (v: boolean) => v ? <Tag>System</Tag> : null },
             ]}
           />
         </div>
