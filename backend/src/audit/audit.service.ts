@@ -47,11 +47,27 @@ export class AuditService {
     }
   }
 
-  async findByOrg(orgId: string, page = 1, limit = 50): Promise<any> {
+  async findAll(
+    orgId: string,
+    page = 1,
+    limit = 50,
+    filters: Record<string, unknown> = {},
+  ): Promise<any> {
     const skip = (page - 1) * limit;
+    const where = { orgId, ...filters } as any;
+
+    // Validate date range (max 90 days)
+    const createdAtFilter = where.createdAt as { gte?: Date; lte?: Date } | undefined;
+    if (createdAtFilter?.gte && createdAtFilter?.lte) {
+      const diffDays = (createdAtFilter.lte.getTime() - createdAtFilter.gte.getTime()) / (1000 * 60 * 60 * 24);
+      if (diffDays > 90) {
+        throw new Error('Date range cannot exceed 90 days');
+      }
+    }
+
     const [logs, total] = await Promise.all([
       this.prisma.auditLog.findMany({
-        where: { orgId },
+        where,
         skip,
         take: limit,
         include: {
@@ -59,7 +75,7 @@ export class AuditService {
         },
         orderBy: { createdAt: 'desc' },
       }),
-      this.prisma.auditLog.count({ where: { orgId } }),
+      this.prisma.auditLog.count({ where }),
     ]);
 
     return {
@@ -73,13 +89,38 @@ export class AuditService {
     };
   }
 
-  async findByEntity(entityType: string, entityId: string): Promise<any[]> {
+  async findByOrg(orgId: string, page = 1, limit = 50): Promise<any> {
+    return this.findAll(orgId, page, limit);
+  }
+
+  async findByEntity(entityType: string, entityId: string, orgId: string): Promise<any[]> {
     return this.prisma.auditLog.findMany({
       where: {
         entityType,
         entityId,
+        orgId,
+      },
+      include: {
+        user: { select: { id: true, name: true, email: true } },
       },
       orderBy: { createdAt: 'desc' },
+    });
+  }
+
+  async getLogsForExport(orgId: string, startDate: Date, endDate: Date): Promise<any[]> {
+    return this.prisma.auditLog.findMany({
+      where: {
+        orgId,
+        createdAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+      include: {
+        user: { select: { id: true, name: true, email: true } },
+      },
+      orderBy: { createdAt: 'desc' },
+      take: 10000, // Safety limit for exports
     });
   }
 }
