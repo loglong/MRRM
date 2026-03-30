@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed plan 02-03 demand management
-last_updated: "2026-03-30T12:49:49.830Z"
+stopped_at: Completed plan 02-02 path management
+last_updated: "2026-03-30T12:55:01.940Z"
 progress:
   total_phases: 5
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 11
-  completed_plans: 9
+  completed_plans: 10
 ---
 
 # Project State
@@ -67,6 +67,9 @@ Recent decisions affecting current work:
 - Phase 3: Follow-up must integrate with treatment pathways to avoid becoming decorative
 - Phase 4: Analytics depend on operational data accumulation - cannot build meaningful analytics without patient interaction history
 - Phase 5: Integration as separate track - HIS/BI integration has unique risks and should not block core development
+- [Phase 02]: Path uses existing Path/PathStep schema models - adapted plan naming to match existing schema
+- [Phase 02]: Overdue notifications notify patient assignedUser directly (simplified from role-based responsibleRole)
+- [Phase 02]: In-system notifications only per CEO decision - no external notifications in MVP
 
 ### Pending Todos
 
@@ -82,6 +85,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-30T12:49:49.695Z
-Stopped at: Completed plan 02-03 demand management
+Last session: 2026-03-30T12:54:56.473Z
+Stopped at: Completed plan 02-02 path management
 Resume file: None
