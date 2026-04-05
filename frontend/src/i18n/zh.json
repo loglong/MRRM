@@ -251,7 +251,13 @@
     "searchPatient": "搜索患者",
     "voidWarning": "确定要作废此触点吗？此操作无法撤销。",
     "voidReasonPlaceholder": "输入作废原因（必填）",
-    "enterVoidReason": "请输入作废原因"
+    "enterVoidReason": "请输入作废原因",
+    "content": "内容",
+    "contentPlaceholder": "输入触点内容/详情",
+    "durationMinutes": "时长（分钟）",
+    "followupRequired": "需要随访",
+    "followupDate": "随访日期",
+    "yes": "是"
   },
   "followups": {
     "title": "随访管理",

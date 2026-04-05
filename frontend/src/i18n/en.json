@@ -251,7 +251,13 @@
     "searchPatient": "Search patient",
     "voidWarning": "Are you sure you want to void this touchpoint? This action cannot be undone.",
     "voidReasonPlaceholder": "Enter void reason (required)",
-    "enterVoidReason": "Please enter void reason"
+    "enterVoidReason": "Please enter void reason",
+    "content": "Content",
+    "contentPlaceholder": "Enter touchpoint content/details",
+    "durationMinutes": "Duration (minutes)",
+    "followupRequired": "Follow-up Required",
+    "followupDate": "Follow-up Date",
+    "yes": "Yes"
   },
   "followups": {
     "title": "Follow-up Management",
