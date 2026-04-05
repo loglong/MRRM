@@ -80,6 +80,7 @@ model User {
   auditLogs           AuditLog[]
   patientAssignments Patient[]    @relation("AssignedUser")
   notifications       Notification[]
+  followupAssignments FollowupPlan[] @relation("FollowupAssignedUser")
 
   @@unique([orgId, email])
   @@index([orgId])
@@ -472,6 +473,9 @@ model PathInstanceStep {
   completedAt DateTime? @map("completed_at")
   notes       String?
 
+  // Reverse relation for FollowupRecord link (FOLLOW-02)
+  followupRecords FollowupRecord[]
+
   @@index([instanceId, stepOrder])
   @@map("path_instance_steps")
 }
@@ -597,6 +601,10 @@ model FollowupPlan {
   createdAt     DateTime        @default(now()) @map("created_at")
   updatedAt     DateTime        @updatedAt @map("updated_at")
 
+  // FOLLOW-01: assigned user for followup responsibility
+  assignedUserId String?   @map("assigned_user_id")
+  assignedUser   User?     @relation("FollowupAssignedUser", fields: [assignedUserId], references: [id])
+
   // Relations
   patient   Patient   @relation(fields: [patientId], references: [id])
   organization Organization @relation(fields: [orgId], references: [id])
@@ -604,6 +612,7 @@ model FollowupPlan {
 
   @@index([orgId])
   @@index([patientId])
+  @@index([assignedUserId])
   @@map("followup_plans")
 }
 
@@ -635,6 +644,10 @@ model FollowupRecord {
   createdAt       DateTime  @default(now()) @map("created_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
 
+  // FOLLOW-02: link to path instance step
+  pathInstanceStepId String?  @map("path_instance_step_id")
+  pathInstanceStep  PathInstanceStep? @relation(fields: [pathInstanceStepId], references: [id])
+
   // Relations
   plan      FollowupPlan @relation(fields: [planId], references: [id])
   patient   Patient      @relation(fields: [patientId], references: [id])
@@ -643,6 +656,7 @@ model FollowupRecord {
   @@index([orgId])
   @@index([planId])
   @@index([patientId])
+  @@index([pathInstanceStepId])
   @@map("followup_records")
 }
 
