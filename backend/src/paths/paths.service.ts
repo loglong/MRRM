@@ -40,6 +40,9 @@ export class PathsService {
 
     if (filters?.status) {
       where.status = filters.status;
+    } else {
+      // Exclude archived templates by default
+      where.status = { not: 'ARCHIVED' };
     }
 
     if (filters?.search) {
@@ -389,7 +392,7 @@ export class PathsService {
       throw new BadRequestException('Path instance is not in progress');
     }
 
-    const step = instance.steps.find((s) => s.stepId === stepId);
+    const step = instance.steps.find((s) => s.id === stepId);
     if (!step) {
       throw new NotFoundException('Step not found in this instance');
     }
@@ -458,7 +461,7 @@ export class PathsService {
       throw new BadRequestException('Path instance is not in progress');
     }
 
-    const step = instance.steps.find((s) => s.stepId === stepId);
+    const step = instance.steps.find((s) => s.id === stepId);
     if (!step) {
       throw new NotFoundException('Step not found in this instance');
     }

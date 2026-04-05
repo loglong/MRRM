@@ -16,7 +16,7 @@ import { ChangeStatusDemandDtoType } from './dto/change-status-demand.dto';
 import { FilterDemandDtoType } from './dto/filter-demand.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
-@Controller('api/v1/demands')
+@Controller('demands')
 @UseGuards(JwtAuthGuard)
 export class DemandsController {
   constructor(private readonly demandsService: DemandsService) {}
@@ -24,13 +24,29 @@ export class DemandsController {
   @Post()
   async create(@Body() createDemandDto: CreateDemandDtoType, @Request() req: any) {
     const orgId = req.user?.orgId || req.user?.user?.orgId;
-    const userId = req.user?.id || req.user?.user?.id;
+    const userId = req.user?.sub || req.user?.user?.sub;
     return this.demandsService.create(createDemandDto, orgId, userId);
   }
 
   @Get()
-  async findAll(@Request() req: any, @Query() filters: FilterDemandDtoType) {
+  async findAll(
+    @Request() req: any,
+    @Query('page') page = '1',
+    @Query('limit') limit = '20',
+    @Query('status') status?: 'OPEN' | 'IN_PROGRESS' | 'PENDING' | 'FULFILLED' | 'CANCELLED' | 'LOST',
+    @Query('type') type?: 'CONSULTATION' | 'TREATMENT' | 'FOLLOWUP' | 'OTHER',
+    @Query('priority') priority?: 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT',
+    @Query('patientId') patientId?: string,
+  ) {
     const orgId = req.user?.orgId || req.user?.user?.orgId;
+    const filters = {
+      page: parseInt(page, 10),
+      limit: parseInt(limit, 10),
+      status,
+      type,
+      priority,
+      patientId,
+    };
     return this.demandsService.findAll(orgId, filters);
   }
 
@@ -63,7 +79,7 @@ export class DemandsController {
     @Request() req: any,
   ) {
     const orgId = req.user?.orgId || req.user?.user?.orgId;
-    const userId = req.user?.id || req.user?.user?.id;
+    const userId = req.user?.sub || req.user?.user?.sub;
     return this.demandsService.changeStatus(id, orgId, userId, changeStatusDto);
   }
 
@@ -74,7 +90,7 @@ export class DemandsController {
   }
 }
 
-@Controller('api/v1/patients')
+@Controller('patients')
 @UseGuards(JwtAuthGuard)
 export class PatientDemandsController {
   constructor(private readonly demandsService: DemandsService) {}
