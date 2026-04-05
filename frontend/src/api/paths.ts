@@ -100,45 +100,45 @@ export const pathsApi = {
     status?: string;
     search?: string;
   }): Promise<PaginatedResponse<PathTemplate>> => {
-    return api.get('/path-templates', { params });
+    return api.get('/path-templates', { params }).then((res) => res.data);
   },
 
   getById: (id: string): Promise<PathTemplate> => {
-    return api.get(`/path-templates/${id}`);
+    return api.get(`/path-templates/${id}`).then((res) => res.data);
   },
 
   create: (data: CreatePathDto): Promise<PathTemplate> => {
-    return api.post('/path-templates', data);
+    return api.post('/path-templates', data).then((res) => res.data);
   },
 
   update: (id: string, data: UpdatePathDto): Promise<PathTemplate> => {
-    return api.put(`/path-templates/${id}`, data);
+    return api.put(`/path-templates/${id}`, data).then((res) => res.data);
   },
 
   delete: (id: string): Promise<void> => {
-    return api.delete(`/path-templates/${id}`);
+    return api.delete(`/path-templates/${id}`).then((res) => res.data);
   },
 
   duplicate: (id: string): Promise<PathTemplate> => {
-    return api.post(`/path-templates/${id}/duplicate`, {});
+    return api.post(`/path-templates/${id}/duplicate`, {}).then((res) => res.data);
   },
 
   // Path Steps
   addStep: (pathId: string, data: CreatePathStepDto): Promise<PathStep> => {
-    return api.post(`/path-templates/${pathId}/steps`, data);
+    return api.post(`/path-templates/${pathId}/steps`, data).then((res) => res.data);
   },
 
   updateStep: (pathId: string, stepId: string, data: Partial<CreatePathStepDto>): Promise<PathStep> => {
-    return api.put(`/path-templates/${pathId}/steps/${stepId}`, data);
+    return api.put(`/path-templates/${pathId}/steps/${stepId}`, data).then((res) => res.data);
   },
 
   deleteStep: (pathId: string, stepId: string): Promise<void> => {
-    return api.delete(`/path-templates/${pathId}/steps/${stepId}`);
+    return api.delete(`/path-templates/${pathId}/steps/${stepId}`).then((res) => res.data);
   },
 
   // Path Assignment
   assignToPatient: (pathId: string, data: AssignPathDto): Promise<PathInstance> => {
-    return api.post(`/path-templates/${pathId}/assign`, data);
+    return api.post(`/path-templates/${pathId}/assign`, data).then((res) => res.data);
   },
 
   // Path Instances
@@ -149,31 +149,31 @@ export const pathsApi = {
     demandId?: string;
     status?: string;
   }): Promise<PaginatedResponse<PathInstance>> => {
-    return api.get('/path-instances', { params });
+    return api.get('/path-instances', { params }).then((res) => res.data);
   },
 
   getInstance: (id: string): Promise<PathInstance> => {
-    return api.get(`/path-instances/${id}`);
+    return api.get(`/path-instances/${id}`).then((res) => res.data);
   },
 
   completeStep: (instanceId: string, stepId: string, notes?: string): Promise<PathInstance> => {
-    return api.put(`/path-instances/${instanceId}/steps/${stepId}/complete`, { notes });
+    return api.put(`/path-instances/${instanceId}/steps/${stepId}/complete`, { notes }).then((res) => res.data);
   },
 
   skipStep: (instanceId: string, stepId: string, reason?: string): Promise<PathInstance> => {
-    return api.put(`/path-instances/${instanceId}/steps/${stepId}/skip`, { reason });
+    return api.put(`/path-instances/${instanceId}/steps/${stepId}/skip`, { reason }).then((res) => res.data);
   },
 
   cancelInstance: (id: string): Promise<PathInstance> => {
-    return api.put(`/path-instances/${id}/cancel`, {});
+    return api.put(`/path-instances/${id}/cancel`, {}).then((res) => res.data);
   },
 
   // Patient/Demand instances
   getPatientInstances: (patientId: string): Promise<PathInstance[]> => {
-    return api.get(`/patients/${patientId}/path-instances`);
+    return api.get(`/patients/${patientId}/path-instances`).then((res) => res.data);
   },
 
   getDemandInstances: (demandId: string): Promise<PathInstance[]> => {
-    return api.get(`/demands/${demandId}/path-instances`);
+    return api.get(`/demands/${demandId}/path-instances`).then((res) => res.data);
   },
 };

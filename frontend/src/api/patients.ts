@@ -116,7 +116,7 @@ export const patientsApi = {
     tier?: string;
     search?: string;
   }): Promise<PaginatedResponse<Patient>> => {
-    return api.get('/patients', { params });
+    return api.get('/patients', { params }).then((res) => res.data);
   },
 
   search: (
@@ -125,26 +125,26 @@ export const patientsApi = {
   ): Promise<Patient[]> => {
     return api.get('/patients/search', {
       params: { q: query, field },
-    });
+    }).then((res) => res.data);
   },
 
   getById: (id: string): Promise<Patient> => {
-    return api.get(`/patients/${id}`);
+    return api.get(`/patients/${id}`).then((res) => res.data);
   },
 
   create: (data: CreatePatientDto): Promise<Patient> => {
-    return api.post('/patients', data);
+    return api.post('/patients', data).then((res) => res.data);
   },
 
   update: (id: string, data: UpdatePatientDto): Promise<Patient> => {
-    return api.put(`/patients/${id}`, data);
+    return api.put(`/patients/${id}`, data).then((res) => res.data);
   },
 
   delete: (id: string): Promise<void> => {
-    return api.delete(`/patients/${id}`);
+    return api.delete(`/patients/${id}`).then((res) => res.data);
   },
 
   getStats: (): Promise<PatientStats> => {
-    return api.get('/patients/stats');
+    return api.get('/patients/stats').then((res) => res.data);
   },
 };

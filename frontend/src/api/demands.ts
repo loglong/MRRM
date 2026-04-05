@@ -141,34 +141,34 @@ export const validStatusTransitions: Record<DemandStatus, DemandStatus[]> = {
 // API functions
 export const demandsApi = {
   list: (params?: DemandFilters): Promise<PaginatedResponse<Demand>> => {
-    return api.get('/demands', { params });
+    return api.get('/demands', { params }).then((res) => res.data);
   },
 
   getById: (id: string): Promise<Demand> => {
-    return api.get(`/demands/${id}`);
+    return api.get(`/demands/${id}`).then((res) => res.data);
   },
 
   create: (data: CreateDemandDto): Promise<Demand> => {
-    return api.post('/demands', data);
+    return api.post('/demands', data).then((res) => res.data);
   },
 
   update: (id: string, data: UpdateDemandDto): Promise<Demand> => {
-    return api.put(`/demands/${id}`, data);
+    return api.put(`/demands/${id}`, data).then((res) => res.data);
   },
 
   changeStatus: (id: string, data: ChangeStatusDto): Promise<Demand> => {
-    return api.put(`/demands/${id}/status`, data);
+    return api.put(`/demands/${id}/status`, data).then((res) => res.data);
   },
 
   getStatusHistory: (id: string): Promise<DemandStatusHistory[]> => {
-    return api.get(`/demands/${id}/history`);
+    return api.get(`/demands/${id}/history`).then((res) => res.data);
   },
 
   getPatientDemands: (patientId: string): Promise<Demand[]> => {
-    return api.get(`/patients/${patientId}/demands`);
+    return api.get(`/patients/${patientId}/demands`).then((res) => res.data);
   },
 
   getStats: (): Promise<DemandStats> => {
-    return api.get('/demands/stats');
+    return api.get('/demands/stats').then((res) => res.data);
   },
 };

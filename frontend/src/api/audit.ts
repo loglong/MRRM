@@ -54,11 +54,11 @@ export const auditApi = {
         Object.entries(filters).filter(([_, v]) => v !== undefined && v !== ''),
       ),
     });
-    return api.get(`/audit?${query}`);
+    return api.get(`/audit?${query}`).then((res) => res.data);
   },
 
   getLogsByEntity: (entityType: string, entityId: string): Promise<AuditLog[]> => {
-    return api.get(`/audit/entity/${entityType}/${entityId}`);
+    return api.get(`/audit/entity/${entityType}/${entityId}`).then((res) => res.data);
   },
 
   exportLogs: (startDate: string, endDate: string): string => {

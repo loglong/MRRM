@@ -29,18 +29,18 @@ export const notificationsApi = {
     limit?: number;
     unreadOnly?: boolean;
   }): Promise<NotificationsResponse> => {
-    return api.get('/notifications', { params });
+    return api.get('/notifications', { params }).then((res) => res.data);
   },
 
   getUnreadCount: (): Promise<{ count: number }> => {
-    return api.get('/notifications/unread-count');
+    return api.get('/notifications/unread-count').then((res) => res.data);
   },
 
   markAsRead: (id: string): Promise<Notification> => {
-    return api.put(`/notifications/${id}/read`, {});
+    return api.put(`/notifications/${id}/read`, {}).then((res) => res.data);
   },
 
   markAllAsRead: (): Promise<{ success: boolean }> => {
-    return api.put('/notifications/read-all', {});
+    return api.put('/notifications/read-all', {}).then((res) => res.data);
   },
 };
