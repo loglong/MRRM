@@ -14,27 +14,47 @@ export class OrganizationsService implements OnModuleInit {
   }
 
   private async seedSystemOrganization(): Promise<void> {
-    const existingOrg = await this.prisma.organization.findUnique({
+    // Seed SYSTEM org
+    const existingSystem = await this.prisma.organization.findUnique({
       where: { code: 'SYSTEM' },
     });
 
-    if (existingOrg) {
-      this.logger.log('System organization already exists', 'OrganizationsService');
-      return;
+    if (!existingSystem) {
+      try {
+        await this.prisma.organization.create({
+          data: {
+            name: 'System',
+            code: 'SYSTEM',
+            status: 'ACTIVE',
+            metadata: { type: 'system', description: 'System-level organization' },
+          },
+        });
+        this.logger.log('System organization seeded', 'OrganizationsService');
+      } catch (error) {
+        this.logger.error('Failed to seed system organization', error instanceof Error ? error.stack : String(error), 'OrganizationsService');
+      }
     }
 
-    try {
-      await this.prisma.organization.create({
-        data: {
-          name: 'System',
-          code: 'SYSTEM',
-          status: 'ACTIVE',
-          metadata: { type: 'system', description: 'System-level organization' },
-        },
-      });
-      this.logger.log('System organization seeded', 'OrganizationsService');
-    } catch (error) {
-      this.logger.error('Failed to seed system organization', error instanceof Error ? error.stack : String(error), 'OrganizationsService');
+    // Seed default-org for user registration
+    const existingDefault = await this.prisma.organization.findUnique({
+      where: { id: 'default-org' },
+    });
+
+    if (!existingDefault) {
+      try {
+        await this.prisma.organization.create({
+          data: {
+            id: 'default-org',
+            name: 'Default Organization',
+            code: 'DEFAULT',
+            status: 'ACTIVE',
+            metadata: { type: 'default', description: 'Default organization for new users' },
+          },
+        });
+        this.logger.log('Default organization seeded', 'OrganizationsService');
+      } catch (error) {
+        this.logger.error('Failed to seed default organization', error instanceof Error ? error.stack : String(error), 'OrganizationsService');
+      }
     }
   }
 
