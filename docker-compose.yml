@@ -88,8 +88,14 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./backend:/app
-      - /app/node_modules
+      - ./backend/src:/app/src
+      - ./backend/prisma:/app/prisma
+      - ./backend/tsconfig.json:/app/tsconfig.json
+      - ./backend/tsconfig.build.json:/app/tsconfig.build.json
+      - ./backend/nest-cli.json:/app/nest-cli.json
+      - ./backend/package.json:/app/package.json
+      - ./backend/package-lock.json:/app/package-lock.json
+      - mrrm_backend_node_modules:/app/node_modules
       - /app/dist
     command: npx ts-node-dev --respawn --transpile-only --ignore-watch node_modules --exit-child src/main.ts
     depends_on:
@@ -141,3 +147,4 @@ volumes:
     driver: local
   rabbitmq_data:
     driver: local
+  mrrm_backend_node_modules:

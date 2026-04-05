@@ -5,7 +5,7 @@ import { UsersService } from '../users/users.service';
 import { Auth0Client } from './auth0.client';
 import { UnauthorizedException, BadRequestException } from '@nestjs/common';
 import { LockedException } from './exceptions/locked.exception';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 
 // Mock bcrypt
 jest.mock('bcrypt', () => ({

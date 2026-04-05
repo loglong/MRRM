@@ -32,6 +32,12 @@ export class RabbitMQService implements OnModuleInit, OnModuleDestroy {
 
       // Declare durable exchange and queue
       await this.channel.assertExchange(this.AUDIT_EXCHANGE, 'direct', { durable: true });
+      // Delete queue if exists with wrong args, then recreate with correct ttl
+      try {
+        await this.channel.deleteQueue(this.AUDIT_QUEUE);
+      } catch {
+        // Queue may not exist, ignore
+      }
       await this.channel.assertQueue(this.AUDIT_QUEUE, {
         durable: true,
         arguments: {

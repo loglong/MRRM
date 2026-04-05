@@ -16,6 +16,20 @@
 | **Ant Design** | 6.3.4 (stable) | UI Component Library | Project constraint; comprehensive enterprise components; March 2025 release with Form.List, Table, Menu improvements |
 | **TypeScript** | 5.x (latest stable) | Type Safety | Strong typing reduces runtime errors; works seamlessly with React and Node.js; required for Prisma and modern tooling |
 
+### AI Native Layer (Phase 3-4 Integration)
+
+| Technology | Version | Purpose | Why |
+|------------|---------|---------|-----|
+| **PgVector** | Latest | Vector Search | PostgreSQL extension for embeddings; patient similarity search, follow-up intent recognition; avoids separate vector DB initially |
+| **Vercel AI SDK** | Latest | Frontend AI Integration | Unified API for OpenAI/Anthropic/Google; streaming UI support; React hooks (useChat, useCompletion) |
+| **LangChain.js** | Latest | Backend AI Orchestration | Agent framework; chain composition; memory management for patient context; tool calling |
+| **Helicone** | Cloud | AI Observability | LLM call tracking; cost analytics; latency monitoring; no infrastructure needed |
+
+**AI Integration Timeline:**
+- Phase 1-2: Install PgVector extension; design AI-ready data schemas
+- Phase 3-4: Integrate Vercel AI SDK + LangChain.js; implement semantic cache with Redis
+- Phase 5-6: LangChain Agents for autonomous tasks; AI-powered patient triage
+
 ### Backend Framework (RECOMMENDED: Node.js + NestJS)
 
 | Technology | Version | Purpose | Why |
@@ -40,20 +54,21 @@
 
 | Technology | Version | Purpose | Why |
 |------------|---------|---------|-----|
-| **PostgreSQL** | 18.3 (stable) | Primary Database | Project constraint confirmed; best-in-class multi-tenant support via Row-Level Security (RLS); PostgreSQL 18 released Feb 2026 with performance improvements |
-| **Redis** | 8.0 | Caching Layer | Sub-millisecond response for session management; supports 18 data structures; active-active geo-distribution for high availability |
+| **PostgreSQL** | 18.3 (stable) | Primary Database + Vector Store | Project constraint confirmed; best-in-class multi-tenant support via Row-Level Security (RLS); PostgreSQL 18 released Feb 2026 with performance improvements; **PgVector extension for AI embeddings** |
+| **Redis** | 8.0 | Caching Layer + Semantic Cache | Sub-millisecond response for session management; supports 18 data structures; active-active geo-distribution for high availability; **LLM response caching** |
 
 **Why PostgreSQL over MongoDB for this medical CRM:**
 - Strict schema aligns with medical record structures (patient, appointment, treatment paths)
 - Row-Level Security provides hardware-level tenant isolation (critical for healthcare compliance)
 - Mature JSON/JSONB support for flexible patient attributes
 - Better for complex queries across patient journeys
+- **PgVector enables similarity search without separate vector database**
 
 ### ORM
 
 | Technology | Version | Purpose | When to Use |
 |------------|---------|---------|-------------|
-| **Prisma** | v7 | Type-safe ORM | RECOMMENDED; works with PostgreSQL; provides migration system, type safety, and excellent DX; v7 is current stable |
+| **Prisma** | v7 | Type-safe ORM + Vector Support | RECOMMENDED; works with PostgreSQL; provides migration system, type safety, and excellent DX; v7 may support pgvector operations via raw queries; **pair with Prisma Extensions for custom vector operations** |
 | **TypeORM** | Latest | Traditional ORM | Alternative; more verbose than Prisma; better for complex stored procedures |
 
 ### API Layer

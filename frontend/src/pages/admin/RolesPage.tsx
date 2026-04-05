@@ -16,6 +16,7 @@ import {
 } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
+import { useTranslation } from 'react-i18next';
 import { rolesApi, type Role, type CreateRoleDto } from '../../api/roles';
 import { permissionsApi, type Permission } from '../../api/permissions';
 
@@ -29,6 +30,7 @@ interface RoleFormValues {
 }
 
 export default function RolesPage() {
+  const { t } = useTranslation();
   const [roles, setRoles] = useState<Role[]>([]);
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [loading, setLoading] = useState(false);
@@ -47,13 +49,12 @@ export default function RolesPage() {
       setRoles(rolesData);
       setPermissions(permsData);
     } catch (error: any) {
-      message.error('Failed to load roles');
+      message.error(t('common.error') || 'Failed to load roles');
     } finally {
       setLoading(false);
     }
   };
 
-  // Load on mount
   useState(() => {
     loadData();
   });
@@ -79,10 +80,10 @@ export default function RolesPage() {
   const handleDelete = async (roleId: string) => {
     try {
       await rolesApi.delete(roleId);
-      message.success('Role deleted');
+      message.success(t('common.success'));
       loadData();
     } catch (error: any) {
-      message.error(error?.response?.data?.message || 'Failed to delete role');
+      message.error(error?.response?.data?.message || t('common.error'));
     }
   };
 
@@ -96,17 +97,17 @@ export default function RolesPage() {
 
       if (editingRole) {
         await rolesApi.update(editingRole.id, payload);
-        message.success('Role updated');
+        message.success(t('common.success'));
       } else {
         await rolesApi.create(payload);
-        message.success('Role created');
+        message.success(t('common.success'));
       }
 
       setModalVisible(false);
       loadData();
     } catch (error: any) {
       if (!error?.errorFields) {
-        message.error(error?.response?.data?.message || 'Failed to save role');
+        message.error(error?.response?.data?.message || t('common.error'));
       }
     }
   };
@@ -118,34 +119,34 @@ export default function RolesPage() {
 
   const columns: ColumnsType<Role> = [
     {
-      title: 'Name',
+      title: t('common.name'),
       dataIndex: 'name',
       key: 'name',
     },
     {
-      title: 'Code',
+      title: t('common.code'),
       dataIndex: 'code',
       key: 'code',
       render: (code: string) => <Tag>{code}</Tag>,
     },
     {
-      title: 'Description',
+      title: t('common.description'),
       dataIndex: 'description',
       key: 'description',
     },
     {
-      title: 'Users',
+      title: t('users.title'),
       key: 'users',
       render: (_: any, role: Role) => role._count?.users ?? 0,
     },
     {
-      title: 'System',
+      title: t('roles.system') || 'System',
       dataIndex: 'isSystem',
       key: 'isSystem',
-      render: (isSystem: boolean) => (isSystem ? <Tag color="blue">System</Tag> : <Tag>Custom</Tag>),
+      render: (isSystem: boolean) => (isSystem ? <Tag color="blue">{t('roles.system') || 'System'}</Tag> : <Tag>{t('roles.custom') || 'Custom'}</Tag>),
     },
     {
-      title: 'Actions',
+      title: t('common.actions'),
       key: 'actions',
       width: 150,
       render: (_: any, role: Role) => (
@@ -157,10 +158,10 @@ export default function RolesPage() {
             disabled={role.isSystem}
           />
           <Popconfirm
-            title="Delete this role?"
-            description="This will remove all permissions from users with this role."
+            title={t('roles.deleteConfirm') || 'Delete this role?'}
+            description={t('roles.deleteDesc') || 'This will remove all permissions from users with this role.'}
             onConfirm={() => handleDelete(role.id)}
-            okText="Delete"
+            okText={t('common.delete')}
             okButtonProps={{ danger: true }}
             disabled={role.isSystem}
           >
@@ -179,9 +180,9 @@ export default function RolesPage() {
   const expandedRowRender = (role: Role) => {
     const rolePerms = role.permissions || [];
     return (
-      <Card size="small" title="Assigned Permissions">
+      <Card size="small" title={t('roles.assignedPermissions') || 'Assigned Permissions'}>
         {rolePerms.length === 0 ? (
-          <Text type="secondary">No permissions assigned</Text>
+          <Text type="secondary">{t('roles.noPermissions') || 'No permissions assigned'}</Text>
         ) : (
           <Space wrap>
             {rolePerms.map((p) => (
@@ -198,15 +199,15 @@ export default function RolesPage() {
   return (
     <div style={{ padding: 24 }}>
       <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2>Roles Management</h2>
+        <h2>{t('roles.title')}</h2>
         <Button type="primary" icon={<PlusOutlined />} onClick={handleCreate}>
-          Create Role
+          {t('roles.addRole')}
         </Button>
       </div>
 
       <Alert
-        message="Role Permissions"
-        description="Click on a row to expand and view assigned permissions. System roles cannot be modified or deleted."
+        message={t('roles.rolePermissions') || 'Role Permissions'}
+        description={t('roles.roleAlertDesc') || 'Click on a row to expand and view assigned permissions. System roles cannot be modified or deleted.'}
         type="info"
         showIcon
         style={{ marginBottom: 16 }}
@@ -225,30 +226,30 @@ export default function RolesPage() {
       />
 
       <Modal
-        title={editingRole ? 'Edit Role' : 'Create Role'}
+        title={editingRole ? t('roles.editRole') : t('roles.addRole')}
         open={modalVisible}
         onOk={handleSubmit}
         onCancel={() => setModalVisible(false)}
         width={600}
-        okText={editingRole ? 'Update' : 'Create'}
+        okText={editingRole ? t('common.save') : t('roles.createRole')}
       >
         <Form form={form} layout="vertical" initialValues={{ code: '' }}>
           <Form.Item
             name="name"
-            label="Role Name"
-            rules={[{ required: true, message: 'Please enter role name' }]}
+            label={t('roles.roleName') || 'Role Name'}
+            rules={[{ required: true, message: t('roles.enterRoleName') || 'Please enter role name' }]}
           >
             <Input placeholder="e.g., Doctor" />
           </Form.Item>
 
           <Form.Item
             name="code"
-            label="Role Code"
+            label={t('roles.roleCode') || 'Role Code'}
             rules={[
-              { required: true, message: 'Please enter role code' },
-              { pattern: /^[A-Z0-9_]+$/, message: 'Code must be uppercase letters, numbers, and underscores only' },
+              { required: true, message: t('roles.enterRoleCode') || 'Please enter role code' },
+              { pattern: /^[A-Z0-9_]+$/, message: t('roles.codePattern') || 'Code must be uppercase letters, numbers, and underscores only' },
             ]}
-            extra="Unique identifier for the role (e.g., DOCTOR, ORG_ADMIN)"
+            extra={t('roles.codeExtra') || 'Unique identifier for the role (e.g., DOCTOR, ORG_ADMIN)'}
           >
             <Input
               placeholder="e.g., DOCTOR"
@@ -259,25 +260,25 @@ export default function RolesPage() {
             />
           </Form.Item>
 
-          <Form.Item name="description" label="Description">
-            <Input.TextArea placeholder="Optional description" rows={2} />
+          <Form.Item name="description" label={t('common.description')}>
+            <Input.TextArea placeholder={t('roles.descriptionPlaceholder') || 'Optional description'} rows={2} />
           </Form.Item>
 
-          <Form.Item label="Permissions">
+          <Form.Item label={t('roles.permissions')}>
             <div style={{ border: '1px solid #d9d9d9', borderRadius: 8, padding: 16, maxHeight: 300, overflowY: 'auto' }}>
               {editingRole?.isSystem && (
                 <Alert
-                  message="System roles have fixed permissions"
+                  message={t('roles.systemFixed') || 'System roles have fixed permissions'}
                   type="warning"
                   style={{ marginBottom: 12 }}
                 />
               )}
 
               <div style={{ marginBottom: 16 }}>
-                <Typography.Title level={5}>Menu Permissions</Typography.Title>
+                <Typography.Title level={5}>{t('permissions.menuPermissions') || 'Menu Permissions'}</Typography.Title>
                 <Select
                   mode="multiple"
-                  placeholder="Select menu permissions"
+                  placeholder={t('permissions.selectMenu') || 'Select menu permissions'}
                   value={selectedPermissions.filter((id) =>
                     groupedPermissions.MENU.find((p) => p.id === id)
                   )}
@@ -299,10 +300,10 @@ export default function RolesPage() {
               </div>
 
               <div>
-                <Typography.Title level={5}>Button Permissions</Typography.Title>
+                <Typography.Title level={5}>{t('permissions.buttonPermissions') || 'Button Permissions'}</Typography.Title>
                 <Select
                   mode="multiple"
-                  placeholder="Select button permissions"
+                  placeholder={t('permissions.selectButton') || 'Select button permissions'}
                   value={selectedPermissions.filter((id) =>
                     groupedPermissions.BUTTON.find((p) => p.id === id)
                   )}

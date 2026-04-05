@@ -1,0 +1,181 @@
+{"context":"AuthService","level":"info","message":"User registered: new@example.com","service":"mrrm-backend","timestamp":"2026-03-30 16:08:52.981"}
+{"context":"AuthService","level":"info","message":"User registered: new@example.com","service":"mrrm-backend","timestamp":"2026-03-30 16:09:36.986"}
+{"context":"AuthService","level":"info","message":"User registered: new@example.com","service":"mrrm-backend","timestamp":"2026-03-30 16:09:57.301"}
+{"context":"AuthService","level":"info","message":"User registered: new@example.com","service":"mrrm-backend","timestamp":"2026-03-30 16:13:17.024"}
+{"context":"AuthService","level":"info","message":"User registered: new@example.com","service":"mrrm-backend","timestamp":"2026-03-30 16:13:57.531"}
+{"context":"AuthService","level":"info","message":"User registered: new@example.com","service":"mrrm-backend","timestamp":"2026-03-30 16:18:11.244"}
+{"context":"PermissionsService","level":"error","message":"Failed to seed permissions","service":"mrrm-backend","timestamp":"2026-03-30 16:26:56.266","trace":"TypeError: this.prisma.permission.createMany is not a function\n    at PermissionsService.seedDefaultPermissions (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/src/auth/permissions/permissions.service.ts:101:36)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at Object.<anonymous> (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/src/auth/permissions/permissions.service.spec.ts:88:7)"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (1)","service":"mrrm-backend","timestamp":"2026-03-30 16:26:56.284"}
+{"context":"RolesService","level":"info","message":"Role created: DOCTOR","service":"mrrm-backend","timestamp":"2026-03-30 16:26:56.281"}
+{"context":"RolesService","level":"info","message":"Role updated: ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:26:56.311"}
+{"context":"PermissionsService","level":"error","message":"Failed to seed permissions","service":"mrrm-backend","timestamp":"2026-03-30 16:27:23.697","trace":"TypeError: this.prisma.permission.createMany is not a function\n    at PermissionsService.seedDefaultPermissions (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/src/auth/permissions/permissions.service.ts:101:36)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at Object.<anonymous> (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/src/auth/permissions/permissions.service.spec.ts:88:7)"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (1)","service":"mrrm-backend","timestamp":"2026-03-30 16:27:23.719"}
+{"context":"RolesService","level":"info","message":"Role created: DOCTOR","service":"mrrm-backend","timestamp":"2026-03-30 16:27:23.775"}
+{"context":"RolesService","level":"info","message":"Role updated: ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:27:23.805"}
+{"context":"RolesService","level":"info","message":"Role deleted: undefined","service":"mrrm-backend","timestamp":"2026-03-30 16:27:23.809"}
+{"context":"PermissionsService","level":"error","message":"Failed to seed permissions","service":"mrrm-backend","timestamp":"2026-03-30 16:51:23.161","trace":"TypeError: this.prisma.permission.createMany is not a function\n    at PermissionsService.seedDefaultPermissions (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/src/auth/permissions/permissions.service.ts:101:36)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at Object.<anonymous> (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/src/auth/permissions/permissions.service.spec.ts:88:7)"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (1)","service":"mrrm-backend","timestamp":"2026-03-30 16:51:23.182"}
+{"context":"RolesService","level":"info","message":"Role created: DOCTOR","service":"mrrm-backend","timestamp":"2026-03-30 16:51:23.145"}
+{"context":"RolesService","level":"info","message":"Role updated: ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:51:23.180"}
+{"context":"RolesService","level":"info","message":"Role deleted: undefined","service":"mrrm-backend","timestamp":"2026-03-30 16:51:23.188"}
+{"context":"PatientsService","level":"info","message":"Patient created: uuid-1 (Zhang Wei)","service":"mrrm-backend","timestamp":"2026-03-30 16:51:56.035"}
+{"context":"PatientsService","level":"info","message":"Patient created: uuid-2 (Li Ming)","service":"mrrm-backend","timestamp":"2026-03-30 16:51:56.054"}
+{"context":"PatientsService","level":"info","message":"Patient updated: uuid-1","service":"mrrm-backend","timestamp":"2026-03-30 16:51:56.067"}
+{"context":"PatientsService","level":"info","message":"Patient soft-deleted: uuid-1","service":"mrrm-backend","timestamp":"2026-03-30 16:51:56.070"}
+{"context":"PatientsService","level":"info","message":"Patient created: uuid-1 (Zhang Wei)","service":"mrrm-backend","timestamp":"2026-03-30 16:52:19.036"}
+{"context":"PatientsService","level":"info","message":"Patient created: uuid-2 (Li Ming)","service":"mrrm-backend","timestamp":"2026-03-30 16:52:19.048"}
+{"context":"PatientsService","level":"info","message":"Patient updated: uuid-1","service":"mrrm-backend","timestamp":"2026-03-30 16:52:19.060"}
+{"context":"PatientsService","level":"info","message":"Patient soft-deleted: uuid-1","service":"mrrm-backend","timestamp":"2026-03-30 16:52:19.063"}
+{"context":"PermissionsService","level":"error","message":"Failed to seed permissions","service":"mrrm-backend","timestamp":"2026-03-30 16:52:24.271","trace":"TypeError: this.prisma.permission.createMany is not a function\n    at PermissionsService.seedDefaultPermissions (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/src/auth/permissions/permissions.service.ts:101:36)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at Object.<anonymous> (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/src/auth/permissions/permissions.service.spec.ts:88:7)"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (1)","service":"mrrm-backend","timestamp":"2026-03-30 16:52:24.294"}
+{"context":"RolesService","level":"info","message":"Role created: DOCTOR","service":"mrrm-backend","timestamp":"2026-03-30 16:52:24.599"}
+{"context":"RolesService","level":"info","message":"Role updated: ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:52:24.636"}
+{"context":"RolesService","level":"info","message":"Role deleted: TEST","service":"mrrm-backend","timestamp":"2026-03-30 16:52:24.644"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:52:24.657"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:52:24.658"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:52:24.659"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:52:24.659"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:52:24.660"}
+{"context":"PermissionsService","level":"error","message":"Failed to seed permissions","service":"mrrm-backend","timestamp":"2026-03-30 16:53:12.737","trace":"TypeError: this.prisma.permission.createMany is not a function\n    at PermissionsService.seedDefaultPermissions (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/src/auth/permissions/permissions.service.ts:101:36)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at Object.<anonymous> (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/src/auth/permissions/permissions.service.spec.ts:88:7)"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (1)","service":"mrrm-backend","timestamp":"2026-03-30 16:53:12.754"}
+{"context":"RolesService","level":"info","message":"Role created: DOCTOR","service":"mrrm-backend","timestamp":"2026-03-30 16:53:12.846"}
+{"context":"RolesService","level":"info","message":"Role updated: undefined","service":"mrrm-backend","timestamp":"2026-03-30 16:53:12.875"}
+{"context":"RolesService","level":"info","message":"Role deleted: TEST","service":"mrrm-backend","timestamp":"2026-03-30 16:53:12.879"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:53:12.893"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:53:12.894"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:53:12.895"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:53:12.896"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:53:12.896"}
+{"context":"PermissionsService","level":"error","message":"Failed to seed permissions","service":"mrrm-backend","timestamp":"2026-03-30 16:53:48.423","trace":"TypeError: this.prisma.permission.createMany is not a function\n    at PermissionsService.seedDefaultPermissions (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/src/auth/permissions/permissions.service.ts:101:36)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at Object.<anonymous> (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/src/auth/permissions/permissions.service.spec.ts:88:7)"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (1)","service":"mrrm-backend","timestamp":"2026-03-30 16:53:48.442"}
+{"context":"RolesService","level":"info","message":"Role created: DOCTOR","service":"mrrm-backend","timestamp":"2026-03-30 16:53:48.409"}
+{"context":"RolesService","level":"info","message":"Role updated: undefined","service":"mrrm-backend","timestamp":"2026-03-30 16:53:48.429"}
+{"context":"RolesService","level":"info","message":"Role deleted: TEST","service":"mrrm-backend","timestamp":"2026-03-30 16:53:48.434"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:53:48.456"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:53:48.457"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:53:48.458"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:53:48.458"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:53:48.459"}
+{"context":"PermissionsService","level":"error","message":"Failed to seed permissions","service":"mrrm-backend","timestamp":"2026-03-30 16:53:55.511","trace":"TypeError: this.prisma.permission.createMany is not a function\n    at PermissionsService.seedDefaultPermissions (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/src/auth/permissions/permissions.service.ts:101:36)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at Object.<anonymous> (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/src/auth/permissions/permissions.service.spec.ts:88:7)"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (1)","service":"mrrm-backend","timestamp":"2026-03-30 16:53:55.528"}
+{"context":"RolesService","level":"info","message":"Role created: DOCTOR","service":"mrrm-backend","timestamp":"2026-03-30 16:53:55.503"}
+{"context":"RolesService","level":"info","message":"Role updated: undefined","service":"mrrm-backend","timestamp":"2026-03-30 16:53:55.521"}
+{"context":"RolesService","level":"info","message":"Role deleted: TEST","service":"mrrm-backend","timestamp":"2026-03-30 16:53:55.525"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:53:55.543"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:53:55.544"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:53:55.544"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:53:55.545"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:53:55.546"}
+{"context":"RolesService","level":"info","message":"Role created: DOCTOR","service":"mrrm-backend","timestamp":"2026-03-30 16:54:31.185"}
+{"context":"RolesService","level":"info","message":"Role updated: undefined","service":"mrrm-backend","timestamp":"2026-03-30 16:54:31.213"}
+{"context":"RolesService","level":"info","message":"Role deleted: TEST","service":"mrrm-backend","timestamp":"2026-03-30 16:54:31.226"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:54:31.246"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:54:31.247"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:54:31.247"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:54:31.248"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 16:54:31.249"}
+{"context":"PermissionsService","level":"info","message":"Seeded 38 default permissions","service":"mrrm-backend","timestamp":"2026-03-30 16:54:31.237"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (1)","service":"mrrm-backend","timestamp":"2026-03-30 16:54:31.254"}
+{"context":"PatientsService","level":"info","message":"Patient created: uuid-1 (Zhang Wei)","service":"mrrm-backend","timestamp":"2026-03-30 16:58:07.239"}
+{"context":"PatientsService","level":"info","message":"Patient created: uuid-2 (Li Ming)","service":"mrrm-backend","timestamp":"2026-03-30 16:58:07.248"}
+{"context":"PatientsService","level":"info","message":"Patient updated: uuid-1","service":"mrrm-backend","timestamp":"2026-03-30 16:58:07.259"}
+{"context":"PatientsService","level":"info","message":"Patient soft-deleted: uuid-1","service":"mrrm-backend","timestamp":"2026-03-30 16:58:07.261"}
+{"context":"PermissionsService","level":"info","message":"Seeded 38 default permissions","service":"mrrm-backend","timestamp":"2026-03-30 17:00:37.469"}
+{"context":"RolesService","level":"info","message":"Role created: DOCTOR","service":"mrrm-backend","timestamp":"2026-03-30 17:00:37.464"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (1)","service":"mrrm-backend","timestamp":"2026-03-30 17:00:37.488"}
+{"context":"RolesService","level":"info","message":"Role updated: undefined","service":"mrrm-backend","timestamp":"2026-03-30 17:00:37.486"}
+{"context":"RolesService","level":"info","message":"Role deleted: TEST","service":"mrrm-backend","timestamp":"2026-03-30 17:00:37.491"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 17:00:37.512"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 17:00:37.513"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 17:00:37.514"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 17:00:37.514"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 17:00:37.515"}
+{"context":"PatientsService","level":"info","message":"Patient created: uuid-2 (Li Ming)","service":"mrrm-backend","timestamp":"2026-03-30 17:00:37.546"}
+{"context":"PatientsService","level":"info","message":"Patient created: uuid-1 (Zhang Wei)","service":"mrrm-backend","timestamp":"2026-03-30 17:00:37.522"}
+{"context":"PatientsService","level":"info","message":"Patient updated: uuid-1","service":"mrrm-backend","timestamp":"2026-03-30 17:00:37.561"}
+{"context":"PatientsService","level":"info","message":"Patient soft-deleted: uuid-1","service":"mrrm-backend","timestamp":"2026-03-30 17:00:37.565"}
+{"context":"AuthService","level":"info","message":"User registered: new@example.com","service":"mrrm-backend","timestamp":"2026-03-30 17:00:38.453"}
+{"context":"PermissionsService","level":"info","message":"Seeded 38 default permissions","service":"mrrm-backend","timestamp":"2026-03-30 17:03:16.048"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (1)","service":"mrrm-backend","timestamp":"2026-03-30 17:03:16.067"}
+{"context":"RolesService","level":"info","message":"Role created: DOCTOR","service":"mrrm-backend","timestamp":"2026-03-30 17:03:16.045"}
+{"context":"RolesService","level":"info","message":"Role updated: undefined","service":"mrrm-backend","timestamp":"2026-03-30 17:03:16.068"}
+{"context":"RolesService","level":"info","message":"Role deleted: TEST","service":"mrrm-backend","timestamp":"2026-03-30 17:03:16.072"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 17:03:16.092"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 17:03:16.094"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 17:03:16.094"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 17:03:16.095"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-03-30 17:03:16.096"}
+{"context":"AuthService","level":"info","message":"User registered: new@example.com","service":"mrrm-backend","timestamp":"2026-03-30 17:03:16.103"}
+{"context":"PatientsService","level":"info","message":"Patient created: uuid-1 (Zhang Wei)","service":"mrrm-backend","timestamp":"2026-03-30 17:03:16.102"}
+{"context":"PatientsService","level":"info","message":"Patient created: uuid-2 (Li Ming)","service":"mrrm-backend","timestamp":"2026-03-30 17:03:16.126"}
+{"context":"PatientsService","level":"info","message":"Patient updated: uuid-1","service":"mrrm-backend","timestamp":"2026-03-30 17:03:16.140"}
+{"context":"PatientsService","level":"info","message":"Patient soft-deleted: uuid-1","service":"mrrm-backend","timestamp":"2026-03-30 17:03:16.144"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.574"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.605"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.609"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.615"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.621"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.625"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.628"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.645"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.598"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.606"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.611"}
+{"context":"TenantMiddleware","level":"debug","message":"Tenant filter applied: model=User, action=findMany, orgId=org-1","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.612"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.625"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.622"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.646"}
+{"context":"TenantMiddleware","level":"debug","message":"Tenant filter applied: model=User, action=findMany, orgId=org-1","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.647"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.616"}
+{"context":"TenantMiddleware","level":"debug","message":"Tenant filter applied: model=Patient, action=findMany, orgId=org-1","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.617"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.629"}
+{"context":"TenantMiddleware","level":"debug","message":"Tenant filter applied: model=User, action=findMany, orgId=org-1","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.629"}
+{"context":"PermissionsService","level":"info","message":"Seeded 38 default permissions","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.858"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (1)","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.876"}
+{"context":"RolesService","level":"info","message":"Role created: DOCTOR","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.916"}
+{"context":"RolesService","level":"info","message":"Role updated: undefined","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.935"}
+{"context":"RolesService","level":"info","message":"Role deleted: TEST","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.939"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.963"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.965"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.965"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.966"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-04 11:28:18.967"}
+{"context":"PatientsService","level":"info","message":"Patient created: uuid-1 (Zhang Wei)","service":"mrrm-backend","timestamp":"2026-04-04 11:28:19.135"}
+{"context":"PatientsService","level":"info","message":"Patient created: uuid-2 (Li Ming)","service":"mrrm-backend","timestamp":"2026-04-04 11:28:19.156"}
+{"context":"PatientsService","level":"info","message":"Patient updated: uuid-1","service":"mrrm-backend","timestamp":"2026-04-04 11:28:19.173"}
+{"context":"PatientsService","level":"info","message":"Patient soft-deleted: uuid-1","service":"mrrm-backend","timestamp":"2026-04-04 11:28:19.177"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.092"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.119"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.123"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.129"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.134"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.138"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.143"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.151"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.113"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.120"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.124"}
+{"context":"TenantMiddleware","level":"debug","message":"Tenant filter applied: model=User, action=findMany, orgId=org-1","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.126"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.130"}
+{"context":"TenantMiddleware","level":"debug","message":"Tenant filter applied: model=Patient, action=findMany, orgId=org-1","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.132"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.135"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.139"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.148"}
+{"context":"TenantMiddleware","level":"debug","message":"Tenant filter applied: model=User, action=findMany, orgId=org-1","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.149"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.153"}
+{"context":"TenantMiddleware","level":"debug","message":"Tenant filter applied: model=User, action=findMany, orgId=org-1","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.153"}
+{"context":"PermissionsService","level":"info","message":"Seeded 38 default permissions","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.230"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (1)","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.254"}
+{"context":"RolesService","level":"info","message":"Role created: DOCTOR","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.227"}
+{"context":"RolesService","level":"info","message":"Role updated: undefined","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.256"}
+{"context":"RolesService","level":"info","message":"Role deleted: TEST","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.262"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.289"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.290"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.291"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.292"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.293"}
+{"context":"PatientsService","level":"info","message":"Patient created: uuid-1 (Zhang Wei)","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.303"}
+{"context":"PatientsService","level":"info","message":"Patient created: uuid-2 (Li Ming)","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.333"}
+{"context":"PatientsService","level":"info","message":"Patient updated: uuid-1","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.349"}
+{"context":"PatientsService","level":"info","message":"Patient soft-deleted: uuid-1","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.353"}
+{"context":"AuditService","level":"error","message":"Failed to write audit log","service":"mrrm-backend","timestamp":"2026-04-04 11:29:42.525","trace":"Error: DB error\n    at Object.<anonymous> (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/src/audit/audit.service.spec.ts:128:67)\n    at Promise.then.completed (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/utils.js:298:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/utils.js:231:10)\n    at _callCircusTest (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:316:40)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at _runTest (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:252:3)\n    at _runTestsForDescribeBlock (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:126:9)\n    at _runTestsForDescribeBlock (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:121:9)\n    at _runTestsForDescribeBlock (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:121:9)\n    at run (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:71:3)\n    at runAndTransformResultsToJestFormat (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)\n    at jestAdapter (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)\n    at runTestInternal (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-runner/build/runTest.js:367:16)\n    at runTest (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-runner/build/runTest.js:444:34)\n    at Object.worker (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-runner/build/testWorker.js:106:12)"}

@@ -1,4 +1,4 @@
-import { Injectable, ExecutionContext } from '@nestjs/common';
+import { Injectable, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthContext } from '../../common/auth/auth-context';
 
@@ -10,7 +10,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
   handleRequest(err: any, user: any, _info: any, context: ExecutionContext) {
     if (err || !user) {
-      throw err || new Error('Unauthorized');
+      throw err || new UnauthorizedException('Unauthorized');
     }
 
     // Set AuthContext for tenant middleware

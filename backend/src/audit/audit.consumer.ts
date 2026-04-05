@@ -27,8 +27,18 @@ export class AuditConsumer implements OnModuleInit {
       this.connection = await amqp.connect(url);
       this.channel = await this.connection.createChannel();
 
-      // Ensure queue exists
-      await this.channel.assertQueue(this.AUDIT_QUEUE, { durable: true });
+      // Ensure queue exists (delete first to handle stale args from previous runs)
+      try {
+        await this.channel.deleteQueue(this.AUDIT_QUEUE);
+      } catch {
+        // Queue may not exist, ignore
+      }
+      await this.channel.assertQueue(this.AUDIT_QUEUE, {
+        durable: true,
+        arguments: {
+          'x-message-ttl': 31536000000, // 1 year in ms
+        },
+      });
 
       // Set prefetch to process one message at a time
       await this.channel.prefetch(1);

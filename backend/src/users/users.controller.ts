@@ -2,15 +2,18 @@ import { Controller, Get, Post, Put, Delete, Body, Param, Query, UseGuards, Requ
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
+import { Permissions } from '../auth/decorators/permissions.decorator';
 
 @ApiTags('users')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Get()
+  @Permissions('user:read')
   @ApiOperation({ summary: 'Get all users for organization' })
   async findAll(
     @Request() req: any,
@@ -27,6 +30,7 @@ export class UsersController {
   }
 
   @Post()
+  @Permissions('user:create')
   @ApiOperation({ summary: 'Create new user' })
   async create(@Body() data: any, @Request() req: any) {
     return this.usersService.create({

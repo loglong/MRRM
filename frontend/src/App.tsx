@@ -11,6 +11,7 @@ import PathsPage from './pages/PathsPage';
 import TouchpointsPage from './pages/TouchpointsPage';
 import FollowupsPage from './pages/FollowupsPage';
 import ReportsPage from './pages/ReportsPage';
+import ExperiencePage from './pages/ExperiencePage';
 import AdminPage from './pages/AdminPage';
 import RolesPage from './pages/admin/RolesPage';
 import PermissionsPage from './pages/admin/PermissionsPage';
@@ -59,6 +60,7 @@ function App() {
           <Route path="touchpoints" element={<TouchpointsPage />} />
           <Route path="followups" element={<FollowupsPage />} />
           <Route path="reports" element={<ReportsPage />} />
+          <Route path="experience" element={<ExperiencePage />} />
           <Route path="admin" element={<AdminPage />} />
           <Route path="admin/roles" element={<RolesPage />} />
           <Route path="admin/permissions" element={<PermissionsPage />} />

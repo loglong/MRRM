@@ -15,7 +15,7 @@ import { CreatePatientDtoType } from './dto/create-patient.dto';
 import { UpdatePatientDtoType } from './dto/update-patient.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
-@Controller('api/v1/patients')
+@Controller('patients')
 @UseGuards(JwtAuthGuard)
 export class PatientsController {
   constructor(private readonly patientsService: PatientsService) {}

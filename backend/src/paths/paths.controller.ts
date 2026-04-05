@@ -18,7 +18,7 @@ import { AssignPathDtoType } from './dto/assign-path.dto';
 import { CompleteStepDtoType, SkipStepDtoType } from './dto/complete-step.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
-@Controller('api/v1')
+@Controller('')
 @UseGuards(JwtAuthGuard)
 export class PathsController {
   constructor(private readonly pathsService: PathsService) {}

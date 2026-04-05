@@ -13,6 +13,7 @@ import {
 } from 'antd';
 import { PlusOutlined, EditOutlined, DownOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
+import { useTranslation } from 'react-i18next';
 import { usersApi, type User, type CreateUserDto } from '../../api/users';
 
 interface UserFormValues {
@@ -24,6 +25,7 @@ interface UserFormValues {
 }
 
 export default function UsersPage() {
+  const { t } = useTranslation();
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({ page: 1, limit: 20, total: 0 });
@@ -38,7 +40,7 @@ export default function UsersPage() {
       setUsers(data.data);
       setPagination((prev) => ({ ...prev, ...data.pagination, page }));
     } catch {
-      message.error('Failed to load users');
+      message.error(t('common.error') || 'Failed to load users');
     } finally {
       setLoading(false);
     }
@@ -66,20 +68,20 @@ export default function UsersPage() {
   const handleDelete = async (userId: string) => {
     try {
       await usersApi.delete(userId);
-      message.success('User deactivated');
+      message.success(t('users.deactivated') || 'User deactivated');
       loadUsers(pagination.page);
     } catch (error: any) {
-      message.error(error?.response?.data?.message || 'Failed to delete user');
+      message.error(error?.response?.data?.message || t('common.error'));
     }
   };
 
   const handleChangeStatus = async (userId: string, status: 'ACTIVE' | 'INACTIVE') => {
     try {
       await usersApi.changeStatus(userId, status);
-      message.success(`User ${status === 'ACTIVE' ? 'activated' : 'deactivated'}`);
+      message.success(status === 'ACTIVE' ? t('users.activated') : t('users.deactivated'));
       loadUsers(pagination.page);
     } catch (error: any) {
-      message.error(error?.response?.data?.message || 'Failed to change status');
+      message.error(error?.response?.data?.message || t('common.error'));
     }
   };
 
@@ -95,17 +97,17 @@ export default function UsersPage() {
 
       if (editingUser) {
         await usersApi.update(editingUser.id, payload);
-        message.success('User updated');
+        message.success(t('common.success'));
       } else {
         await usersApi.create(payload);
-        message.success('User created');
+        message.success(t('common.success'));
       }
 
       setModalVisible(false);
       loadUsers(pagination.page);
     } catch (error: any) {
       if (!error?.errorFields) {
-        message.error(error?.response?.data?.message || 'Failed to save user');
+        message.error(error?.response?.data?.message || t('common.error'));
       }
     }
   };
@@ -122,31 +124,31 @@ export default function UsersPage() {
 
   const columns: ColumnsType<User> = [
     {
-      title: 'Name',
+      title: t('common.name'),
       dataIndex: 'name',
       key: 'name',
     },
     {
-      title: 'Email',
+      title: t('common.email'),
       dataIndex: 'email',
       key: 'email',
     },
     {
-      title: 'Phone',
+      title: t('patients.phone') || 'Phone',
       dataIndex: 'phone',
       key: 'phone',
     },
     {
-      title: 'Roles',
+      title: t('roles.title'),
       dataIndex: 'roles',
       key: 'roles',
       render: (roles: User['roles']) =>
         roles && roles.length > 0
           ? roles.map((r) => <Tag key={r.role.id}>{r.role.name}</Tag>)
-          : <span style={{ color: '#999' }}>No role</span>,
+          : <span style={{ color: '#999' }}>{t('users.noRole') || 'No role'}</span>,
     },
     {
-      title: 'Status',
+      title: t('common.status'),
       dataIndex: 'status',
       key: 'status',
       render: (status: string) => (
@@ -154,14 +156,14 @@ export default function UsersPage() {
       ),
     },
     {
-      title: 'Last Login',
+      title: t('users.lastLogin') || 'Last Login',
       dataIndex: 'lastLoginAt',
       key: 'lastLoginAt',
       render: (date: string) =>
-        date ? new Date(date).toLocaleDateString() : <span style={{ color: '#999' }}>Never</span>,
+        date ? new Date(date).toLocaleDateString() : <span style={{ color: '#999' }}>{t('users.never') || 'Never'}</span>,
     },
     {
-      title: 'Actions',
+      title: t('common.actions'),
       key: 'actions',
       width: 120,
       render: (_: any, user: User) => (
@@ -173,13 +175,13 @@ export default function UsersPage() {
               items: [
                 {
                   key: 'activate',
-                  label: 'Activate',
+                  label: t('users.activate') || 'Activate',
                   disabled: user.status === 'ACTIVE',
                   onClick: () => handleChangeStatus(user.id, 'ACTIVE'),
                 },
                 {
                   key: 'deactivate',
-                  label: 'Deactivate',
+                  label: t('users.deactivate') || 'Deactivate',
                   disabled: user.status === 'INACTIVE',
                   onClick: () => handleChangeStatus(user.id, 'INACTIVE'),
                 },
@@ -188,15 +190,15 @@ export default function UsersPage() {
                   key: 'delete',
                   label: (
                     <Popconfirm
-                      title="Deactivate this user?"
-                      description="The user will not be able to log in."
+                      title={t('users.deactivateConfirm') || 'Deactivate this user?'}
+                      description={t('users.deactivateDesc') || 'The user will not be able to log in.'}
                       onConfirm={(e) => e?.stopPropagation()}
                       onCancel={(e) => e?.stopPropagation()}
-                      okText="Deactivate"
+                      okText={t('users.deactivate') || 'Deactivate'}
                       okButtonProps={{ danger: true }}
                     >
                       <span onClick={(e) => { e?.stopPropagation(); handleDelete(user.id); }}>
-                        Deactivate
+                        {t('users.deactivate') || 'Deactivate'}
                       </span>
                     </Popconfirm>
                   ),
@@ -215,9 +217,9 @@ export default function UsersPage() {
   return (
     <div style={{ padding: 24 }}>
       <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2>User Management</h2>
+        <h2>{t('users.title')}</h2>
         <Button type="primary" icon={<PlusOutlined />} onClick={handleCreate}>
-          Add User
+          {t('users.addUser')}
         </Button>
       </div>
 
@@ -235,20 +237,20 @@ export default function UsersPage() {
       />
 
       <Modal
-        title={editingUser ? 'Edit User' : 'Create User'}
+        title={editingUser ? t('users.editUser') : t('users.addUser')}
         open={modalVisible}
         onOk={handleSubmit}
         onCancel={() => setModalVisible(false)}
         width={500}
-        okText={editingUser ? 'Update' : 'Create'}
+        okText={editingUser ? t('common.save') : t('users.createUser')}
       >
         <Form form={form} layout="vertical">
           <Form.Item
             name="email"
-            label="Email"
+            label={t('common.email')}
             rules={[
-              { required: true, message: 'Please enter email' },
-              { type: 'email', message: 'Please enter a valid email' },
+              { required: true, message: t('users.enterEmail') || 'Please enter email' },
+              { type: 'email', message: t('users.validEmail') || 'Please enter a valid email' },
             ]}
           >
             <Input placeholder="user@example.com" disabled={!!editingUser} />
@@ -257,25 +259,25 @@ export default function UsersPage() {
           {!editingUser && (
             <Form.Item
               name="password"
-              label="Password"
+              label={t('common.password')}
               rules={[
-                { required: true, message: 'Please enter password' },
-                { min: 8, message: 'Password must be at least 8 characters' },
+                { required: true, message: t('users.enterPassword') || 'Please enter password' },
+                { min: 8, message: t('users.passwordMin') || 'Password must be at least 8 characters' },
               ]}
             >
-              <Input.Password placeholder="Min 8 characters" />
+              <Input.Password placeholder={t('users.passwordMin') || 'Min 8 characters'} />
             </Form.Item>
           )}
 
           <Form.Item
             name="name"
-            label="Full Name"
-            rules={[{ required: true, message: 'Please enter name' }]}
+            label={t('users.fullName') || 'Full Name'}
+            rules={[{ required: true, message: t('users.enterName') || 'Please enter name' }]}
           >
             <Input placeholder="John Doe" />
           </Form.Item>
 
-          <Form.Item name="phone" label="Phone">
+          <Form.Item name="phone" label={t('patients.phone') || 'Phone'}>
             <Input placeholder="+86 138 0000 0000" />
           </Form.Item>
         </Form>

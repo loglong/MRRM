@@ -61,14 +61,21 @@ export class TenantMiddleware implements OnModuleInit {
   }
 
   private addTenantFilter(params: Prisma.MiddlewareParams, next: Function, orgId: string): Promise<any> {
-    // Modify WHERE clause to include orgId
-    if (params.args.where) {
-      // If where already has orgId, keep it (don't override user-specified filter)
-      // But ensure it matches the current user's org
-      params.args.where.orgId = orgId;
-    } else {
-      params.args.where = { orgId };
+    // Only add orgId filter for read operations that support WHERE clause
+    const readActions = ['findMany', 'findFirst', 'findUnique', 'count', 'updateMany', 'deleteMany'];
+
+    if (readActions.includes(params.action)) {
+      if (params.args.where) {
+        // If where already has orgId, keep it (don't override user-specified filter)
+        // But ensure it matches the current user's org
+        params.args.where.orgId = orgId;
+      } else {
+        params.args.where = { orgId };
+      }
     }
+
+    // For create/update - the orgId should come from the data payload, not the query
+    // Skip for create as Prisma doesn't support where clause in create
 
     // Log in development
     if (process.env.NODE_ENV !== 'production') {

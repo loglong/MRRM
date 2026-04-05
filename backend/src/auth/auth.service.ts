@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import { Auth0Client } from './auth0.client';
 import { Logger } from '../common/logger';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { LoginDto, RegisterDto } from './dto';
 import { LockedException } from './exceptions/locked.exception';
 
@@ -38,6 +38,11 @@ export class AuthService {
     // Check if user is locked
     if (user.lockedUntil && user.lockedUntil > new Date()) {
       throw new LockedException(user.lockedUntil);
+    }
+
+    // Check if user is inactive
+    if (user.status === 'INACTIVE') {
+      throw new UnauthorizedException('User account is inactive');
     }
 
     // Verify password

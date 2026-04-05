@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Table, Input, Tag, Space, Card } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import { useTranslation } from 'react-i18next';
 import { permissionsApi, type Permission } from '../../api/permissions';
 
 const { Search } = Input;
 
 export default function PermissionsPage() {
+  const { t } = useTranslation();
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [loading, setLoading] = useState(false);
   const [searchText, setSearchText] = useState('');
@@ -40,18 +42,18 @@ export default function PermissionsPage() {
 
   const columns: ColumnsType<Permission> = [
     {
-      title: 'Code',
+      title: t('common.code'),
       dataIndex: 'code',
       key: 'code',
       render: (code: string) => <Tag>{code}</Tag>,
     },
     {
-      title: 'Name',
+      title: t('common.name'),
       dataIndex: 'name',
       key: 'name',
     },
     {
-      title: 'Type',
+      title: t('common.type'),
       dataIndex: 'type',
       key: 'type',
       render: (type: string) => {
@@ -60,7 +62,7 @@ export default function PermissionsPage() {
       },
     },
     {
-      title: 'Menu Path',
+      title: t('permissions.menuPath'),
       dataIndex: 'menuPath',
       key: 'menuPath',
       render: (path: string | undefined) =>
@@ -71,16 +73,16 @@ export default function PermissionsPage() {
   return (
     <div style={{ padding: 24 }}>
       <div style={{ marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2>Permissions Reference</h2>
+        <h2>{t('permissions.title')}</h2>
         <Search
-          placeholder="Search by code or name"
+          placeholder={t('permissions.searchPlaceholder') || 'Search by code or name'}
           onChange={(e) => setSearchText(e.target.value)}
           style={{ width: 300 }}
         />
       </div>
 
       <Space direction="vertical" style={{ width: '100%' }} size="large">
-        <Card title="Menu Permissions" size="small">
+        <Card title={t('permissions.menuPermissions') || 'Menu Permissions'} size="small">
           <Table
             columns={columns}
             dataSource={groupedPermissions.MENU}
@@ -91,7 +93,7 @@ export default function PermissionsPage() {
           />
         </Card>
 
-        <Card title="Button Permissions" size="small">
+        <Card title={t('permissions.buttonPermissions') || 'Button Permissions'} size="small">
           <Table
             columns={columns}
             dataSource={groupedPermissions.BUTTON}
@@ -103,7 +105,7 @@ export default function PermissionsPage() {
         </Card>
 
         {groupedPermissions.API.length > 0 && (
-          <Card title="API Permissions" size="small">
+          <Card title={t('permissions.apiPermissions') || 'API Permissions'} size="small">
             <Table
               columns={columns}
               dataSource={groupedPermissions.API}

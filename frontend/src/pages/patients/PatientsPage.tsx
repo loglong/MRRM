@@ -3,6 +3,7 @@ import { Table, Tag, Space, Button, Input, Card, Select, Typography, message, Po
 import { PlusOutlined, EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { patientsApi, Patient } from '@/api/patients';
 import PatientFormModal from './PatientFormModal';
 
@@ -15,12 +16,6 @@ const tierColors: Record<string, string> = {
   LOST_RISK: 'red',
 };
 
-const tierLabels: Record<string, string> = {
-  HIGH_VALUE: '高价值',
-  REGULAR: '普通',
-  LOST_RISK: '流失风险',
-};
-
 const statusColors: Record<string, string> = {
   ACTIVE: 'green',
   INACTIVE: 'orange',
@@ -29,6 +24,7 @@ const statusColors: Record<string, string> = {
 };
 
 export default function PatientsPage() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [loading, setLoading] = useState(false);
@@ -38,6 +34,19 @@ export default function PatientsPage() {
   const [stats, setStats] = useState({ total: 0, byTier: { HIGH_VALUE: 0, REGULAR: 0, LOST_RISK: 0 } });
   const [modalVisible, setModalVisible] = useState(false);
   const [editingPatient, setEditingPatient] = useState<Patient | null>(null);
+
+  const tierLabels: Record<string, string> = {
+    HIGH_VALUE: t('patients.highValue') || '高价值',
+    REGULAR: t('patients.regular') || '普通',
+    LOST_RISK: t('patients.lostRisk') || '流失风险',
+  };
+
+  const genderLabels: Record<string, string> = {
+    MALE: t('patients.male') || '男',
+    FEMALE: t('patients.female') || '女',
+    OTHER: t('patients.other') || '其他',
+    UNKNOWN: t('patients.unknown') || '未知',
+  };
 
   const fetchPatients = async () => {
     setLoading(true);
@@ -51,7 +60,7 @@ export default function PatientsPage() {
       setPatients(response.data);
       setPagination((prev) => ({ ...prev, total: response.pagination.total }));
     } catch (error) {
-      message.error('Failed to fetch patients');
+      message.error(t('common.error') || 'Failed to fetch patients');
     } finally {
       setLoading(false);
     }
@@ -105,11 +114,11 @@ export default function PatientsPage() {
   const handleDelete = async (id: string) => {
     try {
       await patientsApi.delete(id);
-      message.success('Patient deleted successfully');
+      message.success(t('common.success') || 'Patient deleted successfully');
       fetchPatients();
       fetchStats();
     } catch (error) {
-      message.error('Failed to delete patient');
+      message.error(t('common.error') || 'Failed to delete patient');
     }
   };
 
@@ -122,28 +131,25 @@ export default function PatientsPage() {
 
   const columns: ColumnsType<Patient> = [
     {
-      title: 'Name',
+      title: t('common.name') || 'Name',
       dataIndex: 'name',
       key: 'name',
       render: (name: string) => <Text strong>{name}</Text>,
     },
     {
-      title: 'Phone',
+      title: t('patients.phone') || 'Phone',
       dataIndex: 'phone',
       key: 'phone',
       render: (phone: string | null) => phone || '-',
     },
     {
-      title: 'Gender',
+      title: t('patients.gender') || 'Gender',
       dataIndex: 'gender',
       key: 'gender',
-      render: (gender: string | null) => {
-        const labels: Record<string, string> = { MALE: 'Male', FEMALE: 'Female', OTHER: 'Other', UNKNOWN: 'Unknown' };
-        return labels[gender || 'UNKNOWN'] || '-';
-      },
+      render: (gender: string | null) => genderLabels[gender || 'UNKNOWN'] || '-',
     },
     {
-      title: 'Tier',
+      title: t('patients.tier') || 'Tier',
       dataIndex: 'tier',
       key: 'tier',
       render: (tier: string) => (
@@ -151,19 +157,19 @@ export default function PatientsPage() {
       ),
     },
     {
-      title: 'Status',
+      title: t('common.status') || 'Status',
       dataIndex: 'status',
       key: 'status',
       render: (status: string) => <Tag color={statusColors[status]}>{status}</Tag>,
     },
     {
-      title: 'Created',
+      title: t('common.createTime') || 'Created',
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (date: string) => new Date(date).toLocaleDateString(),
     },
     {
-      title: 'Action',
+      title: t('common.actions') || 'Action',
       key: 'action',
       render: (_: any, record: Patient) => (
         <Space size="small">
@@ -180,11 +186,11 @@ export default function PatientsPage() {
             onClick={() => handleEdit(record)}
           />
           <Popconfirm
-            title="Delete patient"
-            description="Are you sure you want to delete this patient?"
+            title={t('patients.deleteConfirmTitle') || 'Delete patient'}
+            description={t('patients.deleteConfirm') || 'Are you sure you want to delete this patient?'}
             onConfirm={() => handleDelete(record.id)}
-            okText="Yes"
-            cancelText="No"
+            okText={t('common.confirm') || 'Yes'}
+            cancelText={t('common.cancel') || 'No'}
           >
             <Button type="text" size="small" danger icon={<DeleteOutlined />} />
           </Popconfirm>
@@ -196,25 +202,25 @@ export default function PatientsPage() {
   return (
     <div style={{ padding: 24 }}>
       <div style={{ marginBottom: 24 }}>
-        <Title level={4} style={{ margin: 0 }}>Patient Management</Title>
+        <Title level={4} style={{ margin: 0 }}>{t('patients.title')}</Title>
       </div>
 
       {/* Stats Cards */}
       <div style={{ display: 'flex', gap: 16, marginBottom: 24 }}>
         <Card size="small" style={{ flex: 1 }}>
-          <Text type="secondary">Total Patients</Text>
+          <Text type="secondary">{t('patients.totalPatients') || 'Total Patients'}</Text>
           <div style={{ fontSize: 24, fontWeight: 600 }}>{stats.total}</div>
         </Card>
         <Card size="small" style={{ flex: 1 }}>
-          <Text type="secondary">High Value</Text>
+          <Text type="secondary">{t('patients.highValue') || 'High Value'}</Text>
           <div style={{ fontSize: 24, fontWeight: 600, color: '#faad14' }}>{stats.byTier.HIGH_VALUE}</div>
         </Card>
         <Card size="small" style={{ flex: 1 }}>
-          <Text type="secondary">Regular</Text>
+          <Text type="secondary">{t('patients.regular') || 'Regular'}</Text>
           <div style={{ fontSize: 24, fontWeight: 600 }}>{stats.byTier.REGULAR}</div>
         </Card>
         <Card size="small" style={{ flex: 1 }}>
-          <Text type="secondary">Lost Risk</Text>
+          <Text type="secondary">{t('patients.lostRisk') || 'Lost Risk'}</Text>
           <div style={{ fontSize: 24, fontWeight: 600, color: '#ff4d4f' }}>{stats.byTier.LOST_RISK}</div>
         </Card>
       </div>
@@ -223,26 +229,26 @@ export default function PatientsPage() {
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
         <Space>
           <Search
-            placeholder="Search by name or phone"
+            placeholder={t('patients.searchPlaceholder') || 'Search by name or phone'}
             onSearch={handleSearch}
             style={{ width: 250 }}
             allowClear
           />
           <Select
-            placeholder="Filter by tier"
+            placeholder={t('patients.filterByTier') || 'Filter by tier'}
             allowClear
             style={{ width: 150 }}
             onChange={handleTierChange}
             options={[
-              { label: 'All Tiers', value: undefined },
-              { label: '高价值', value: 'HIGH_VALUE' },
-              { label: '普通', value: 'REGULAR' },
-              { label: '流失风险', value: 'LOST_RISK' },
+              { label: t('patients.allTiers') || 'All Tiers', value: undefined },
+              { label: t('patients.highValue') || '高价值', value: 'HIGH_VALUE' },
+              { label: t('patients.regular') || '普通', value: 'REGULAR' },
+              { label: t('patients.lostRisk') || '流失风险', value: 'LOST_RISK' },
             ]}
           />
         </Space>
         <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
-          Add Patient
+          {t('patients.addPatient') || 'Add Patient'}
         </Button>
       </div>
 
@@ -255,7 +261,7 @@ export default function PatientsPage() {
         pagination={{
           ...pagination,
           showSizeChanger: true,
-          showTotal: (total) => `Total ${total} patients`,
+          showTotal: (total) => `${t('common.total') || 'Total'} ${total} ${t('patients.title') || 'patients'}`,
         }}
         onChange={handleTableChange}
       />
