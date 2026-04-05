@@ -10,6 +10,7 @@ import { PatientsModule } from './patients/patients.module';
 import { DemandsModule } from './demands/demands.module';
 import { PathsModule } from './paths/paths.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { TouchpointsModule } from './touchpoints/touchpoints.module';
 import { RabbitMQModule } from './rabbitmq/rabbitmq.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { OrgIdMiddleware } from './common/middleware/org-id.middleware';
@@ -31,6 +32,7 @@ import { HealthController } from './health/health.controller';
     DemandsModule,
     PathsModule,
     NotificationsModule,
+    TouchpointsModule,
     RabbitMQModule,
   ],
   controllers: [HealthController],
