@@ -2,8 +2,11 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, Descriptions, Tag, Button, Tabs, Table, Space, Typography, Spin, message } from 'antd';
 import { EditOutlined, ArrowLeftOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 import { patientsApi, Patient } from '@/api/patients';
+import { journeyApi, JourneyEvent } from '@/api/journey';
 import PatientFormModal from './PatientFormModal';
+import PatientTimeline from '@/components/PatientTimeline';
 
 const { Title, Text } = Typography;
 
@@ -27,11 +30,16 @@ const statusColors: Record<string, string> = {
 };
 
 export default function PatientDetailPage() {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [patient, setPatient] = useState<Patient | null>(null);
   const [loading, setLoading] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
+  const [journeyEvents, setJourneyEvents] = useState<JourneyEvent[]>([]);
+  const [journeyLoading, setJourneyLoading] = useState(false);
+  const [journeyPage, setJourneyPage] = useState(1);
+  const [journeyTotalPages, setJourneyTotalPages] = useState(1);
 
   const fetchPatient = async () => {
     if (!id) return;
@@ -49,6 +57,22 @@ export default function PatientDetailPage() {
   useEffect(() => {
     fetchPatient();
   }, [id]);
+
+  useEffect(() => {
+    if (patient?.id) {
+      setJourneyLoading(true);
+      journeyApi.getPatientJourney(patient.id, { page: journeyPage, limit: 50 })
+        .then((data) => {
+          setJourneyEvents(data.events);
+          setJourneyTotalPages(data.pagination.totalPages);
+        })
+        .catch((err) => {
+          console.error('Failed to load journey', err);
+          message.error(t('common.error') || 'Failed to load journey');
+        })
+        .finally(() => setJourneyLoading(false));
+    }
+  }, [patient?.id, journeyPage, t]);
 
   const handleEdit = () => {
     setModalVisible(true);
@@ -156,6 +180,19 @@ export default function PatientDetailPage() {
           rowKey="id"
           pagination={false}
           size="small"
+        />
+      ),
+    },
+    {
+      key: 'journey',
+      label: t('journey.title', 'Journey'),
+      children: (
+        <PatientTimeline
+          events={journeyEvents}
+          loading={journeyLoading}
+          onPageChange={setJourneyPage}
+          currentPage={journeyPage}
+          totalPages={journeyTotalPages}
         />
       ),
     },
