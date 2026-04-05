@@ -253,6 +253,7 @@
     "voidReasonPlaceholder": "Enter void reason (required)",
     "enterVoidReason": "Please enter void reason",
     "content": "Content",
+    "outcome": "Outcome",
     "contentPlaceholder": "Enter touchpoint content/details",
     "durationMinutes": "Duration (minutes)",
     "followupRequired": "Follow-up Required",

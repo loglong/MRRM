@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Modal, Form, Input, Select, DatePicker, Radio, message } from 'antd';
+import { Modal, Form, Input, Select, Radio, message } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { touchpointsApi } from '@/api/touchpoints';
 import { patientsApi } from '@/api/patients';
@@ -54,13 +54,9 @@ export default function TouchpointFormModal({ visible, onOk, onCancel }: Touchpo
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
-      const data = {
-        ...values,
-        followupDate: values.followupDate?.toISOString(),
-      };
 
       setLoading(true);
-      await touchpointsApi.create(data);
+      await touchpointsApi.create(values);
       message.success(t('common.success'));
       form.resetFields();
       onOk();
@@ -124,10 +120,6 @@ export default function TouchpointFormModal({ visible, onOk, onCancel }: Touchpo
           <Input placeholder={t('touchpoints.titlePlaceholder') || 'Enter touchpoint title'} />
         </Form.Item>
 
-        <Form.Item name="content" label={t('touchpoints.content') || 'Content'}>
-          <TextArea rows={4} placeholder={t('touchpoints.contentPlaceholder') || 'Enter touchpoint content/details'} />
-        </Form.Item>
-
         <Form.Item name="sentiment" label={t('touchpoints.sentiment') || 'Sentiment'}>
           <Radio.Group options={sentimentOptions} />
         </Form.Item>
@@ -138,20 +130,6 @@ export default function TouchpointFormModal({ visible, onOk, onCancel }: Touchpo
 
         <Form.Item name="outcome" label={t('touchpoints.outcome') || 'Outcome'}>
           <TextArea rows={2} placeholder={t('touchpoints.outcomePlaceholder') || 'Enter outcome'} />
-        </Form.Item>
-
-        <Form.Item name="followupRequired" label={t('touchpoints.followupRequired') || 'Follow-up Required'} valuePropName="checked">
-          <Radio>{t('common.yes') || 'Yes'}</Radio>
-        </Form.Item>
-
-        <Form.Item noStyle shouldUpdate={(prev, curr) => prev.followupRequired !== curr.followupRequired}>
-          {({ getFieldValue }) =>
-            getFieldValue('followupRequired') && (
-              <Form.Item name="followupDate" label={t('touchpoints.followupDate') || 'Follow-up Date'}>
-                <DatePicker style={{ width: '100%' }} />
-              </Form.Item>
-            )
-          }
         </Form.Item>
       </Form>
     </Modal>
