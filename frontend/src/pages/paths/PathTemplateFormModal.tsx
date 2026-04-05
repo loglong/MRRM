@@ -21,6 +21,9 @@ export default function PathTemplateFormModal({ visible, template, onOk, onCance
         name: template.name,
         description: template.description,
         status: template.status,
+        icd10Code: template.icd10Code,
+        icd9Code: template.icd9Code,
+        diagnosisName: template.diagnosisName,
       });
     } else if (visible) {
       form.resetFields();
@@ -88,6 +91,18 @@ export default function PathTemplateFormModal({ visible, template, onOk, onCance
             <Select.Option value="ACTIVE">{t('paths.active') || 'Active'}</Select.Option>
             <Select.Option value="ARCHIVED">{t('paths.archived') || 'Archived'}</Select.Option>
           </Select>
+        </Form.Item>
+
+        <Form.Item name="diagnosisName" label={t('paths.diagnosisName') || 'Diagnosis Name'}>
+          <Input placeholder={t('paths.diagnosisNamePlaceholder') || 'Enter diagnosis name'} />
+        </Form.Item>
+
+        <Form.Item name="icd10Code" label={t('paths.icd10Code') || 'ICD-10 Code'}>
+          <Input placeholder={t('paths.icd10Placeholder') || 'e.g., K02.3'} />
+        </Form.Item>
+
+        <Form.Item name="icd9Code" label={t('paths.icd9Code') || 'ICD-9 Code'}>
+          <Input placeholder={t('paths.icd9Placeholder') || 'e.g., 521.03'} />
         </Form.Item>
       </Form>
     </Modal>

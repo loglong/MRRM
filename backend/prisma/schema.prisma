@@ -298,8 +298,8 @@ model Demand {
 model DemandStatusHistory {
   id         String   @id @default(uuid())
   demandId   String   @map("demand_id")
-  fromStatus DemandStatus?
-  toStatus   DemandStatus
+  fromStatus DemandStatus? @map("from_status")
+  toStatus   DemandStatus @map("to_status")
   changedBy  String   @map("changed_by")
   notes      String?
   createdAt  DateTime @default(now()) @map("created_at")
@@ -350,16 +350,19 @@ enum Priority {
 // ============================================================================
 
 model Path {
-  id          String    @id @default(uuid())
-  name        String
-  description String?
-  orgId       String    @map("org_id")
-  version     String    @default("1.0")
-  status      PathStatus @default(DRAFT)
-  steps       PathStep[]
-  metadata    Json?
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
+  id           String    @id @default(uuid())
+  name         String
+  description  String?
+  orgId        String    @map("org_id")
+  version      String    @default("1.0")
+  status       PathStatus @default(DRAFT)
+  icd10Code    String?   @map("icd10_code")    // ICD-10 诊断代码
+  icd9Code     String?   @map("icd9_code")     // ICD-9 诊断代码
+  diagnosisName String?  @map("diagnosis_name") // 诊断名称
+  steps        PathStep[]
+  metadata     Json?
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
 
   // Relations
   organization Organization @relation(fields: [orgId], references: [id])

@@ -20,6 +20,9 @@ export interface PathTemplate {
   orgId: string;
   version: string;
   status: 'DRAFT' | 'ACTIVE' | 'ARCHIVED';
+  icd10Code: string | null;
+  icd9Code: string | null;
+  diagnosisName: string | null;
   stepCount?: number;
   steps?: PathStep[];
   createdAt: string;
@@ -30,12 +33,18 @@ export interface CreatePathDto {
   name: string;
   description?: string;
   status?: 'DRAFT' | 'ACTIVE' | 'ARCHIVED';
+  icd10Code?: string;
+  icd9Code?: string;
+  diagnosisName?: string;
 }
 
 export interface UpdatePathDto {
   name?: string;
   description?: string;
   status?: 'DRAFT' | 'ACTIVE' | 'ARCHIVED';
+  icd10Code?: string | null;
+  icd9Code?: string | null;
+  diagnosisName?: string | null;
 }
 
 export interface CreatePathStepDto {
