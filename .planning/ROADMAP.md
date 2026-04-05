@@ -78,7 +78,7 @@
 **Plans**: 3 plans (01-03)
 **Plan List**:
 - [x] 04-01-PLAN.md - Patient Journey (JOURNEY-01~03)
-- [ ] 04-02-PLAN.md - Reports & KPIs (REPORT-01~03)
+- [x] 04-02-PLAN.md - Reports & KPIs (REPORT-01~03)
 - [ ] 04-03-PLAN.md - Experience Analytics (EXPER-01~04)
 
 ### Phase 5: Health and Integration
