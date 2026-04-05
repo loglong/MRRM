@@ -402,5 +402,14 @@
   "forbidden": {
     "message": "抱歉，您没有权限访问此页面。",
     "return": "返回上一页"
+  },
+  "journey": {
+    "title": "患者旅程",
+    "timeline": "时间轴",
+    "noEvents": "暂无事件记录",
+    "events": "事件",
+    "page": "页",
+    "of": "共",
+    "loadMore": "加载更多"
   }
 }

@@ -401,5 +401,14 @@
   "forbidden": {
     "message": "Sorry, you don't have permission to access this page.",
     "return": "Return to Previous Page"
+  },
+  "journey": {
+    "title": "Patient Journey",
+    "timeline": "Timeline",
+    "noEvents": "No events recorded",
+    "events": "Events",
+    "page": "Page",
+    "of": "of",
+    "loadMore": "Load More"
   }
 }
