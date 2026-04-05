@@ -77,7 +77,7 @@
   6. 用户可以识别体验下滑的患者（满意度下降预警），体验报告支持导出
 **Plans**: 3 plans (01-03)
 **Plan List**:
-- [ ] 04-01-PLAN.md - Patient Journey (JOURNEY-01~03)
+- [x] 04-01-PLAN.md - Patient Journey (JOURNEY-01~03)
 - [ ] 04-02-PLAN.md - Reports & KPIs (REPORT-01~03)
 - [ ] 04-03-PLAN.md - Experience Analytics (EXPER-01~04)
 
