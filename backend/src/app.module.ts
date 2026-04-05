@@ -12,6 +12,7 @@ import { PathsModule } from './paths/paths.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { TouchpointsModule } from './touchpoints/touchpoints.module';
 import { FollowupsModule } from './followups/followups.module';
+import { JourneyModule } from './journey/journey.module';
 import { RabbitMQModule } from './rabbitmq/rabbitmq.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { OrgIdMiddleware } from './common/middleware/org-id.middleware';
@@ -35,6 +36,7 @@ import { HealthController } from './health/health.controller';
     NotificationsModule,
     TouchpointsModule,
     FollowupsModule,
+    JourneyModule,
     RabbitMQModule,
   ],
   controllers: [HealthController],

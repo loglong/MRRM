@@ -9,7 +9,7 @@
 - [x] **Phase 1: Foundation** - 认证、权限、机构管理、审计日志基础设施 (6/8 plans)
 - [x] **Phase 2: Core Patient Objects** - 患者档案、需求管理、路径管理 (3 plans)
 - [x] **Phase 3: Patient Engagement Operations** - 触点管理、随访管理 (2 plans) (1/2)
-- [ ] **Phase 4: Analytics and Journey** - 患者旅程中心、报表中心、体验管理中心
+- [ ] **Phase 4: Analytics and Journey** - 患者旅程中心、报表中心、体验管理中心 (3 plans)
 - [ ] **Phase 5: Health and Integration** - 健康管理中心、系统集成
 
 ## Phase Details
@@ -75,7 +75,11 @@
   4. 报表支持导出（Excel格式）
   5. 系统汇总患者满意度数据（来自触点记录的满意度评分），用户可以查看满意度趋势报表（按门店、按时间段）
   6. 用户可以识别体验下滑的患者（满意度下降预警），体验报告支持导出
-**Plans**: 8 plans (01-08)
+**Plans**: 3 plans (01-03)
+**Plan List**:
+- [ ] 04-01-PLAN.md - Patient Journey (JOURNEY-01~03)
+- [ ] 04-02-PLAN.md - Reports & KPIs (REPORT-01~03)
+- [ ] 04-03-PLAN.md - Experience Analytics (EXPER-01~04)
 
 ### Phase 5: Health and Integration
 **Goal**: 用户可以查看健康档案汇总，系统可以与外部系统对接
@@ -100,7 +104,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 1. Foundation | 6/8 | In Progress| |
 | 2. Core Patient Objects | 1/3 plans (01-03) | Not started | 02-01 (Patient module) |
 | 3. Patient Engagement Operations | 0/2 plans (01-02) | Not started | - |
-| 4. Analytics and Journey | 0/8 plans (01-08) | Not started | - |
+| 4. Analytics and Journey | 0/3 plans (01-03) | Not started | - |
 | 5. Health and Integration | 0/8 plans (01-08) | Not started | - |
 
 ## Coverage
