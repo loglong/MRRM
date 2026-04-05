@@ -178,6 +178,8 @@
     "icd10Placeholder": "e.g., K02.3",
     "icd9Code": "ICD-9 Code",
     "icd9Placeholder": "e.g., 521.03",
+    "surgeryName": "Surgery Name",
+    "surgeryNamePlaceholder": "Enter surgery name",
     "stepOrder": "Order",
     "estimatedDays": "Days",
     "startDate": "Start Date",

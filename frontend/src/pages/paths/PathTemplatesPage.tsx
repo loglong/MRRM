@@ -147,6 +147,14 @@ export default function PathTemplatesPage() {
       render: (code: string | null) => code || '-',
     },
     {
+      title: t('paths.surgeryName') || 'Surgery',
+      dataIndex: 'surgeryName',
+      key: 'surgeryName',
+      width: 150,
+      ellipsis: true,
+      render: (name: string | null) => name || '-',
+    },
+    {
       title: t('paths.steps') || 'Steps',
       dataIndex: 'stepCount',
       key: 'stepCount',

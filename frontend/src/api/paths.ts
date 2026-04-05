@@ -23,6 +23,7 @@ export interface PathTemplate {
   icd10Code: string | null;
   icd9Code: string | null;
   diagnosisName: string | null;
+  surgeryName: string | null;
   stepCount?: number;
   steps?: PathStep[];
   createdAt: string;
@@ -36,6 +37,7 @@ export interface CreatePathDto {
   icd10Code?: string;
   icd9Code?: string;
   diagnosisName?: string;
+  surgeryName?: string;
 }
 
 export interface UpdatePathDto {
@@ -45,6 +47,7 @@ export interface UpdatePathDto {
   icd10Code?: string | null;
   icd9Code?: string | null;
   diagnosisName?: string | null;
+  surgeryName?: string | null;
 }
 
 export interface CreatePathStepDto {

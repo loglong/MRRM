@@ -7,6 +7,7 @@ export const CreatePathDto = z.object({
   icd10Code: z.string().max(20).optional(),
   icd9Code: z.string().max(20).optional(),
   diagnosisName: z.string().max(200).optional(),
+  surgeryName: z.string().max(200).optional(),
 });
 
 export type CreatePathDtoType = z.infer<typeof CreatePathDto>;

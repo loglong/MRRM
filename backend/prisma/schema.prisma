@@ -359,6 +359,7 @@ model Path {
   icd10Code    String?   @map("icd10_code")    // ICD-10 诊断代码
   icd9Code     String?   @map("icd9_code")     // ICD-9 诊断代码
   diagnosisName String?  @map("diagnosis_name") // 诊断名称
+  surgeryName   String?  @map("surgery_name")   // 手术治疗名称
   steps        PathStep[]
   metadata     Json?
   createdAt    DateTime  @default(now()) @map("created_at")

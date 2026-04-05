@@ -7,6 +7,7 @@ export const UpdatePathDto = z.object({
   icd10Code: z.string().max(20).optional().nullable(),
   icd9Code: z.string().max(20).optional().nullable(),
   diagnosisName: z.string().max(200).optional().nullable(),
+  surgeryName: z.string().max(200).optional().nullable(),
 });
 
 export type UpdatePathDtoType = z.infer<typeof UpdatePathDto>;

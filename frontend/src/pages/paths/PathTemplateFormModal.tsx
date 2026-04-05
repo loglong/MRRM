@@ -24,6 +24,7 @@ export default function PathTemplateFormModal({ visible, template, onOk, onCance
         icd10Code: template.icd10Code,
         icd9Code: template.icd9Code,
         diagnosisName: template.diagnosisName,
+        surgeryName: template.surgeryName,
       });
     } else if (visible) {
       form.resetFields();
@@ -103,6 +104,10 @@ export default function PathTemplateFormModal({ visible, template, onOk, onCance
 
         <Form.Item name="icd9Code" label={t('paths.icd9Code') || 'ICD-9 Code'}>
           <Input placeholder={t('paths.icd9Placeholder') || 'e.g., 521.03'} />
+        </Form.Item>
+
+        <Form.Item name="surgeryName" label={t('paths.surgeryName') || 'Surgery Name'}>
+          <Input placeholder={t('paths.surgeryNamePlaceholder') || 'Enter surgery name'} />
         </Form.Item>
       </Form>
     </Modal>
