@@ -32,10 +32,27 @@ export interface Demand {
   closedAt: string | null;
   createdAt: string;
   updatedAt: string;
+  // 新增字段
+  createdBy: string | null;
+  developmentManager: string | null;
+  preTreatmentStartDate: string | null;
+  preTreatmentManager: string | null;
+  treatmentStartDate: string | null;
+  treatmentManager: string | null;
+  treatmentEndDate: string | null;
+  pathId: string | null;
+  maintenanceManager: string | null;
+  maintenancePlanId: string | null;
+  demandEndDate: string | null;
+  // 关联
   patient?: {
     id: string;
     name: string;
     phone: string | null;
+  };
+  path?: {
+    id: string;
+    name: string;
   };
   statusHistory?: DemandStatusHistory[];
 }
@@ -48,6 +65,16 @@ export interface CreateDemandDto {
   priority?: DemandPriority;
   source?: DemandSource;
   estimatedAmount?: number;
+  developmentManager?: string;
+  preTreatmentStartDate?: string;
+  preTreatmentManager?: string;
+  treatmentStartDate?: string;
+  treatmentManager?: string;
+  treatmentEndDate?: string;
+  pathId?: string;
+  maintenanceManager?: string;
+  maintenancePlanId?: string;
+  demandEndDate?: string;
 }
 
 export interface UpdateDemandDto {
@@ -58,6 +85,16 @@ export interface UpdateDemandDto {
   estimatedAmount?: number;
   actualAmount?: number;
   closeReason?: string;
+  developmentManager?: string | null;
+  preTreatmentStartDate?: string | null;
+  preTreatmentManager?: string | null;
+  treatmentStartDate?: string | null;
+  treatmentManager?: string | null;
+  treatmentEndDate?: string | null;
+  pathId?: string | null;
+  maintenanceManager?: string | null;
+  maintenancePlanId?: string | null;
+  demandEndDate?: string | null;
 }
 
 export interface ChangeStatusDto {

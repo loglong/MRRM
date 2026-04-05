@@ -281,6 +281,28 @@ model Demand {
   closeReason   String?      @map("close_reason")
   closedAt      DateTime?    @map("closed_at")
   metadata      Json?
+
+  // 用户字段
+  createdBy     String?      @map("created_by")        // 创建人
+  developmentManager String?  @map("development_manager") // 开发期管理人(前台)
+
+  // 治疗前期
+  preTreatmentStartDate DateTime? @map("pre_treatment_start_date") // 治疗前期开始时间
+  preTreatmentManager   String?  @map("pre_treatment_manager")    // 治疗前期管理人(护士)
+
+  // 治疗期
+  treatmentStartDate  DateTime?  @map("treatment_start_date")     // 治疗期开始时间
+  treatmentManager    String?    @map("treatment_manager")        // 治疗期管理人(护士)
+  treatmentEndDate    DateTime?  @map("treatment_end_date")       // 治疗结束时间
+
+  // 技术路径
+  pathId              String?    @map("path_id")                  // 技术路径ID
+  maintenanceManager  String?    @map("maintenance_manager")     // 维护人(护士)
+  maintenancePlanId   String?    @map("maintenance_plan_id")      // 维护方案ID
+
+  // 需求结束时间
+  demandEndDate       DateTime? @map("demand_end_date")          // 需求结束时间
+
   createdAt     DateTime      @default(now()) @map("created_at")
   updatedAt     DateTime      @updatedAt @map("updated_at")
 
@@ -288,10 +310,12 @@ model Demand {
   patient   Patient   @relation(fields: [patientId], references: [id])
   organization Organization @relation(fields: [orgId], references: [id])
   statusHistory DemandStatusHistory[]
+  path      Path?     @relation(fields: [pathId], references: [id])
 
   @@index([orgId])
   @@index([patientId])
   @@index([status])
+  @@index([pathId])
   @@map("demands")
 }
 
