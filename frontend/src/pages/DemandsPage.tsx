@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import {
-  Table, Tag, Space, Button, Input, Card, Select, Typography, message, Modal, Form, Timeline
+  Table, Tag, Space, Button, Input, Card, Select, Typography, message, Modal, Form, Timeline, Dropdown, DatePicker
 } from 'antd';
 import {
-  PlusOutlined, EditOutlined, HistoryOutlined, CheckCircleOutlined
+  PlusOutlined, EditOutlined, HistoryOutlined, CheckCircleOutlined, SettingOutlined
 } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslation } from 'react-i18next';
+import dayjs from 'dayjs';
 import { patientsApi } from '@/api/patients';
+import { pathsApi } from '@/api/paths';
 import {
   demandsApi,
   Demand,
@@ -46,15 +48,32 @@ const priorityColors: Record<string, string> = {
   URGENT: 'red',
 };
 
+// Column key definitions for custom field selection
+const ALL_COLUMN_KEYS = [
+  'patient', 'type', 'title', 'status', 'priority', 'source',
+  'estimatedAmount', 'createdAt', 'createdBy', 'developmentManager',
+  'preTreatmentStartDate', 'preTreatmentManager',
+  'treatmentStartDate', 'treatmentManager', 'treatmentEndDate',
+  'pathId', 'maintenanceManager', 'maintenancePlanId', 'demandEndDate',
+  'action'
+] as const;
+
+type ColumnKey = typeof ALL_COLUMN_KEYS[number];
+
+const DEFAULT_VISIBLE_COLUMNS: ColumnKey[] = [
+  'patient', 'type', 'title', 'status', 'priority', 'createdAt', 'action'
+];
+
 interface DemandFormModalProps {
   visible: boolean;
   demand: Demand | null;
   patients: { id: string; name: string; phone: string | null }[];
+  paths: { id: string; name: string }[];
   onOk: () => void;
   onCancel: () => void;
 }
 
-function DemandFormModal({ visible, demand, patients, onOk, onCancel }: DemandFormModalProps) {
+function DemandFormModal({ visible, demand, patients, paths, onOk, onCancel }: DemandFormModalProps) {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
@@ -64,6 +83,10 @@ function DemandFormModal({ visible, demand, patients, onOk, onCancel }: DemandFo
       form.setFieldsValue({
         ...demand,
         patientId: demand.patientId,
+        preTreatmentStartDate: demand.preTreatmentStartDate ? dayjs(demand.preTreatmentStartDate) : null,
+        treatmentStartDate: demand.treatmentStartDate ? dayjs(demand.treatmentStartDate) : null,
+        treatmentEndDate: demand.treatmentEndDate ? dayjs(demand.treatmentEndDate) : null,
+        demandEndDate: demand.demandEndDate ? dayjs(demand.demandEndDate) : null,
       });
     } else if (visible) {
       form.resetFields();
@@ -81,6 +104,16 @@ function DemandFormModal({ visible, demand, patients, onOk, onCancel }: DemandFo
           priority: values.priority,
           source: values.source,
           estimatedAmount: values.estimatedAmount,
+          developmentManager: values.developmentManager,
+          preTreatmentStartDate: values.preTreatmentStartDate?.toISOString(),
+          preTreatmentManager: values.preTreatmentManager,
+          treatmentStartDate: values.treatmentStartDate?.toISOString(),
+          treatmentManager: values.treatmentManager,
+          treatmentEndDate: values.treatmentEndDate?.toISOString(),
+          pathId: values.pathId,
+          maintenanceManager: values.maintenanceManager,
+          maintenancePlanId: values.maintenancePlanId,
+          demandEndDate: values.demandEndDate?.toISOString(),
         };
         await demandsApi.update(demand.id, data);
         message.success(t('common.success'));
@@ -93,6 +126,16 @@ function DemandFormModal({ visible, demand, patients, onOk, onCancel }: DemandFo
           priority: values.priority,
           source: values.source,
           estimatedAmount: values.estimatedAmount,
+          developmentManager: values.developmentManager,
+          preTreatmentStartDate: values.preTreatmentStartDate?.toISOString(),
+          preTreatmentManager: values.preTreatmentManager,
+          treatmentStartDate: values.treatmentStartDate?.toISOString(),
+          treatmentManager: values.treatmentManager,
+          treatmentEndDate: values.treatmentEndDate?.toISOString(),
+          pathId: values.pathId,
+          maintenanceManager: values.maintenanceManager,
+          maintenancePlanId: values.maintenancePlanId,
+          demandEndDate: values.demandEndDate?.toISOString(),
         };
         await demandsApi.create(data);
         message.success(t('common.success'));
@@ -185,6 +228,60 @@ function DemandFormModal({ visible, demand, patients, onOk, onCancel }: DemandFo
 
         <Form.Item name="estimatedAmount" label={t('demands.estimatedAmount')}>
           <Input type="number" placeholder={t('demands.enterAmount') || '输入预估金额'} />
+        </Form.Item>
+
+        {/* 开发期 */}
+        <div style={{ fontWeight: 500, margin: '16px 0 8px', color: '#1890ff' }}>{t('demands.developmentPhase') || '开发期'}</div>
+        <Form.Item name="developmentManager" label={t('demands.developmentManager')}>
+          <Input placeholder={t('demands.developmentManagerPlaceholder') || '输入开发期管理人（前台）'} />
+        </Form.Item>
+
+        {/* 治疗前期 */}
+        <div style={{ fontWeight: 500, margin: '16px 0 8px', color: '#52c41a' }}>{t('demands.preTreatmentPhase') || '治疗前期'}</div>
+        <Space style={{ display: 'flex' }} align="start">
+          <Form.Item name="preTreatmentStartDate" label={t('demands.preTreatmentStartDate')}>
+            <DatePicker placeholder={t('demands.selectDate') || '选择日期'} />
+          </Form.Item>
+          <Form.Item name="preTreatmentManager" label={t('demands.preTreatmentManager')}>
+            <Input placeholder={t('demands.preTreatmentManagerPlaceholder') || '输入治疗前期管理人（护士）'} />
+          </Form.Item>
+        </Space>
+
+        {/* 治疗期 */}
+        <div style={{ fontWeight: 500, margin: '16px 0 8px', color: '#fa8c16' }}>{t('demands.treatmentPhase') || '治疗期'}</div>
+        <Space style={{ display: 'flex' }} align="start">
+          <Form.Item name="treatmentStartDate" label={t('demands.treatmentStartDate')}>
+            <DatePicker placeholder={t('demands.selectDate') || '选择日期'} />
+          </Form.Item>
+          <Form.Item name="treatmentManager" label={t('demands.treatmentManager')}>
+            <Input placeholder={t('demands.treatmentManagerPlaceholder') || '输入治疗期管理人（护士）'} />
+          </Form.Item>
+          <Form.Item name="treatmentEndDate" label={t('demands.treatmentEndDate')}>
+            <DatePicker placeholder={t('demands.selectDate') || '选择日期'} />
+          </Form.Item>
+        </Space>
+
+        {/* 技术路径 */}
+        <div style={{ fontWeight: 500, margin: '16px 0 8px', color: '#722ed1' }}>{t('demands.pathInfo') || '技术路径'}</div>
+        <Space style={{ display: 'flex' }} align="start">
+          <Form.Item name="pathId" label={t('demands.pathId')} style={{ width: 200 }}>
+            <Select allowClear placeholder={t('demands.selectPath') || '选择技术路径'} showSearch>
+              {paths.map((p) => (
+                <Select.Option key={p.id} value={p.id}>{p.name}</Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item name="maintenanceManager" label={t('demands.maintenanceManager')}>
+            <Input placeholder={t('demands.maintenanceManagerPlaceholder') || '输入维护人（护士）'} />
+          </Form.Item>
+          <Form.Item name="maintenancePlanId" label={t('demands.maintenancePlanId')}>
+            <Input placeholder={t('demands.maintenancePlanIdPlaceholder') || '输入维护方案ID'} />
+          </Form.Item>
+        </Space>
+
+        {/* 需求结束 */}
+        <Form.Item name="demandEndDate" label={t('demands.demandEndDate')}>
+          <DatePicker placeholder={t('demands.selectDate') || '选择日期'} />
         </Form.Item>
       </Form>
     </Modal>
@@ -357,6 +454,13 @@ export default function DemandsPage() {
     byPriority: Record<string, number>;
   }>({ total: 0, byStatus: {}, byType: {}, byPriority: {} });
 
+  // Custom column visibility state
+  const [visibleColumns, setVisibleColumns] = useState<ColumnKey[]>(() => {
+    const saved = localStorage.getItem('demand_visible_columns');
+    return saved ? JSON.parse(saved) : DEFAULT_VISIBLE_COLUMNS;
+  });
+  const [paths, setPaths] = useState<{ id: string; name: string }[]>([]);
+
   // Modals
   const [formModalVisible, setFormModalVisible] = useState(false);
   const [statusModalVisible, setStatusModalVisible] = useState(false);
@@ -372,6 +476,23 @@ export default function DemandsPage() {
     } catch (error) {
       console.error('Failed to fetch patients', error);
     }
+  };
+
+  const fetchPaths = async () => {
+    try {
+      const response = await pathsApi.list({ limit: 100, status: 'ACTIVE' });
+      setPaths(response.data.map((p: any) => ({ id: p.id, name: p.name })));
+    } catch (error) {
+      console.error('Failed to fetch paths', error);
+    }
+  };
+
+  const toggleColumn = (key: ColumnKey) => {
+    const newVisible = visibleColumns.includes(key)
+      ? visibleColumns.filter((k) => k !== key)
+      : [...visibleColumns, key];
+    setVisibleColumns(newVisible);
+    localStorage.setItem('demand_visible_columns', JSON.stringify(newVisible));
   };
 
   const fetchDemands = async () => {
@@ -408,6 +529,7 @@ export default function DemandsPage() {
 
   useEffect(() => {
     fetchPatients();
+    fetchPaths();
   }, []);
 
   useEffect(() => {
@@ -459,8 +581,9 @@ export default function DemandsPage() {
     fetchStats();
   };
 
+  // Build columns based on visible columns
   const columns: ColumnsType<Demand> = [
-    {
+    visibleColumns.includes('patient') && {
       title: t('patients.patientName') || 'Patient',
       dataIndex: ['patient', 'name'],
       key: 'patient',
@@ -468,7 +591,7 @@ export default function DemandsPage() {
         <Text strong>{record.patient?.name || '-'}</Text>
       ),
     },
-    {
+    visibleColumns.includes('type') && {
       title: t('demands.demandType') || 'Type',
       dataIndex: 'type',
       key: 'type',
@@ -476,13 +599,13 @@ export default function DemandsPage() {
         <Tag>{demandTypeLabels[type] || type}</Tag>
       ),
     },
-    {
+    visibleColumns.includes('title') && {
       title: t('common.name') || 'Title',
       dataIndex: 'title',
       key: 'title',
       render: (title: string) => <Text>{title}</Text>,
     },
-    {
+    visibleColumns.includes('status') && {
       title: t('common.status') || 'Status',
       dataIndex: 'status',
       key: 'status',
@@ -490,7 +613,7 @@ export default function DemandsPage() {
         <Tag color={statusColors[status]}>{demandStatusLabels[status]}</Tag>
       ),
     },
-    {
+    visibleColumns.includes('priority') && {
       title: t('demands.priority') || 'Priority',
       dataIndex: 'priority',
       key: 'priority',
@@ -498,13 +621,91 @@ export default function DemandsPage() {
         <Tag color={priorityColors[priority]}>{demandPriorityLabels[priority]}</Tag>
       ),
     },
-    {
+    visibleColumns.includes('source') && {
+      title: t('demands.source') || 'Source',
+      dataIndex: 'source',
+      key: 'source',
+      render: (source: string) => demandSourceLabels[source as keyof typeof demandSourceLabels] || source,
+    },
+    visibleColumns.includes('estimatedAmount') && {
+      title: t('demands.estimatedAmount') || 'Est. Amount',
+      dataIndex: 'estimatedAmount',
+      key: 'estimatedAmount',
+      render: (amount: number | null) => amount ? `¥${amount.toLocaleString()}` : '-',
+    },
+    visibleColumns.includes('createdAt') && {
       title: t('common.createTime') || 'Created',
       dataIndex: 'createdAt',
       key: 'createdAt',
       render: (date: string) => new Date(date).toLocaleDateString(),
     },
-    {
+    visibleColumns.includes('createdBy') && {
+      title: t('demands.createdBy') || 'Created By',
+      dataIndex: 'createdBy',
+      key: 'createdBy',
+      render: (val: string | null) => val || '-',
+    },
+    visibleColumns.includes('developmentManager') && {
+      title: t('demands.developmentManager') || 'Dev Manager',
+      dataIndex: 'developmentManager',
+      key: 'developmentManager',
+      render: (val: string | null) => val || '-',
+    },
+    visibleColumns.includes('preTreatmentStartDate') && {
+      title: t('demands.preTreatmentStartDate') || 'Pre-Tx Start',
+      dataIndex: 'preTreatmentStartDate',
+      key: 'preTreatmentStartDate',
+      render: (date: string | null) => date ? new Date(date).toLocaleDateString() : '-',
+    },
+    visibleColumns.includes('preTreatmentManager') && {
+      title: t('demands.preTreatmentManager') || 'Pre-Tx Manager',
+      dataIndex: 'preTreatmentManager',
+      key: 'preTreatmentManager',
+      render: (val: string | null) => val || '-',
+    },
+    visibleColumns.includes('treatmentStartDate') && {
+      title: t('demands.treatmentStartDate') || 'Tx Start',
+      dataIndex: 'treatmentStartDate',
+      key: 'treatmentStartDate',
+      render: (date: string | null) => date ? new Date(date).toLocaleDateString() : '-',
+    },
+    visibleColumns.includes('treatmentManager') && {
+      title: t('demands.treatmentManager') || 'Tx Manager',
+      dataIndex: 'treatmentManager',
+      key: 'treatmentManager',
+      render: (val: string | null) => val || '-',
+    },
+    visibleColumns.includes('treatmentEndDate') && {
+      title: t('demands.treatmentEndDate') || 'Tx End',
+      dataIndex: 'treatmentEndDate',
+      key: 'treatmentEndDate',
+      render: (date: string | null) => date ? new Date(date).toLocaleDateString() : '-',
+    },
+    visibleColumns.includes('pathId') && {
+      title: t('demands.pathId') || 'Path',
+      dataIndex: ['path', 'name'],
+      key: 'pathId',
+      render: (_: any, record: Demand) => record.path?.name || '-',
+    },
+    visibleColumns.includes('maintenanceManager') && {
+      title: t('demands.maintenanceManager') || 'Maint. Manager',
+      dataIndex: 'maintenanceManager',
+      key: 'maintenanceManager',
+      render: (val: string | null) => val || '-',
+    },
+    visibleColumns.includes('maintenancePlanId') && {
+      title: t('demands.maintenancePlanId') || 'Maint. Plan',
+      dataIndex: 'maintenancePlanId',
+      key: 'maintenancePlanId',
+      render: (val: string | null) => val || '-',
+    },
+    visibleColumns.includes('demandEndDate') && {
+      title: t('demands.demandEndDate') || 'End Date',
+      dataIndex: 'demandEndDate',
+      key: 'demandEndDate',
+      render: (date: string | null) => date ? new Date(date).toLocaleDateString() : '-',
+    },
+    visibleColumns.includes('action') && {
       title: t('common.actions') || 'Action',
       key: 'action',
       width: 200,
@@ -532,7 +733,7 @@ export default function DemandsPage() {
         </Space>
       ),
     },
-  ];
+  ].filter(Boolean) as ColumnsType<Demand>;
 
   // Filter demands client-side for search
   const filteredDemands = searchText
@@ -626,9 +827,44 @@ export default function DemandsPage() {
             ))}
           </Select>
         </Space>
-        <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
-          {t('demands.createDemand')}
-        </Button>
+        <Space>
+          <Dropdown
+            menu={{
+              selectable: true,
+              selectedKeys: visibleColumns,
+              onSelect: ({ key }) => toggleColumn(key as ColumnKey),
+              items: [
+                { key: 'patient', label: t('patients.patientName') || 'Patient' },
+                { key: 'type', label: t('demands.demandType') || 'Type' },
+                { key: 'title', label: t('common.name') || 'Title' },
+                { key: 'status', label: t('common.status') || 'Status' },
+                { key: 'priority', label: t('demands.priority') || 'Priority' },
+                { key: 'source', label: t('demands.source') || 'Source' },
+                { key: 'estimatedAmount', label: t('demands.estimatedAmount') || 'Est. Amount' },
+                { key: 'createdAt', label: t('common.createTime') || 'Created' },
+                { key: 'createdBy', label: t('demands.createdBy') || 'Created By' },
+                { key: 'developmentManager', label: t('demands.developmentManager') || 'Dev Manager' },
+                { key: 'preTreatmentStartDate', label: t('demands.preTreatmentStartDate') || 'Pre-Tx Start' },
+                { key: 'preTreatmentManager', label: t('demands.preTreatmentManager') || 'Pre-Tx Manager' },
+                { key: 'treatmentStartDate', label: t('demands.treatmentStartDate') || 'Tx Start' },
+                { key: 'treatmentManager', label: t('demands.treatmentManager') || 'Tx Manager' },
+                { key: 'treatmentEndDate', label: t('demands.treatmentEndDate') || 'Tx End' },
+                { key: 'pathId', label: t('demands.pathId') || 'Path' },
+                { key: 'maintenanceManager', label: t('demands.maintenanceManager') || 'Maint. Manager' },
+                { key: 'maintenancePlanId', label: t('demands.maintenancePlanId') || 'Maint. Plan' },
+                { key: 'demandEndDate', label: t('demands.demandEndDate') || 'End Date' },
+              ],
+            }}
+            trigger={['click']}
+          >
+            <Button icon={<SettingOutlined />}>
+              {t('demands.customizeColumns') || 'Customize Columns'}
+            </Button>
+          </Dropdown>
+          <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
+            {t('demands.createDemand')}
+          </Button>
+        </Space>
       </div>
 
       {/* Demands Table */}
@@ -650,6 +886,7 @@ export default function DemandsPage() {
         visible={formModalVisible}
         demand={editingDemand}
         patients={patients}
+        paths={paths}
         onOk={handleModalOk}
         onCancel={() => {
           setFormModalVisible(false);
