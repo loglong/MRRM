@@ -308,7 +308,16 @@
     "followupRate": "随访率",
     "patientTrends": "患者趋势",
     "demandAnalysis": "需求分析",
-    "chartPlaceholder": "图表占位"
+    "chartPlaceholder": "图表占位",
+    "export": "导出Excel",
+    "newPatients": "新增患者",
+    "followupCompletionRate": "随访完成率",
+    "selectDateRange": "选择日期范围",
+    "filterByOrg": "按机构筛选",
+    "allOrgs": "全部机构",
+    "kpiSummary": "KPI摘要",
+    "trends": "趋势数据",
+    "noData": "暂无数据"
   },
   "admin": {
     "overview": "概览",

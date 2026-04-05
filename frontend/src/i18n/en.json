@@ -307,7 +307,16 @@
     "followupRate": "Follow-up Rate",
     "patientTrends": "Patient Trends",
     "demandAnalysis": "Demand Analysis",
-    "chartPlaceholder": "Chart placeholder"
+    "chartPlaceholder": "Chart placeholder",
+    "export": "Export Excel",
+    "newPatients": "New Patients",
+    "followupCompletionRate": "Follow-up Completion Rate",
+    "selectDateRange": "Select date range",
+    "filterByOrg": "Filter by organization",
+    "allOrgs": "All Organizations",
+    "kpiSummary": "KPI Summary",
+    "trends": "Trends",
+    "noData": "No data"
   },
   "admin": {
     "overview": "Overview",
