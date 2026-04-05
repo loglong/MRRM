@@ -392,6 +392,7 @@ model Path {
   // Relations
   organization Organization @relation(fields: [orgId], references: [id])
   instances    PathInstance[]
+  demands      Demand[]
 
   @@index([orgId])
   @@map("paths")
@@ -538,6 +539,10 @@ model Touchpoint {
   createdAt     DateTime        @default(now()) @map("created_at")
   updatedAt     DateTime        @updatedAt @map("updated_at")
 
+  // Soft-delete fields (TOUCH-05: touchpoints are never hard-deleted, only voided)
+  voidedAt     DateTime?        @map("voided_at")
+  voidedReason String?         @map("voided_reason")
+
   // Relations
   patient     Patient     @relation(fields: [patientId], references: [id])
   organization Organization @relation(fields: [orgId], references: [id])
@@ -546,6 +551,7 @@ model Touchpoint {
   @@index([patientId])
   @@index([type])
   @@index([createdAt])
+  @@index([voidedAt])
   @@map("touchpoints")
 }
 
