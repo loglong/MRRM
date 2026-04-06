@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Query, Req } from '@nestjs/common';
 import { Request } from 'express';
 import { ChurnPredictionService } from './services/churn-prediction.service';
-import { FollowupRecommendationService } from './services/followup-recommendation.service';
+import { FollowupRecommendationService, FollowupRecommendation } from './services/followup-recommendation.service';
 import { GetHighRiskPatientsDto } from './dto/churn-prediction.dto';
 
 @Controller('api/ai')
@@ -38,7 +38,7 @@ export class AiController {
   async getFollowupRecommendation(
     @Param('patientId') patientId: string,
     @Req() req: Request,
-  ) {
+  ): Promise<FollowupRecommendation | { error: string }> {
     const orgId = (req.headers['x-org-id'] as string) || 'default';
     const recommendation = await this.followupRecommendationService.getRecommendation(patientId, orgId);
     if (!recommendation) {

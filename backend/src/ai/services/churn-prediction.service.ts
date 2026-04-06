@@ -162,17 +162,24 @@ export class ChurnPredictionService {
   /**
    * Factor: Satisfaction drop (weight: 30%)
    * Get satisfaction scores from recent touchpoints
+   * Maps sentiment (POSITIVE=3, NEUTRAL=2, NEGATIVE=1) to calculate trend
    */
   private async getSatisfactionTrend(patientId: string): Promise<RiskFactor | null> {
     const recentTouchpoints = await this.prisma.touchpoint.findMany({
       where: { patientId, voidedAt: null },
       orderBy: { createdAt: 'desc' },
       take: 5,
-      select: { satisfactionScore: true },
+      select: { sentiment: true },
     });
 
+    const sentimentMap: Record<string, number> = {
+      'POSITIVE': 3,
+      'NEUTRAL': 2,
+      'NEGATIVE': 1,
+    };
+
     const scores = recentTouchpoints
-      .map(t => t.satisfactionScore)
+      .map(t => t.sentiment ? sentimentMap[t.sentiment] : null)
       .filter((s): s is number => s !== null);
 
     if (scores.length < 2) {

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { Logger } from '../../common/logger';
 
-interface FollowupRecommendation {
+export interface FollowupRecommendation {
   recommendedContent: string[];
   optimalTime: string;
   seasonalAdjustment?: {
@@ -33,9 +33,9 @@ interface DemandInfo {
 interface TouchpointInfo {
   id: string;
   type: string;
-  scheduledAt: Date | null;
-  completedAt: Date | null;
-  satisfactionScore: number | null;
+  followupDate: Date | null;
+  outcome: string | null;
+  sentiment: string | null;
 }
 
 @Injectable()
@@ -92,9 +92,9 @@ export class FollowupRecommendationService {
     const touchpointInfos: TouchpointInfo[] = touchpoints.map(t => ({
       id: t.id,
       type: t.type,
-      scheduledAt: t.scheduledAt,
-      completedAt: t.completedAt ? new Date(t.completedAt) : null,
-      satisfactionScore: t.satisfactionScore,
+      followupDate: t.followupDate,
+      outcome: t.outcome,
+      sentiment: t.sentiment || null,
     }));
 
     const recommendedContent = this.generateContent(patientInfo, demandInfos);
@@ -191,17 +191,18 @@ export class FollowupRecommendationService {
       return '10:00-11:00'; // Default best time
     }
 
-    // Analyze response rate by hour
+    // Analyze response rate by hour based on followupDate
     const hourStats: Record<number, { total: number; responded: number }> = {};
 
     for (const tp of touchpoints) {
-      if (tp.scheduledAt) {
-        const hour = new Date(tp.scheduledAt).getHours();
+      if (tp.followupDate) {
+        const hour = new Date(tp.followupDate).getHours();
         if (!hourStats[hour]) {
           hourStats[hour] = { total: 0, responded: 0 };
         }
         hourStats[hour].total++;
-        if (tp.completedAt) {
+        // If there's an outcome, it was responded
+        if (tp.outcome) {
           hourStats[hour].responded++;
         }
       }
