@@ -16,6 +16,7 @@ import { JourneyModule } from './journey/journey.module';
 import { ReportsModule } from './reports/reports.module';
 import { ExperienceModule } from './experience/experience.module';
 import { RabbitMQModule } from './rabbitmq/rabbitmq.module';
+import { IntegrationModule } from './integration/integration.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { OrgIdMiddleware } from './common/middleware/org-id.middleware';
 import { HealthController } from './health/health.controller';
@@ -42,6 +43,7 @@ import { HealthController } from './health/health.controller';
     ReportsModule,
     RabbitMQModule,
     ExperienceModule,
+    IntegrationModule,
   ],
   controllers: [HealthController],
 })
