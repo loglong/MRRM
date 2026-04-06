@@ -34,7 +34,7 @@ export default function ExperiencePage() {
       setTrends(trendsData);
       setDeclining(decliningData);
     } catch (err) {
-      message.error('Failed to load experience data');
+      message.error(t('experience.loadError'));
     } finally {
       setLoading(false);
     }
@@ -61,9 +61,9 @@ export default function ExperiencePage() {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      message.success('Report exported successfully');
+      message.success(t('experience.exportSuccess'));
     } catch (err) {
-      message.error('Failed to export report');
+      message.error(t('experience.exportError'));
     }
   };
 
@@ -88,9 +88,9 @@ export default function ExperiencePage() {
             value={granularity}
             onChange={setGranularity}
             options={[
-              { value: 'day', label: t('experience.day') },
-              { value: 'week', label: t('experience.week') },
-              { value: 'month', label: t('experience.month') },
+              { value: 'day', label: t('experience.byDay') },
+              { value: 'week', label: t('experience.byWeek') },
+              { value: 'month', label: t('experience.byMonth') },
             ]}
             style={{ width: 120 }}
           />

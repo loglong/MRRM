@@ -1,4 +1,4 @@
-import apiClient from './apiClient';
+import api from './auth';
 
 // Types
 export enum ChurnRiskLevel {
@@ -32,11 +32,11 @@ export interface PatientRiskScore {
 
 export const churnRiskApi = {
   getPatientRisk: (patientId: string): Promise<PatientRiskScore> => {
-    return apiClient.get<PatientRiskScore>(`/ai/churn-risk/${patientId}`).then(res => res.data);
+    return api.get<PatientRiskScore>(`/ai/churn-risk/${patientId}`).then(res => res.data);
   },
 
   getHighRiskPatients: (threshold?: number): Promise<PatientRiskScore[]> => {
-    return apiClient.get<PatientRiskScore[]>('/ai/churn-risk/high-risk', {
+    return api.get<PatientRiskScore[]>('/ai/churn-risk/high-risk', {
       params: { threshold },
     }).then(res => res.data);
   },

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Card, Typography, List, Spin, Statistic, Row, Col } from 'antd';
+import { Card, Typography, Spin, Statistic, Row, Col } from 'antd';
 import { TeamOutlined, FileTextOutlined, BellOutlined, AlertOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { patientsApi } from '@/api/patients';

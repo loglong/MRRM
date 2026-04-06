@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Card, Table, Tag, Progress, Empty, Typography, Space } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { churnRiskApi, PatientRiskScore, ChurnRiskLevel, RiskFactorType } from '@/api/churn-risk';
+import { churnRiskApi, PatientRiskScore, ChurnRiskLevel, RiskFactorType, RiskFactor } from '@/api/churn-risk';
 
 const { Title, Text } = Typography;
 
@@ -120,7 +120,7 @@ export default function ChurnRiskPage() {
       <div style={{ marginBottom: 24 }}>
         <Title level={4} style={{ margin: 0 }}>{t('churnRisk.title') || '患者流失预警'}</Title>
         <Text type="secondary">
-          显示风险评分 >= 70 的高风险患者
+          显示风险评分 &gt;= 70 的高风险患者
         </Text>
       </div>
 

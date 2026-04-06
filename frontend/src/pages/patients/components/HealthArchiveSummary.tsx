@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Card, List, Typography, Spin, Empty } from 'antd';
+import { List, Typography, Spin, Empty } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { healthApi, HealthArchive, HealthRecord } from '@/api/health';
 
@@ -31,14 +31,14 @@ export default function HealthArchiveSummary({ patientId }: Props) {
   }
 
   if (!archive) {
-    return <Empty description={t('health.archiveEmpty') || 'No health archive data'} />;
+    return <Empty description={t('health.archiveEmpty')} />;
   }
 
   const renderRecordList = (records: HealthRecord[], title: string) => (
     <div style={{ marginBottom: 16 }}>
       <Text strong>{title}</Text>
       {records.length === 0 ? (
-        <div style={{ padding: '8px 0', color: '#999' }}>{t('common.empty') || 'None'}</div>
+        <div style={{ padding: '8px 0', color: '#999' }}>{t('health.empty')}</div>
       ) : (
         <List
           size="small"
@@ -63,9 +63,9 @@ export default function HealthArchiveSummary({ patientId }: Props) {
 
   return (
     <div>
-      {renderRecordList(archive.allergies, t('health.allergies') || '过敏史')}
-      {renderRecordList(archive.pastHistory, t('health.pastHistory') || '既往史')}
-      {renderRecordList(archive.examResults, t('health.examResults') || '检查结果')}
+      {renderRecordList(archive.allergies, t('health.allergies'))}
+      {renderRecordList(archive.pastHistory, t('health.pastHistory'))}
+      {renderRecordList(archive.examResults, t('health.examResults'))}
     </div>
   );
 }

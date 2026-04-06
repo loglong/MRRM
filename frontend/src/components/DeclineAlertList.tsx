@@ -1,4 +1,5 @@
 import { Card, Table, Tag } from 'antd';
+import { useTranslation } from 'react-i18next';
 import type { DecliningPatient } from '../api/experience';
 
 interface Props {
@@ -8,26 +9,28 @@ interface Props {
 }
 
 export default function DeclineAlertList({ patients, loading }: Props) {
+  const { t } = useTranslation();
+
   const columns = [
     {
-      title: 'Patient Name',
+      title: t('patients.patientName'),
       dataIndex: 'patientName',
       key: 'patientName',
     },
     {
-      title: 'Current Score',
+      title: t('experience.currentScore'),
       dataIndex: 'currentScore',
       key: 'currentScore',
       render: (score: number) => score.toFixed(0),
     },
     {
-      title: 'Previous Score',
+      title: t('experience.previousScore'),
       dataIndex: 'previousScore',
       key: 'previousScore',
       render: (score: number) => score.toFixed(0),
     },
     {
-      title: 'Decline',
+      title: t('experience.decline'),
       dataIndex: 'decline',
       key: 'decline',
       render: (decline: number) => {
@@ -41,14 +44,14 @@ export default function DeclineAlertList({ patients, loading }: Props) {
   ];
 
   return (
-    <Card title="Patients with Declining Satisfaction">
+    <Card title={t('experience.decliningPatients')}>
       <Table
         columns={columns}
         dataSource={patients}
         rowKey="patientId"
         loading={loading}
         pagination={false}
-        locale={{ emptyText: 'No patients with declining experience' }}
+        locale={{ emptyText: t('experience.noDeclines') }}
       />
     </Card>
   );

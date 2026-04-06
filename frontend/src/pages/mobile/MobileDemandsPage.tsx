@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { List, Card, Tag, Typography, Select, Spin, PullToRefresh } from 'antd';
+import { List, Typography, Select, Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { demandsApi, Demand, DemandStatus, DemandType, DemandPriority } from '@/api/demands';
+import { demandsApi, Demand } from '@/api/demands';
 import MobileDemandCard from '@/components/mobile/MobileDemandCard';
 import './MobileDemandsPage.css';
 
@@ -33,7 +33,6 @@ export default function MobileDemandsPage() {
   const [typeFilter, setTypeFilter] = useState<string>('');
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
 
   const fetchDemands = async (pageNum: number = 1, status?: string, type?: string) => {
     setLoading(true);
@@ -53,7 +52,6 @@ export default function MobileDemandsPage() {
       console.error('Failed to fetch demands', error);
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
   };
 
@@ -78,12 +76,6 @@ export default function MobileDemandsPage() {
     }
   };
 
-  const handleRefresh = () => {
-    setRefreshing(true);
-    setPage(1);
-    fetchDemands(1, statusFilter, typeFilter);
-  };
-
   return (
     <div className="mobile-demands-page">
       <div className="mobile-demands-filters">
@@ -105,37 +97,35 @@ export default function MobileDemandsPage() {
         />
       </div>
 
-      <PullToRefresh onRefresh={handleRefresh}>
-        <List
-          loading={loading && page === 1}
-          dataSource={demands}
-          loadMore={
-            hasMore && !loading ? (
-              <div className="load-more" onClick={handleLoadMore}>
-                <Text type="secondary">加载更多</Text>
-              </div>
-            ) : null
-          }
-          renderItem={(demand: Demand) => (
-            <MobileDemandCard
-              key={demand.id}
-              id={demand.id}
-              patientName={demand.patient?.name || '-'}
-              type={demand.type}
-              title={demand.title}
-              status={demand.status}
-              priority={demand.priority}
-              createdAt={demand.createdAt}
-              onClick={() => navigate(`/demands`)}
-            />
-          )}
-        />
-        {loading && page > 1 && (
-          <div className="loading-more">
-            <Spin size="small" />
-          </div>
+      <List
+        loading={loading && page === 1}
+        dataSource={demands}
+        loadMore={
+          hasMore && !loading ? (
+            <div className="load-more" onClick={handleLoadMore}>
+              <Text type="secondary">加载更多</Text>
+            </div>
+          ) : null
+        }
+        renderItem={(demand: Demand) => (
+          <MobileDemandCard
+            key={demand.id}
+            id={demand.id}
+            patientName={demand.patient?.name || '-'}
+            type={demand.type}
+            title={demand.title}
+            status={demand.status}
+            priority={demand.priority}
+            createdAt={demand.createdAt}
+            onClick={() => navigate(`/demands`)}
+          />
         )}
-      </PullToRefresh>
+      />
+      {loading && page > 1 && (
+        <div className="loading-more">
+          <Spin size="small" />
+        </div>
+      )}
     </div>
   );
 }

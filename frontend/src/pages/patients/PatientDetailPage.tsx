@@ -5,7 +5,7 @@ import { EditOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { patientsApi, Patient } from '@/api/patients';
 import { journeyApi, JourneyEvent } from '@/api/journey';
-import { healthApi } from '@/api/health';
+import { demandStatusLabels, demandTypeLabels, DemandStatus, DemandType } from '@/api/demands';
 import HealthArchiveSummary from './components/HealthArchiveSummary';
 import HealthTimeline from './components/HealthTimeline';
 import HealthReminderForm from './components/HealthReminderForm';
@@ -31,6 +31,15 @@ const statusColors: Record<string, string> = {
   INACTIVE: 'orange',
   CHURNED: 'red',
   DECEASED: 'default',
+};
+
+const demandStatusColors: Record<string, string> = {
+  OPEN: 'blue',
+  IN_PROGRESS: 'processing',
+  PENDING: 'warning',
+  FULFILLED: 'success',
+  CANCELLED: 'default',
+  LOST: 'error',
 };
 
 export default function PatientDetailPage() {
@@ -128,8 +137,18 @@ export default function PatientDetailPage() {
 
   const demandColumns = [
     { title: t('patientDetail.demandTitle'), dataIndex: 'title', key: 'title' },
-    { title: t('patientDetail.demandType'), dataIndex: 'type', key: 'type' },
-    { title: t('patientDetail.demandStatus'), dataIndex: 'status', key: 'status' },
+    {
+      title: t('patientDetail.demandType'),
+      dataIndex: 'type',
+      key: 'type',
+      render: (type: DemandType) => <Tag>{demandTypeLabels[type] || type}</Tag>,
+    },
+    {
+      title: t('patientDetail.demandStatus'),
+      dataIndex: 'status',
+      key: 'status',
+      render: (status: DemandStatus) => <Tag color={demandStatusColors[status]}>{demandStatusLabels[status] || status}</Tag>,
+    },
     { title: t('patientDetail.demandCreated'), dataIndex: 'createdAt', key: 'createdAt', render: (date: string) => new Date(date).toLocaleDateString() },
   ];
 

@@ -70,10 +70,10 @@ export function PatientTimeline({
         <Space direction="vertical" size={0}>
           <Text strong>{event.title}</Text>
           <Space>
-            <Tag>{event.type.replace('_', ' ')}</Tag>
+            <Tag>{t(`journey.eventType.${event.type}`, event.type.replace('_', ' '))}</Tag>
             {event.subType && <Tag>{event.subType}</Tag>}
             {event.sentiment && (
-              <Tag color={sentimentColors[event.sentiment]}>{event.sentiment}</Tag>
+              <Tag color={sentimentColors[event.sentiment]}>{t(`journey.sentiment.${event.sentiment}`, event.sentiment)}</Tag>
             )}
             {event.status && <Tag color="blue">{event.status}</Tag>}
           </Space>

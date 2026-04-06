@@ -47,6 +47,7 @@
     "touchpoints": "Touchpoints",
     "followups": "Follow-ups",
     "reports": "Reports",
+    "experience": "Experience",
     "admin": "Admin"
   },
   "auth": {
@@ -115,7 +116,32 @@
     "enterPhone": "Enter phone number",
     "validEmail": "Please enter a valid email",
     "enterEmail": "Enter email address",
-    "enterAddress": "Enter address"
+    "enterAddress": "Enter address",
+    "back": "Back",
+    "backToPrevious": "Return to Previous Page",
+    "demands": "Demands",
+    "touchpoints": "Touchpoints",
+    "followups": "Follow-ups",
+    "journey": "Journey"
+  },
+  "patientDetail": {
+    "name": "Name",
+    "gender": "Gender",
+    "birthDate": "Birth Date",
+    "tier": "Tier",
+    "status": "Status",
+    "created": "Created",
+    "phone": "Phone",
+    "email": "Email",
+    "address": "Address",
+    "allergyHistory": "Allergy History",
+    "pastMedicalHistory": "Past Medical History",
+    "title": "Title",
+    "type": "Type",
+    "demandTitle": "Title",
+    "demandType": "Type",
+    "demandStatus": "Status",
+    "demandCreated": "Created"
   },
   "demands": {
     "title": "Demand Management",
@@ -323,9 +349,12 @@
     "satisfactionTrends": "Satisfaction Trends",
     "decliningPatients": "Declining Patients",
     "averageScore": "Average Score",
+    "totalInteractions": "Total Interactions",
     "totalResponses": "Total Responses",
     "declineCount": "Decline Count",
     "declineAlert": "Decline Alert",
+    "currentScore": "Current Score",
+    "previousScore": "Previous Score",
     "noDeclines": "No declining patients",
     "export": "Export Experience Report",
     "selectGranularity": "Select Granularity",
@@ -344,7 +373,10 @@
     "severity": "Severity",
     "severe": "Severe",
     "moderate": "Moderate",
-    "mild": "Mild"
+    "mild": "Mild",
+    "loadError": "Failed to load experience data",
+    "exportSuccess": "Report exported successfully",
+    "exportError": "Failed to export report"
   },
   "admin": {
     "overview": "Overview",
@@ -446,6 +478,20 @@
     "events": "Events",
     "page": "Page",
     "of": "of",
-    "loadMore": "Load More"
+    "loadMore": "Load More",
+    "eventType": {
+      "TOUCHPOINT": "Touchpoint",
+      "DEMAND": "Demand",
+      "PATH_START": "Path Start",
+      "PATH_STEP": "Path Step",
+      "PATH_END": "Path End",
+      "FOLLOWUP": "Follow-up",
+      "MILESTONE": "Milestone"
+    },
+    "sentiment": {
+      "POSITIVE": "Positive",
+      "NEUTRAL": "Neutral",
+      "NEGATIVE": "Negative"
+    }
   }
 }

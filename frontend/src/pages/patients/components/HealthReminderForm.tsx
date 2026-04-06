@@ -1,10 +1,15 @@
 import { useState } from 'react';
-import { Form, Radio, Input, DatePicker, Button, message, List, Space } from 'antd';
+import { Form, Radio, Input, DatePicker, Button, message, List } from 'antd';
 import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 import { healthApi, HealthReminder } from '@/api/health';
 
 const { TextArea } = Input;
+
+const reminderTypeLabels: Record<string, string> = {
+  REVIEW: '复查',
+  MEDICATION: '用药',
+};
 
 interface Props {
   patientId: string;
@@ -152,7 +157,7 @@ export default function HealthReminderForm({ patientId, onReminderCreated }: Pro
                   <div style={{ fontWeight: 500 }}>{item.title}</div>
                   {item.content && <div style={{ fontSize: 12 }}>{item.content}</div>}
                   <div style={{ fontSize: 12, color: '#999' }}>
-                    {dayjs(item.remindAt).format('YYYY-MM-DD HH:mm')} - {item.type}
+                    {dayjs(item.remindAt).format('YYYY-MM-DD HH:mm')} - {reminderTypeLabels[item.type] || item.type}
                   </div>
                 </div>
               </List.Item>

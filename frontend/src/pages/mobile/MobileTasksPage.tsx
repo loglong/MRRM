@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { List, Typography, Select, Spin, PullToRefresh } from 'antd';
+import { List, Typography, Select, Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { followupsApi, FollowupRecord } from '@/api/followups';
 import MobileFollowupCard from '@/components/mobile/MobileFollowupCard';
@@ -22,7 +22,6 @@ export default function MobileTasksPage() {
   const [statusFilter, setStatusFilter] = useState<string>('');
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
 
   const fetchFollowups = async (pageNum: number = 1, status?: string) => {
     setLoading(true);
@@ -41,7 +40,6 @@ export default function MobileTasksPage() {
       console.error('Failed to fetch followups', error);
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
   };
 
@@ -62,12 +60,6 @@ export default function MobileTasksPage() {
     }
   };
 
-  const handleRefresh = () => {
-    setRefreshing(true);
-    setPage(1);
-    fetchFollowups(1, statusFilter);
-  };
-
   return (
     <div className="mobile-tasks-page">
       <div className="mobile-tasks-filters">
@@ -81,36 +73,34 @@ export default function MobileTasksPage() {
         />
       </div>
 
-      <PullToRefresh onRefresh={handleRefresh}>
-        <List
-          loading={loading && page === 1}
-          dataSource={followups}
-          loadMore={
-            hasMore && !loading ? (
-              <div className="load-more" onClick={handleLoadMore}>
-                <Text type="secondary">加载更多</Text>
-              </div>
-            ) : null
-          }
-          renderItem={(followup: FollowupRecord) => (
-            <MobileFollowupCard
-              key={followup.id}
-              id={followup.id}
-              patientName={followup.patient?.name || '-'}
-              type={followup.plan?.name || 'ROUTINE'}
-              status={followup.status}
-              planTime={followup.scheduledAt}
-              content={followup.outcome || followup.notes || null}
-              onClick={() => navigate('/followups')}
-            />
-          )}
-        />
-        {loading && page > 1 && (
-          <div className="loading-more">
-            <Spin size="small" />
-          </div>
+      <List
+        loading={loading && page === 1}
+        dataSource={followups}
+        loadMore={
+          hasMore && !loading ? (
+            <div className="load-more" onClick={handleLoadMore}>
+              <Text type="secondary">加载更多</Text>
+            </div>
+          ) : null
+        }
+        renderItem={(followup: FollowupRecord) => (
+          <MobileFollowupCard
+            key={followup.id}
+            id={followup.id}
+            patientName={followup.patient?.name || '-'}
+            type={followup.plan?.name || 'ROUTINE'}
+            status={followup.status}
+            planTime={followup.scheduledAt}
+            content={followup.outcome || followup.notes || null}
+            onClick={() => navigate('/followups')}
+          />
         )}
-      </PullToRefresh>
+      />
+      {loading && page > 1 && (
+        <div className="loading-more">
+          <Spin size="small" />
+        </div>
+      )}
     </div>
   );
 }

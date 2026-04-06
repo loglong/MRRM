@@ -123,7 +123,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 | 3. Patient Engagement Operations | 0/2 plans (01-02) | Not started | - |
 | 4. Analytics and Journey | 0/3 plans (01-03) | Not started | - |
 | 5. Health and Integration | 2/2 plans (01-02) | Complete    | 2026-04-06 |
-| 6. Advanced Intelligence | 1/1 | Complete   | 2026-04-06 |
+| 6. Advanced Intelligence | 1/1 | Complete    | 2026-04-06 |
 
 ## Coverage
 

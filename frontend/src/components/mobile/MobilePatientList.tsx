@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { List, Card, Tag, Typography, Search, Spin, PullToRefresh } from 'antd';
+import { List, Card, Tag, Typography, Input, Spin } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { patientsApi, Patient } from '@/api/patients';
 import './MobilePatientList.css';
@@ -26,7 +26,6 @@ export default function MobilePatientList() {
   const [searchText, setSearchText] = useState('');
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
 
   const fetchPatients = async (pageNum: number = 1, search: string = '') => {
     setLoading(true);
@@ -46,7 +45,6 @@ export default function MobilePatientList() {
       console.error('Failed to fetch patients', error);
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
   };
 
@@ -67,12 +65,6 @@ export default function MobilePatientList() {
     }
   };
 
-  const handleRefresh = () => {
-    setRefreshing(true);
-    setPage(1);
-    fetchPatients(1, searchText);
-  };
-
   const tierLabels: Record<string, string> = {
     HIGH_VALUE: '高价值',
     REGULAR: '普通',
@@ -89,52 +81,50 @@ export default function MobilePatientList() {
   return (
     <div className="mobile-patient-list">
       <div className="mobile-patient-search">
-        <Search
+        <Input.Search
           placeholder="搜索患者姓名或电话"
           onSearch={handleSearch}
           allowClear
         />
       </div>
 
-      <PullToRefresh onRefresh={handleRefresh}>
-        <List
-          loading={loading && page === 1}
-          dataSource={patients}
-          loadMore={
-            hasMore && !loading ? (
-              <div className="load-more" onClick={handleLoadMore}>
-                <Text type="secondary">加载更多</Text>
-              </div>
-            ) : null
-          }
-          renderItem={(patient: Patient) => (
-            <Card
-              className="mobile-patient-card"
-              size="small"
-              onClick={() => navigate(`/patients/${patient.id}`)}
-            >
-              <div className="mobile-patient-header">
-                <Text strong className="patient-name">{patient.name}</Text>
-                <Tag color={tierColors[patient.tier]}>{tierLabels[patient.tier]}</Tag>
-              </div>
-              <div className="mobile-patient-info">
-                <Text type="secondary">{patient.phone || '-'}</Text>
-                <Tag color={statusColors[patient.status]}>{statusLabels[patient.status]}</Tag>
-              </div>
-              {patient.lastVisitAt && (
-                <Text type="secondary" className="last-visit">
-                  最后就诊: {new Date(patient.lastVisitAt).toLocaleDateString()}
-                </Text>
-              )}
-            </Card>
-          )}
-        />
-        {loading && page > 1 && (
-          <div className="loading-more">
-            <Spin size="small" />
-          </div>
+      <List
+        loading={loading && page === 1}
+        dataSource={patients}
+        loadMore={
+          hasMore && !loading ? (
+            <div className="load-more" onClick={handleLoadMore}>
+              <Text type="secondary">加载更多</Text>
+            </div>
+          ) : null
+        }
+        renderItem={(patient: Patient) => (
+          <Card
+            className="mobile-patient-card"
+            size="small"
+            onClick={() => navigate(`/patients/${patient.id}`)}
+          >
+            <div className="mobile-patient-header">
+              <Text strong className="patient-name">{patient.name}</Text>
+              <Tag color={tierColors[patient.tier]}>{tierLabels[patient.tier]}</Tag>
+            </div>
+            <div className="mobile-patient-info">
+              <Text type="secondary">{patient.phone || '-'}</Text>
+              <Tag color={statusColors[patient.status]}>{statusLabels[patient.status]}</Tag>
+            </div>
+            {patient.lastVisitAt && (
+              <Text type="secondary" className="last-visit">
+                最后就诊: {new Date(patient.lastVisitAt).toLocaleDateString()}
+              </Text>
+            )}
+          </Card>
         )}
-      </PullToRefresh>
+      />
+      {loading && page > 1 && (
+        <div className="loading-more">
+          <Spin size="small" />
+        </div>
+      )}
     </div>
   );
 }

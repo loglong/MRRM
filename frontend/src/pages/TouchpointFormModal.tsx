@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, Form, Input, Select, Radio, message } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { touchpointsApi } from '@/api/touchpoints';
@@ -16,6 +16,7 @@ export default function TouchpointFormModal({ visible, onOk, onCancel }: Touchpo
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [patientOptions, setPatientOptions] = useState<{ label: string; value: string }[]>([]);
 
   const typeOptions = [
     { label: t('touchpoints.visit') || 'Visit', value: 'VISIT' },
@@ -42,14 +43,24 @@ export default function TouchpointFormModal({ visible, onOk, onCancel }: Touchpo
   ];
 
   const handlePatientSearch = async (query: string) => {
-    if (!query || query.length < 1) return [];
+    if (!query || query.length < 1) {
+      setPatientOptions([]);
+      return;
+    }
     try {
       const patients = await patientsApi.search(query);
-      return patients.map((p: any) => ({ label: p.name, value: p.id }));
+      setPatientOptions(patients.map((p: any) => ({ label: `${p.name} ${p.phone || ''}`, value: p.id })));
     } catch {
-      return [];
+      setPatientOptions([]);
     }
   };
+
+  useEffect(() => {
+    if (!visible) {
+      form.resetFields();
+      setPatientOptions([]);
+    }
+  }, [visible, form]);
 
   const handleSubmit = async () => {
     try {
@@ -95,8 +106,8 @@ export default function TouchpointFormModal({ visible, onOk, onCancel }: Touchpo
             placeholder={t('touchpoints.searchPatient') || 'Search patient by name'}
             filterOption={false}
             onSearch={handlePatientSearch}
-            options={[]}
-            notFoundContent={null}
+            options={patientOptions}
+            notFoundContent={patientOptions.length === 0 ? null : undefined}
           />
         </Form.Item>
 

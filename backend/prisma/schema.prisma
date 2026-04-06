@@ -219,7 +219,7 @@ model Patient {
   assignedUserId  String?   @map("assigned_user_id")
   lastVisitAt     DateTime? @map("last_visit_at")
   nextVisitAt     DateTime? @map("next_visit_at")
-  tags            String[]  // Array of tag strings
+  tags            String[]  @default([]) // Array of tag strings
   metadata        Json?
   encryptedFields Json?     @map("encrypted_fields") // AES-256 encrypted sensitive data
   deletedAt       DateTime? @map("deleted_at")
