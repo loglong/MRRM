@@ -92,7 +92,10 @@
   4. 系统支持与HIS系统对接（读取患者基础信息）
   5. 系统支持与CRM系统对接（同步患者数据）
   6. 系统支持与BI系统对接（推送业务数据）
-**Plans**: 8 plans (01-08)
+**Plans**: 2 plans (01-02)
+**Plan List**:
+- [ ] 05-01-PLAN.md - Health Module (HEALTH-01, HEALTH-02, HEALTH-03)
+- [ ] 05-02-PLAN.md - Integration Module (INTEG-01, INTEG-02, INTEG-03, INTEG-04, INTEG-05)
 
 ## Progress
 
@@ -105,7 +108,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 2. Core Patient Objects | 1/3 plans (01-03) | Not started | 02-01 (Patient module) |
 | 3. Patient Engagement Operations | 0/2 plans (01-02) | Not started | - |
 | 4. Analytics and Journey | 0/3 plans (01-03) | Not started | - |
-| 5. Health and Integration | 0/8 plans (01-08) | Not started | - |
+| 5. Health and Integration | 0/2 plans (01-02) | Not started | - |
 
 ## Coverage
 
@@ -122,3 +125,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 **Total v1 requirements:** 57
 **Mapped:** 57
 **Unmapped:** 0
+
+---
+*Requirements defined: 2026-03-25*
+*Last updated: 2026-03-25 after roadmap creation*

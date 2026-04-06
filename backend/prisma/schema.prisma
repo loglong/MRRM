@@ -42,6 +42,8 @@ model Organization {
   followupRecords   FollowupRecord[]
   auditLogs         AuditLog[]
   journeyMilestones JourneyMilestone[]
+  healthRecords     HealthRecord[]
+  healthReminders   HealthReminder[]
 
   @@index([code])
   @@index([status])
@@ -232,6 +234,8 @@ model Patient {
   followupPlans    FollowupPlan[]
   followupRecords  FollowupRecord[]
   journeyMilestones JourneyMilestone[]
+  healthRecords    HealthRecord[]
+  healthReminders  HealthReminder[]
   pathInstances    PathInstance[]
 
   @@index([orgId])
@@ -689,4 +693,73 @@ model JourneyMilestone {
 
   @@index([orgId, patientId])
   @@map("journey_milestones")
+}
+
+// ============================================================================
+// Health Record Management (HEALTH-01, HEALTH-02)
+// ============================================================================
+
+model HealthRecord {
+  id          String   @id @default(uuid())
+  patientId   String   @map("patient_id")
+  orgId       String   @map("org_id")
+  category    HealthRecordCategory
+  title       String
+  description String?  @db.Text
+  recordDate  DateTime @map("record_date") @db.Date
+  data        Json?    // Flexible: { value, unit, referenceRange, fileUrl }
+  source      String   @default("manual") // "manual", "his", "lab_system"
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  // Relations
+  patient   Patient   @relation(fields: [patientId], references: [id])
+  organization Organization @relation(fields: [orgId], references: [id])
+
+  @@index([patientId, recordDate])
+  @@index([orgId])
+  @@map("health_records")
+}
+
+enum HealthRecordCategory {
+  ALLERGY
+  PAST_HISTORY
+  EXAM_RESULT
+  DIAGNOSIS
+  TREATMENT
+}
+
+// ============================================================================
+// Health Reminder (HEALTH-03)
+// ============================================================================
+
+model HealthReminder {
+  id        String   @id @default(uuid())
+  patientId String   @map("patient_id")
+  orgId     String   @map("org_id")
+  type      ReminderType
+  title     String
+  content   String?  @db.Text
+  remindAt  DateTime @map("remind_at") @db.Timestamp
+  status    ReminderStatus @default(PENDING)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  patient   Patient   @relation(fields: [patientId], references: [id])
+  organization Organization @relation(fields: [orgId], references: [id])
+
+  @@index([patientId, remindAt])
+  @@index([orgId, status])
+  @@map("health_reminders")
+}
+
+enum ReminderType {
+  REVIEW
+  MEDICATION
+}
+
+enum ReminderStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
 }
