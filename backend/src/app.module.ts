@@ -19,7 +19,7 @@ import { RabbitMQModule } from './rabbitmq/rabbitmq.module';
 import { IntegrationModule } from './integration/integration.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { OrgIdMiddleware } from './common/middleware/org-id.middleware';
-import { HealthController } from './health/health.controller';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -44,8 +44,9 @@ import { HealthController } from './health/health.controller';
     RabbitMQModule,
     ExperienceModule,
     IntegrationModule,
+    HealthModule,
   ],
-  controllers: [HealthController],
+  controllers: [],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
