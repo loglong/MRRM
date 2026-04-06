@@ -22,6 +22,7 @@ import { OrgIdMiddleware } from './common/middleware/org-id.middleware';
 import { HealthModule } from './health/health.module';
 import { MobileModule } from './mobile/mobile.module';
 import { AiModule } from './ai/ai.module';
+import { AutomationModule } from './automation/automation.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { AiModule } from './ai/ai.module';
     HealthModule,
     MobileModule,
     AiModule,
+    AutomationModule,
   ],
   controllers: [],
 })
