@@ -1,0 +1,21 @@
+.mobile-demands-page {
+  padding: 12px;
+  padding-bottom: 80px;
+}
+
+.mobile-demands-filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.load-more {
+  text-align: center;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.loading-more {
+  text-align: center;
+  padding: 8px;
+}

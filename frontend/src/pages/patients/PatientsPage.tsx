@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { patientsApi, Patient } from '@/api/patients';
 import PatientFormModal from './PatientFormModal';
+import { useMobile } from '@/hooks/useMobile';
+import MobilePatientList from '@/components/mobile/MobilePatientList';
 
 const { Title, Text } = Typography;
 const { Search } = Input;
@@ -26,6 +28,7 @@ const statusColors: Record<string, string> = {
 export default function PatientsPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const isMobile = useMobile();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({ current: 1, pageSize: 20, total: 0 });
@@ -199,6 +202,19 @@ export default function PatientsPage() {
     },
   ];
 
+  // Mobile view - render mobile patient list
+  if (isMobile) {
+    return (
+      <div>
+        <div style={{ padding: '12px', paddingBottom: 80 }}>
+          <Title level={4} style={{ margin: 0, marginBottom: 12 }}>{t('patients.title')}</Title>
+        </div>
+        <MobilePatientList />
+      </div>
+    );
+  }
+
+  // Desktop view - render full table
   return (
     <div style={{ padding: 24 }}>
       <div style={{ marginBottom: 24 }}>

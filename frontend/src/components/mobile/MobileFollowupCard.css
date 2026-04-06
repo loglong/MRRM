@@ -1,0 +1,53 @@
+.mobile-followup-card {
+  margin-bottom: 8px;
+  border-radius: 8px;
+}
+
+.mobile-followup-card.overdue {
+  border-left: 3px solid #ff4d4f;
+}
+
+.mobile-followup-card .ant-card-body {
+  padding: 12px;
+}
+
+.followup-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.followup-icon {
+  margin-right: 6px;
+  color: #faad14;
+}
+
+.followup-type {
+  font-size: 12px;
+  flex: 1;
+}
+
+.followup-patient {
+  display: block;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.followup-content {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.followup-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.followup-time {
+  font-size: 12px;
+}

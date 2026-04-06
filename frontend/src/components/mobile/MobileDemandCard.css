@@ -1,0 +1,49 @@
+.mobile-demand-card {
+  margin-bottom: 8px;
+  border-radius: 8px;
+}
+
+.mobile-demand-card .ant-card-body {
+  padding: 12px;
+}
+
+.demand-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.demand-icon {
+  margin-right: 6px;
+  color: #1890ff;
+}
+
+.demand-type {
+  font-size: 12px;
+}
+
+.demand-title {
+  display: block;
+  font-size: 15px;
+  margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.demand-patient {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.demand-footer {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.demand-date {
+  font-size: 11px;
+  margin-left: auto;
+}

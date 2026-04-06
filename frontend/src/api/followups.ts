@@ -73,6 +73,9 @@ export const followupsApi = {
   listRecords: (params?: any): Promise<PaginatedResponse<FollowupRecord>> =>
     api.get('/followup-records', { params }).then(res => res.data),
 
+  listPending: (params?: { page?: number; limit?: number }): Promise<PaginatedResponse<FollowupRecord>> =>
+    api.get('/followup-records', { params: { ...params, status: 'PENDING' } }).then(res => res.data),
+
   executeRecord: (id: string, data: { outcome?: string; notes?: string }): Promise<FollowupRecord> =>
     api.put(`/followup-records/${id}/execute`, data).then(res => res.data),
 

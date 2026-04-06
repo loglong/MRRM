@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import MainLayout from './layouts/MainLayout';
+import MobileLayout from './layouts/MobileLayout';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
@@ -17,6 +18,11 @@ import RolesPage from './pages/admin/RolesPage';
 import PermissionsPage from './pages/admin/PermissionsPage';
 import UsersPage from './pages/admin/UsersPage';
 import ForbiddenPage from './pages/ForbiddenPage';
+import MobileHomePage from './pages/mobile/MobileHomePage';
+import MobilePatientsPage from './pages/mobile/MobilePatientsPage';
+import MobileDemandsPage from './pages/mobile/MobileDemandsPage';
+import MobileTasksPage from './pages/mobile/MobileTasksPage';
+import ChurnRiskPage from './pages/ChurnRiskPage';
 import { Spin } from 'antd';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -66,6 +72,20 @@ function App() {
           <Route path="admin/permissions" element={<PermissionsPage />} />
           <Route path="admin/users" element={<UsersPage />} />
           <Route path="forbidden" element={<ForbiddenPage />} />
+          <Route path="churn-risk" element={<ChurnRiskPage />} />
+        </Route>
+        <Route
+          path="/mobile"
+          element={
+            <ProtectedRoute>
+              <MobileLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<MobileHomePage />} />
+          <Route path="patients" element={<MobilePatientsPage />} />
+          <Route path="demands" element={<MobileDemandsPage />} />
+          <Route path="tasks" element={<MobileTasksPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

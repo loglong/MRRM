@@ -1,5 +1,6 @@
 {
   "common": {
+    "create": "创建",
     "login": "登录",
     "logout": "退出登录",
     "register": "注册",
@@ -38,7 +39,9 @@
     "total": "共",
     "pending": "待处理",
     "completed": "已完成",
-    "time": "时间"
+    "time": "时间",
+    "back": "返回",
+    "backToPrevious": "返回上一页"
   },
   "menu": {
     "dashboard": "工作台",
@@ -48,6 +51,7 @@
     "touchpoints": "触点管理",
     "followups": "随访管理",
     "reports": "数据报表",
+    "experience": "体验管理",
     "admin": "系统管理"
   },
   "auth": {
@@ -116,7 +120,32 @@
     "enterPhone": "输入电话号码",
     "validEmail": "请输入有效的邮箱",
     "enterEmail": "输入邮箱地址",
-    "enterAddress": "输入地址"
+    "enterAddress": "输入地址",
+    "back": "返回",
+    "backToPrevious": "返回上一页",
+    "demands": "需求",
+    "touchpoints": "触点",
+    "followups": "随访",
+    "journey": "旅程"
+  },
+  "patientDetail": {
+    "name": "姓名",
+    "gender": "性别",
+    "birthDate": "出生日期",
+    "tier": "等级",
+    "status": "状态",
+    "created": "创建时间",
+    "phone": "电话",
+    "email": "邮箱",
+    "address": "地址",
+    "allergyHistory": "过敏史",
+    "pastMedicalHistory": "病史",
+    "title": "标题",
+    "type": "类型",
+    "demandTitle": "需求标题",
+    "demandType": "需求类型",
+    "demandStatus": "需求状态",
+    "demandCreated": "创建时间"
   },
   "demands": {
     "title": "需求管理",
@@ -324,9 +353,12 @@
     "satisfactionTrends": "满意度趋势",
     "decliningPatients": "体验下滑患者",
     "averageScore": "平均满意度",
+    "totalInteractions": "总交互数",
     "totalResponses": "总响应数",
     "declineCount": "下滑人数",
     "declineAlert": "下滑预警",
+    "currentScore": "当前评分",
+    "previousScore": "上次评分",
     "noDeclines": "暂无体验下滑患者",
     "export": "导出体验报告",
     "selectGranularity": "选择粒度",
@@ -345,7 +377,10 @@
     "severity": "严重程度",
     "severe": "严重",
     "moderate": "中等",
-    "mild": "轻度"
+    "mild": "轻度",
+    "loadError": "加载体验数据失败",
+    "exportSuccess": "报告导出成功",
+    "exportError": "导出报告失败"
   },
   "admin": {
     "overview": "概览",
@@ -447,6 +482,65 @@
     "events": "事件",
     "page": "页",
     "of": "共",
-    "loadMore": "加载更多"
+    "loadMore": "加载更多",
+    "eventType": {
+      "TOUCHPOINT": "触点",
+      "DEMAND": "需求",
+      "PATH_START": "路径开始",
+      "PATH_STEP": "路径步骤",
+      "PATH_END": "路径完成",
+      "FOLLOWUP": "随访",
+      "MILESTONE": "里程碑"
+    },
+    "sentiment": {
+      "POSITIVE": "满意",
+      "NEUTRAL": "一般",
+      "NEGATIVE": "不满意"
+    }
+  },
+  "health": {
+    "title": "健康档案",
+    "archiveSummary": "健康档案摘要",
+    "archive": "健康摘要",
+    "timeline": "健康时间线",
+    "reminders": "健康提醒",
+    "allergies": "过敏史",
+    "pastHistory": "既往史",
+    "examResults": "检查结果",
+    "diagnosis": "诊断",
+    "treatment": "治疗",
+    "archiveEmpty": "暂无健康档案数据",
+    "timelineEmpty": "暂无健康记录",
+    "noReminders": "暂无待执行提醒",
+    "pendingReminders": "待执行提醒",
+    "reminderCreated": "提醒已创建",
+    "reminderError": "创建提醒失败",
+    "reminderCompleted": "提醒已完成",
+    "reminderDeleted": "提醒已删除",
+    "reminderType": "提醒类型",
+    "review": "复查",
+    "medication": "用药",
+    "reminderTitle": "标题",
+    "reminderContent": "内容",
+    "remindAt": "提醒时间",
+    "titleRequired": "请输入标题",
+    "dateRequired": "请选择日期",
+    "loadMore": "加载更多",
+    "empty": "暂无数据"
+  },
+  "churnRisk": {
+    "title": "患者流失预警",
+    "noHighRisk": "暂无高风险患者",
+    "riskScore": "风险评分",
+    "riskLevel": "风险等级",
+    "riskFactors": "风险因素",
+    "highRisk": "高风险",
+    "mediumRisk": "中风险",
+    "lowRisk": "低风险",
+    "lastVisitDays": "最后就诊",
+    "satisfactionDrop": "满意度下降",
+    "touchpointDecline": "触点减少",
+    "pathMissed": "路径遗漏",
+    "daysAgo": "{{days}}天前"
   }
 }

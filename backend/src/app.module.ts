@@ -20,6 +20,7 @@ import { IntegrationModule } from './integration/integration.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { OrgIdMiddleware } from './common/middleware/org-id.middleware';
 import { HealthModule } from './health/health.module';
+import { MobileModule } from './mobile/mobile.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { HealthModule } from './health/health.module';
     ExperienceModule,
     IntegrationModule,
     HealthModule,
+    MobileModule,
   ],
   controllers: [],
 })

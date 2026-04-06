@@ -1,0 +1,52 @@
+.mobile-patient-list {
+  padding: 12px;
+  padding-bottom: 80px;
+}
+
+.mobile-patient-search {
+  margin-bottom: 12px;
+}
+
+.mobile-patient-card {
+  margin-bottom: 8px;
+  border-radius: 8px;
+}
+
+.mobile-patient-card .ant-card-body {
+  padding: 12px;
+}
+
+.mobile-patient-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.patient-name {
+  font-size: 16px;
+}
+
+.mobile-patient-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.last-visit {
+  font-size: 12px;
+  display: block;
+  margin-top: 4px;
+}
+
+.load-more {
+  text-align: center;
+  padding: 12px;
+  cursor: pointer;
+}
+
+.loading-more {
+  text-align: center;
+  padding: 8px;
+}

@@ -1,0 +1,53 @@
+.mobile-home {
+  padding: 12px;
+  padding-bottom: 80px;
+}
+
+.mobile-home-header {
+  margin-bottom: 16px;
+  padding: 8px 0;
+}
+
+.mobile-home-header h4 {
+  margin-bottom: 4px;
+}
+
+.mobile-home-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.mobile-stats {
+  margin-bottom: 16px;
+}
+
+.stat-card {
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.stat-card.risk {
+  border: 1px solid #ff4d4f33;
+}
+
+.stat-card .ant-statistic-title {
+  font-size: 12px;
+}
+
+.stat-card .ant-statistic-content {
+  font-size: 20px;
+}
+
+.mobile-section {
+  margin-bottom: 16px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 0 4px;
+}
