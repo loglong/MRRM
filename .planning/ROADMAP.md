@@ -10,7 +10,8 @@
 - [x] **Phase 2: Core Patient Objects** - 患者档案、需求管理、路径管理 (3 plans)
 - [x] **Phase 3: Patient Engagement Operations** - 触点管理、随访管理 (2 plans) (1/2)
 - [ ] **Phase 4: Analytics and Journey** - 患者旅程中心、报表中心、体验管理中心 (3 plans)
-- [ ] **Phase 5: Health and Integration** - 健康管理中心、系统集成
+- [x] **Phase 5: Health and Integration** - 健康管理中心、系统集成 (completed 2026-04-06)
+- [x] **Phase 6: Advanced Intelligence & Mobile** - 移动端适配、AI流失预警、营销自动化 (completed 2026-04-06)
 
 ## Phase Details
 
@@ -97,10 +98,23 @@
 - [x] 05-01-PLAN.md - Health Module (HEALTH-01, HEALTH-02, HEALTH-03)
 - [x] 05-02-PLAN.md - Integration Module (INTEG-01, INTEG-02, INTEG-03, INTEG-04, INTEG-05)
 
+### Phase 6: Advanced Intelligence & Mobile
+**Goal**: 用户可以在移动端使用核心功能，系统具备AI患者流失预警和营销自动化基础能力
+**Depends on**: Phase 5
+**Requirements**: MOBILE-01, AI-02, ADV-02 (3 requirements from v2)
+**Success Criteria** (what must be TRUE):
+  1. 移动端浏览器可访问患者列表、需求列表、触点记录、随访任务
+  2. 系统自动识别流失风险患者（评分 > 70）并产生预警
+  3. 系统自动在患者生日前 7 天创建随访任务
+  4. 系统自动在复诊周期到期前创建随访提醒
+**Plans**: 1 plan (01)
+**Plan List**:
+- [x] 06-01-PLAN.md - Mobile + AI Core (MOBILE-01, AI-02, ADV-02)
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -108,7 +122,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 2. Core Patient Objects | 1/3 plans (01-03) | Not started | 02-01 (Patient module) |
 | 3. Patient Engagement Operations | 0/2 plans (01-02) | Not started | - |
 | 4. Analytics and Journey | 0/3 plans (01-03) | Not started | - |
-| 5. Health and Integration | 2/2 plans (01-02) | Completed | 05-01, 05-02 |
+| 5. Health and Integration | 2/2 plans (01-02) | Complete    | 2026-04-06 |
+| 6. Advanced Intelligence | 1/1 | Complete   | 2026-04-06 |
 
 ## Coverage
 
@@ -121,10 +136,12 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5
 | 3 - Patient Engagement Operations | TOUCH-01~TOUCH-05, FOLLOW-01~FOLLOW-06 | 11 |
 | 4 - Analytics and Journey | JOURNEY-01~JOURNEY-03, REPORT-01~REPORT-03, EXPER-01~EXPER-04 | 10 |
 | 5 - Health and Integration | HEALTH-01~HEALTH-03, INTEG-01~INTEG-05 | 8 |
+| 6 - Advanced Intelligence | MOBILE-01, AI-02, ADV-02 | 3 (v2) |
 
 **Total v1 requirements:** 57
 **Mapped:** 57
 **Unmapped:** 0
+**v2 requirements:** 9 total, 3 planned in Phase 6, 6 remaining
 
 ---
 *Requirements defined: 2026-03-25*

@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: Ready to plan
-stopped_at: Completed 05-02-PLAN.md
-last_updated: "2026-04-06T02:54:32.849Z"
+status: Phase complete — ready for verification
+stopped_at: Completed Phase 6 (06-advanced-intelligence) with 06-01-PLAN.md covering Mobile + AI Core
+last_updated: "2026-04-06T07:17:59.055Z"
 progress:
-  total_phases: 6
-  completed_phases: 3
-  total_plans: 18
-  completed_plans: 16
+  total_phases: 7
+  completed_phases: 5
+  total_plans: 19
+  completed_plans: 18
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-25)
 
 **Core value:** 帮助医疗机构通过标准化诊疗路径提升患者转化率，通过全触点记录优化患者体验，通过智能随访提高治疗完成率
-**Current focus:** Phase 04 — analytics-and-journey
+**Current focus:** Phase 6 — advanced-intelligence
 
 ## Current Position
 
-Phase: 5
-Plan: Not started
+Phase: 6 (advanced-intelligence) — EXECUTING
+Plan: 1 of 1
 
 ## Performance Metrics
 
@@ -55,7 +55,10 @@ Plan: Not started
 | Phase 01 P06 | 5 | 2 tasks | 30 files |
 | Phase 02-core-patient-objects P03 | 15 | 3 tasks | 13 files |
 | Phase 04 P01 | 8 | 5 tasks | 11 files |
+| Phase 05-health-and-integration P01 | 15 | 3 tasks | 24 files |
 | Phase 05-health-and-integration P02 | 5 | 3 tasks | 17 files |
+| Phase 06-advanced-intelligence P01 | — | Planned | — |
+| Phase 06-advanced-intelligence P01 | 8 | 3 tasks | 40 files |
 
 ## Accumulated Context
 
@@ -79,6 +82,13 @@ Recent decisions affecting current work:
 - [Phase 05-health-and-integration]: Public API uses X-Org-Id header for external system tenant identification
 - [Phase 05-health-and-integration]: Integration exchange uses RabbitMQ topic type with webhook.{eventType} routing
 - [Phase 05-health-and-integration]: All adapters use fire-and-forget pattern: 5s timeout, log errors, no exceptions propagate
+- [Phase 05-health-and-integration P01]: HealthArchive returns grouped records (allergies, pastHistory, examResults) rather than flat list
+- [Phase 05-health-and-integration P01]: HealthTimeline uses cursor-based pagination matching journey pattern
+- [Phase 05-health-and-integration P01]: Reminder deletion restricted to PENDING status only
+- [Phase 06]: AI churn prediction uses rule-based MVP first (ML v2), factors: lastVisitDays (40%), satisfactionDrop (30%), touchpointDecline (20%), pathMissed (10%)
+- [Phase 06]: Marketing automation includes birthday reminders (7 days window) and followup reminders based on treatment type cycles
+- [Phase 06-advanced-intelligence]: Churn prediction uses rule-based MVP with 4 weighted factors: lastVisitDays (40%), satisfactionDrop (30%), touchpointDecline (20%), pathMissed (10%)
+- [Phase 06-advanced-intelligence]: Marketing automation includes birthday reminders (7 days window) and followup reminders based on treatment type cycles (implant=180d, orthodontics=30d, etc)
 
 ### Pending Todos
 
@@ -94,6 +104,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-04-06T02:53:55.181Z
-Stopped at: Completed 05-02-PLAN.md
+Last session: 2026-04-06T07:17:59.049Z
+Stopped at: Completed Phase 6 (06-advanced-intelligence) with 06-01-PLAN.md covering Mobile + AI Core
 Resume file: None
