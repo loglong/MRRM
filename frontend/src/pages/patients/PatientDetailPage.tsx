@@ -5,6 +5,10 @@ import { EditOutlined, ArrowLeftOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { patientsApi, Patient } from '@/api/patients';
 import { journeyApi, JourneyEvent } from '@/api/journey';
+import { healthApi } from '@/api/health';
+import HealthArchiveSummary from './components/HealthArchiveSummary';
+import HealthTimeline from './components/HealthTimeline';
+import HealthReminderForm from './components/HealthReminderForm';
 import PatientFormModal from './PatientFormModal';
 import PatientTimeline from '@/components/PatientTimeline';
 
@@ -96,57 +100,57 @@ export default function PatientDetailPage() {
   }
 
   const genderLabels: Record<string, string> = {
-    MALE: 'Male',
-    FEMALE: 'Female',
-    OTHER: 'Other',
-    UNKNOWN: 'Unknown',
+    MALE: t('patients.male'),
+    FEMALE: t('patients.female'),
+    OTHER: t('patients.other'),
+    UNKNOWN: t('patients.unknown'),
   };
 
   const basicInfoItems = [
-    { key: '1', label: 'Name', children: <Text strong>{patient.name}</Text> },
-    { key: '2', label: 'Gender', children: genderLabels[patient.gender || 'UNKNOWN'] || '-' },
-    { key: '3', label: 'Birth Date', children: patient.birthDate ? new Date(patient.birthDate).toLocaleDateString() : '-' },
-    { key: '4', label: 'Tier', children: <Tag color={tierColors[patient.tier]}>{tierLabels[patient.tier]}</Tag> },
-    { key: '5', label: 'Status', children: <Tag color={statusColors[patient.status]}>{patient.status}</Tag> },
-    { key: '6', label: 'Created', children: new Date(patient.createdAt).toLocaleString() },
+    { key: '1', label: t('patientDetail.name'), children: <Text strong>{patient.name}</Text> },
+    { key: '2', label: t('patientDetail.gender'), children: genderLabels[patient.gender || 'UNKNOWN'] || '-' },
+    { key: '3', label: t('patientDetail.birthDate'), children: patient.birthDate ? new Date(patient.birthDate).toLocaleDateString() : '-' },
+    { key: '4', label: t('patientDetail.tier'), children: <Tag color={tierColors[patient.tier]}>{tierLabels[patient.tier]}</Tag> },
+    { key: '5', label: t('patientDetail.status'), children: <Tag color={statusColors[patient.status]}>{patient.status}</Tag> },
+    { key: '6', label: t('patientDetail.created'), children: new Date(patient.createdAt).toLocaleString() },
   ];
 
   const contactInfoItems = [
-    { key: '1', label: 'Phone', children: patient.phone || '-' },
-    { key: '2', label: 'Email', children: patient.email || '-' },
-    { key: '3', label: 'Address', children: patient.address || '-' },
+    { key: '1', label: t('patientDetail.phone'), children: patient.phone || '-' },
+    { key: '2', label: t('patientDetail.email'), children: patient.email || '-' },
+    { key: '3', label: t('patientDetail.address'), children: patient.address || '-' },
   ];
 
   const medicalInfoItems = [
-    { key: '1', label: 'Allergy History', children: patient.allergyHistory || '-' },
-    { key: '2', label: 'Past Medical History', children: patient.pastHistory || '-' },
+    { key: '1', label: t('patientDetail.allergyHistory'), children: patient.allergyHistory || '-' },
+    { key: '2', label: t('patientDetail.pastMedicalHistory'), children: patient.pastHistory || '-' },
   ];
 
   const demandColumns = [
-    { title: 'Title', dataIndex: 'title', key: 'title' },
-    { title: 'Type', dataIndex: 'type', key: 'type' },
-    { title: 'Status', dataIndex: 'status', key: 'status' },
-    { title: 'Created', dataIndex: 'createdAt', key: 'createdAt', render: (date: string) => new Date(date).toLocaleDateString() },
+    { title: t('patientDetail.demandTitle'), dataIndex: 'title', key: 'title' },
+    { title: t('patientDetail.demandType'), dataIndex: 'type', key: 'type' },
+    { title: t('patientDetail.demandStatus'), dataIndex: 'status', key: 'status' },
+    { title: t('patientDetail.demandCreated'), dataIndex: 'createdAt', key: 'createdAt', render: (date: string) => new Date(date).toLocaleDateString() },
   ];
 
   const touchpointColumns = [
-    { title: 'Title', dataIndex: 'title', key: 'title' },
-    { title: 'Type', dataIndex: 'type', key: 'type' },
-    { title: 'Channel', dataIndex: 'channel', key: 'channel' },
-    { title: 'Created', dataIndex: 'createdAt', key: 'createdAt', render: (date: string) => new Date(date).toLocaleDateString() },
+    { title: t('patientDetail.title'), dataIndex: 'title', key: 'title' },
+    { title: t('patientDetail.type'), dataIndex: 'type', key: 'type' },
+    { title: t('touchpoints.channel'), dataIndex: 'channel', key: 'channel' },
+    { title: t('patientDetail.created'), dataIndex: 'createdAt', key: 'createdAt', render: (date: string) => new Date(date).toLocaleDateString() },
   ];
 
   const followupColumns = [
-    { title: 'Name', dataIndex: 'name', key: 'name' },
-    { title: 'Type', dataIndex: 'type', key: 'type' },
-    { title: 'Status', dataIndex: 'status', key: 'status' },
-    { title: 'Start Date', dataIndex: 'startDate', key: 'startDate', render: (date: string) => new Date(date).toLocaleDateString() },
+    { title: t('followups.planName'), dataIndex: 'name', key: 'name' },
+    { title: t('patientDetail.type'), dataIndex: 'type', key: 'type' },
+    { title: t('patientDetail.status'), dataIndex: 'status', key: 'status' },
+    { title: t('followups.startDate'), dataIndex: 'startDate', key: 'startDate', render: (date: string) => new Date(date).toLocaleDateString() },
   ];
 
   const tabItems = [
     {
       key: 'demands',
-      label: `Demands (${patient.demands?.length || 0})`,
+      label: `${t('patients.demands')} (${patient.demands?.length || 0})`,
       children: (
         <Table
           dataSource={patient.demands || []}
@@ -159,7 +163,7 @@ export default function PatientDetailPage() {
     },
     {
       key: 'touchpoints',
-      label: `Touchpoints (${patient.touchpoints?.length || 0})`,
+      label: `${t('patients.touchpoints')} (${patient.touchpoints?.length || 0})`,
       children: (
         <Table
           dataSource={patient.touchpoints || []}
@@ -172,7 +176,7 @@ export default function PatientDetailPage() {
     },
     {
       key: 'followups',
-      label: `Follow-ups (${patient.followupPlans?.length || 0})`,
+      label: `${t('patients.followups')} (${patient.followupPlans?.length || 0})`,
       children: (
         <Table
           dataSource={patient.followupPlans || []}
@@ -185,7 +189,7 @@ export default function PatientDetailPage() {
     },
     {
       key: 'journey',
-      label: t('journey.title', 'Journey'),
+      label: t('patients.journey'),
       children: (
         <PatientTimeline
           events={journeyEvents}
@@ -196,16 +200,33 @@ export default function PatientDetailPage() {
         />
       ),
     },
+    {
+      key: 'health',
+      label: t('patients.health') || '健康档案',
+      children: (
+        <div>
+          <Card title={t('health.archiveSummary') || '健康档案摘要'} size="small" style={{ marginBottom: 16 }}>
+            <HealthArchiveSummary patientId={patient.id} />
+          </Card>
+          <Card title={t('health.timeline') || '健康时间线'} size="small" style={{ marginBottom: 16 }}>
+            <HealthTimeline patientId={patient.id} />
+          </Card>
+          <Card title={t('health.reminders') || '健康提醒'} size="small">
+            <HealthReminderForm patientId={patient.id} onReminderCreated={() => {}} />
+          </Card>
+        </div>
+      ),
+    },
   ];
 
   return (
     <div style={{ padding: 24 }}>
       <Space style={{ marginBottom: 16 }}>
         <Button icon={<ArrowLeftOutlined />} onClick={() => navigate('/patients')}>
-          Back
+          {t('common.back')}
         </Button>
         <Button icon={<EditOutlined />} onClick={handleEdit}>
-          Edit
+          {t('common.edit')}
         </Button>
       </Space>
 
@@ -215,15 +236,15 @@ export default function PatientDetailPage() {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 16 }}>
-        <Card title="Basic Information" size="small">
+        <Card title={t('patients.basicInfo')} size="small">
           <Descriptions column={1} size="small" items={basicInfoItems} />
         </Card>
 
-        <Card title="Contact Information" size="small">
+        <Card title={t('patients.contactInfo')} size="small">
           <Descriptions column={1} size="small" items={contactInfoItems} />
         </Card>
 
-        <Card title="Medical Information" size="small">
+        <Card title={t('patients.medicalInfo')} size="small">
           <Descriptions column={1} size="small" items={medicalInfoItems} />
         </Card>
       </div>
