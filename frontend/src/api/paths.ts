@@ -20,6 +20,7 @@ export interface PathTemplate {
   orgId: string;
   version: string;
   status: 'DRAFT' | 'ACTIVE' | 'ARCHIVED';
+  specialty?: 'ORAL' | 'OPHTHALMIC' | 'ORTHOPEDIC' | 'DERMATOLOGY' | 'TCM' | null;
   icd10Code: string | null;
   icd9Code: string | null;
   diagnosisName: string | null;
@@ -34,6 +35,7 @@ export interface CreatePathDto {
   name: string;
   description?: string;
   status?: 'DRAFT' | 'ACTIVE' | 'ARCHIVED';
+  specialty?: 'ORAL' | 'OPHTHALMIC' | 'ORTHOPEDIC' | 'DERMATOLOGY' | 'TCM';
   icd10Code?: string;
   icd9Code?: string;
   diagnosisName?: string;
@@ -44,6 +46,7 @@ export interface UpdatePathDto {
   name?: string;
   description?: string;
   status?: 'DRAFT' | 'ACTIVE' | 'ARCHIVED';
+  specialty?: 'ORAL' | 'OPHTHALMIC' | 'ORTHOPEDIC' | 'DERMATOLOGY' | 'TCM' | null;
   icd10Code?: string | null;
   icd9Code?: string | null;
   diagnosisName?: string | null;
@@ -111,6 +114,7 @@ export const pathsApi = {
     limit?: number;
     status?: string;
     search?: string;
+    specialty?: string;
   }): Promise<PaginatedResponse<PathTemplate>> => {
     return api.get('/path-templates', { params }).then((res) => res.data);
   },

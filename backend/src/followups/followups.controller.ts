@@ -86,4 +86,46 @@ export class FollowupsController {
     const orgId = req.user?.orgId;
     return this.followupsService.getCompletionRate(orgId, query);
   }
+
+  // ===== Path-based Follow-up (LINK-01) =====
+
+  /**
+   * Get available path templates for follow-up selection
+   */
+  @Get('paths/available')
+  async getAvailablePaths(
+    @Request() req: any,
+    @Query('specialty') specialty?: string,
+    @Query('search') search?: string,
+  ) {
+    const orgId = req.user?.orgId;
+    return this.followupsService.getAvailablePaths(orgId, { specialty, search });
+  }
+
+  /**
+   * Suggest paths for a patient based on their specialty/demands
+   */
+  @Get('patients/:patientId/suggested-paths')
+  async suggestPathsForPatient(
+    @Param('patientId', ParseUUIDPipe) patientId: string,
+    @Request() req: any,
+  ) {
+    const orgId = req.user?.orgId;
+    return this.followupsService.suggestPathsForPatient(patientId, orgId);
+  }
+
+  /**
+   * Create follow-up plan from path template
+   */
+  @Post('patients/:patientId/followup-plans/from-path/:pathId')
+  async createPlanFromPath(
+    @Param('patientId', ParseUUIDPipe) patientId: string,
+    @Param('pathId', ParseUUIDPipe) pathId: string,
+    @Body() body: any,
+    @Request() req: any,
+  ) {
+    const orgId = req.user?.orgId;
+    const userId = req.user?.sub;
+    return this.followupsService.createPlanFromPath(patientId, pathId, body, orgId, userId);
+  }
 }

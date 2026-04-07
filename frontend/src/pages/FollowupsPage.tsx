@@ -142,6 +142,10 @@ export default function FollowupsPage() {
     { title: t('followups.planName') || '计划名称', dataIndex: 'name', key: 'name' },
     { title: t('common.type'), dataIndex: 'type', key: 'type', render: (type: string) => getTypeTag(type) },
     { title: t('common.status'), dataIndex: 'status', key: 'status', render: (status: string) => getStatusTag(status) },
+    { title: t('paths.path') || '关联路径', key: 'path', render: (_: any, record: FollowupPlan) => {
+      if (!record.path) return '-';
+      return <Tag color="blue">{record.path.name}</Tag>;
+    }},
     { title: t('followups.frequencyDays') || '频率(天)', dataIndex: 'frequencyDays', key: 'frequencyDays' },
     { title: t('followups.completion') || '完成率', key: 'completion', render: (_: any, record: FollowupPlan) => {
       if (!record.recordCount) return '-';

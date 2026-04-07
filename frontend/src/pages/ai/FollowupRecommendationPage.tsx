@@ -7,23 +7,24 @@ const { Title, Text, Paragraph } = Typography;
 
 interface Props {
   patientId: string;
+  patientOrgId?: string;
   onCreateFollowup?: () => void;
 }
 
-export default function FollowupRecommendationPage({ patientId, onCreateFollowup }: Props) {
+export default function FollowupRecommendationPage({ patientId, patientOrgId, onCreateFollowup }: Props) {
   const [recommendation, setRecommendation] = useState<FollowupRecommendation | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     loadRecommendation();
-  }, [patientId]);
+  }, [patientId, patientOrgId]);
 
   const loadRecommendation = async () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await followupRecommendationApi.get(patientId);
+      const data = await followupRecommendationApi.get(patientId, patientOrgId);
       setRecommendation(data);
     } catch (err: any) {
       console.error('Failed to load recommendation', err);
@@ -138,3 +139,6 @@ export default function FollowupRecommendationPage({ patientId, onCreateFollowup
     </Card>
   );
 }
+
+// Alias for use in tab panels
+export { FollowupRecommendationPage as FollowupRecommendationPanel };

@@ -25,6 +25,16 @@ export class FollowupsService {
     // Default assignedUserId to patient's assigned user if not provided
     const assignedUserId = dto.assignedUserId || patient.assignedUserId;
 
+    // Verify pathId if provided (LINK-01)
+    if (dto.pathId) {
+      const path = await this.prisma.path.findFirst({
+        where: { id: dto.pathId, orgId, status: 'ACTIVE' },
+      });
+      if (!path) {
+        throw new NotFoundException('Path template not found or not active');
+      }
+    }
+
     // Verify pathInstanceStepId if provided
     if (dto.pathInstanceStepId) {
       const step = await this.prisma.pathInstanceStep.findUnique({
@@ -46,14 +56,16 @@ export class FollowupsService {
         startDate: new Date(dto.startDate),
         endDate: dto.endDate ? new Date(dto.endDate) : null,
         assignedUserId,
+        pathId: dto.pathId || null,  // LINK-01: store path association
       },
       include: {
         patient: { select: { id: true, name: true } },
         assignedUser: { select: { id: true, name: true } },
+        path: { select: { id: true, name: true, specialty: true } },
       },
     });
 
-    this.logger.log(`FollowupPlan created: ${plan.id} for patient ${dto.patientId}`, 'FollowupsService');
+    this.logger.log(`FollowupPlan created: ${plan.id} for patient ${dto.patientId}${dto.pathId ? ` with path ${dto.pathId}` : ''}`, 'FollowupsService');
 
     // Auto-generate followup records based on frequencyDays (FOLLOW-03)
     if (dto.frequencyDays && dto.frequencyDays > 0) {
@@ -143,6 +155,7 @@ export class FollowupsService {
         include: {
           patient: { select: { id: true, name: true } },
           assignedUser: { select: { id: true, name: true } },
+          path: { select: { id: true, name: true, specialty: true } },
           _count: { select: { records: true } },
         },
       }),
@@ -455,5 +468,264 @@ export class FollowupsService {
       where: { id: planId },
       data: { status: 'ACTIVE' },
     });
+  }
+
+  // ========================================================================
+  // Path-based Follow-up Matching (LINK-01)
+  // ========================================================================
+
+  /**
+   * Suggest paths for a patient based on their specialty
+   * Used for auto-matching patients to appropriate follow-up paths
+   */
+  async suggestPathsForPatient(patientId: string, orgId: string) {
+    const patient = await this.prisma.patient.findFirst({
+      where: { id: patientId, orgId, deletedAt: null },
+      include: {
+        demands: {
+          where: { orgId },
+          orderBy: { createdAt: 'desc' },
+          take: 5,
+        },
+      },
+    });
+
+    if (!patient) {
+      throw new NotFoundException('Patient not found');
+    }
+
+    // Find active path templates matching patient's demands/specialty
+    const demandTitles = patient.demands.map(d => d.title);
+    const specialty = patient.primarySpecialty;
+
+    const suggestedPaths = await this.prisma.path.findMany({
+      where: {
+        orgId,
+        status: 'ACTIVE',
+        OR: [
+          // Match by specialty
+          specialty ? { specialty } : undefined,
+          // Match by disease name in demand titles
+          demandTitles.length > 0 ? {
+            OR: demandTitles.map(title => ({
+              diagnosisName: { contains: title, mode: 'insensitive' as const },
+            })),
+          } : undefined,
+        ].filter(Boolean),
+      },
+      take: 10,
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        specialty: true,
+        diagnosisName: true,
+        surgeryName: true,
+        icd10Code: true,
+        icd9Code: true,
+        _count: { select: { steps: true } },
+      },
+    });
+
+    return {
+      patient: {
+        id: patient.id,
+        name: patient.name,
+        specialty: patient.primarySpecialty,
+      },
+      demands: patient.demands.map(d => ({
+        id: d.id,
+        title: d.title,
+        status: d.status,
+      })),
+      suggestedPaths: suggestedPaths.map(p => ({
+        ...p,
+        stepCount: p._count.steps,
+        matchReason: this.getPathMatchReason(p, specialty, demandTitles),
+      })),
+    };
+  }
+
+  private getPathMatchReason(
+    path: { diagnosisName: string | null; specialty: string | null },
+    patientSpecialty: string | null,
+    demandTitles: string[],
+  ): string {
+    if (patientSpecialty && path.specialty === patientSpecialty) {
+      return '匹配患者专科';
+    }
+    if (path.diagnosisName && demandTitles.some(t => t.includes(path.diagnosisName!))) {
+      return '匹配患者需求';
+    }
+    return '推荐路径';
+  }
+
+  /**
+   * Get all active path templates for follow-up selection
+   */
+  async getAvailablePaths(orgId: string, filters?: { specialty?: string; search?: string }) {
+    const where: any = {
+      orgId,
+      status: 'ACTIVE',
+    };
+
+    if (filters?.specialty) {
+      where.specialty = filters.specialty;
+    }
+
+    if (filters?.search) {
+      where.OR = [
+        { name: { contains: filters.search, mode: 'insensitive' } },
+        { diagnosisName: { contains: filters.search, mode: 'insensitive' } },
+        { surgeryName: { contains: filters.search, mode: 'insensitive' } },
+      ];
+    }
+
+    const paths = await this.prisma.path.findMany({
+      where,
+      take: 50,
+      orderBy: { name: 'asc' },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        specialty: true,
+        diagnosisName: true,
+        surgeryName: true,
+        icd10Code: true,
+        icd9Code: true,
+        _count: { select: { steps: true } },
+      },
+    });
+
+    return paths.map(p => ({
+      ...p,
+      stepCount: p._count.steps,
+    }));
+  }
+
+  /**
+   * Create follow-up plan from path template
+   * Generates follow-up records based on path steps
+   */
+  async createPlanFromPath(
+    patientId: string,
+    pathId: string,
+    dto: {
+      name?: string;
+      type?: 'ROUTINE' | 'POST_TREATMENT' | 'PRE_APPOINTMENT' | 'CUSTOM';
+      frequencyDays?: number;
+      startDate: string;
+      endDate?: string;
+      assignedUserId?: string;
+    },
+    orgId: string,
+    userId: string,
+  ) {
+    // Verify patient
+    const patient = await this.prisma.patient.findFirst({
+      where: { id: patientId, orgId, deletedAt: null },
+    });
+    if (!patient) {
+      throw new NotFoundException('Patient not found');
+    }
+
+    // Get path template with steps
+    const path = await this.prisma.path.findFirst({
+      where: { id: pathId, orgId, status: 'ACTIVE' },
+      include: { steps: { orderBy: { stepOrder: 'asc' } } },
+    });
+    if (!path) {
+      throw new NotFoundException('Path template not found or not active');
+    }
+
+    // Default assigned user
+    const assignedUserId = dto.assignedUserId || patient.assignedUserId;
+
+    // Create follow-up plan
+    const plan = await this.prisma.followupPlan.create({
+      data: {
+        patientId,
+        orgId,
+        name: dto.name || `${path.name} - 随访计划`,
+        type: dto.type || 'POST_TREATMENT',
+        frequencyDays: dto.frequencyDays,
+        startDate: new Date(dto.startDate),
+        endDate: dto.endDate ? new Date(dto.endDate) : null,
+        assignedUserId,
+        pathId,
+      },
+      include: {
+        patient: { select: { id: true, name: true } },
+        assignedUser: { select: { id: true, name: true } },
+        path: { select: { id: true, name: true, specialty: true } },
+      },
+    });
+
+    this.logger.log(`Follow-up plan created from path: ${plan.id} for patient ${patientId}`, 'FollowupsService');
+
+    // Generate follow-up records based on path steps
+    if (path.steps.length > 0 && dto.frequencyDays) {
+      await this.generateFollowupRecordsFromPath(plan, path.steps, dto.frequencyDays);
+    }
+
+    const recordCount = await this.prisma.followupRecord.count({
+      where: { planId: plan.id },
+    });
+
+    return {
+      ...plan,
+      recordCount,
+      completedCount: 0,
+    };
+  }
+
+  private async generateFollowupRecordsFromPath(
+    plan: { id: string; patientId: string; orgId: string; frequencyDays: number | null; startDate: Date; endDate: Date | null },
+    steps: Array<{ id: string; stepOrder: number; estimatedDays: number | null; name: string }>,
+    frequencyDays: number,
+  ) {
+    if (!plan.frequencyDays || plan.frequencyDays <= 0) return;
+
+    const records: Array<{
+      planId: string;
+      patientId: string;
+      orgId: string;
+      scheduledAt: Date;
+      status: 'PENDING';
+      pathInstanceStepId?: string;
+    }> = [];
+
+    const startDate = new Date(plan.startDate);
+    const endDate = plan.endDate
+      ? new Date(plan.endDate)
+      : new Date(startDate.getTime() + 365 * 24 * 60 * 60 * 1000);
+
+    let currentDate = new Date(startDate);
+    let recordCount = 0;
+    const maxRecords = 365;
+
+    while (currentDate <= endDate && recordCount < maxRecords) {
+      // Link to first pending step
+      const linkedStep = steps.find(s => s.stepOrder === recordCount + 1);
+
+      records.push({
+        planId: plan.id,
+        patientId: plan.patientId,
+        orgId: plan.orgId,
+        scheduledAt: new Date(currentDate),
+        status: 'PENDING',
+        pathInstanceStepId: linkedStep?.id,
+      });
+
+      currentDate = new Date(currentDate.getTime() + frequencyDays * 24 * 60 * 60 * 1000);
+      recordCount++;
+    }
+
+    if (records.length > 0) {
+      await this.prisma.followupRecord.createMany({ data: records });
+      this.logger.log(`Generated ${records.length} FollowupRecords from path for plan ${plan.id}`, 'FollowupsService');
+    }
   }
 }

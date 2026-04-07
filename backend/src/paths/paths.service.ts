@@ -33,10 +33,14 @@ export class PathsService {
     orgId: string,
     page = 1,
     limit = 20,
-    filters?: { status?: string; search?: string },
+    filters?: { status?: string; search?: string; specialty?: string },
   ) {
     const skip = (page - 1) * limit;
     const where: any = { orgId };
+
+    if (filters?.specialty) {
+      where.specialty = filters.specialty;
+    }
 
     if (filters?.status) {
       where.status = filters.status;

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Table, Tag, Space, Button, Input, Select, Typography, message, Popconfirm } from 'antd';
+import { Table, Tag, Space, Button, Input, Typography, message, Popconfirm, Tabs, Select } from 'antd';
 import { PlusOutlined, EditOutlined, DeleteOutlined, EyeOutlined, CopyOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslation } from 'react-i18next';
@@ -16,6 +16,9 @@ const statusColors: Record<string, string> = {
   ARCHIVED: 'default',
 };
 
+const SPECIALTIES = ['ORAL', 'OPHTHALMIC', 'ORTHOPEDIC', 'DERMATOLOGY', 'TCM'] as const;
+type Specialty = typeof SPECIALTIES[number];
+
 export default function PathTemplatesPage() {
   const { t } = useTranslation();
   const [templates, setTemplates] = useState<PathTemplate[]>([]);
@@ -23,6 +26,7 @@ export default function PathTemplatesPage() {
   const [pagination, setPagination] = useState({ current: 1, pageSize: 20, total: 0 });
   const [statusFilter, setStatusFilter] = useState<string | undefined>();
   const [searchText, setSearchText] = useState('');
+  const [activeSpecialty, setActiveSpecialty] = useState<Specialty | 'ALL'>('ALL');
   const [modalVisible, setModalVisible] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState<PathTemplate | null>(null);
   const [detailVisible, setDetailVisible] = useState(false);
@@ -34,6 +38,23 @@ export default function PathTemplatesPage() {
     ARCHIVED: t('paths.archived') || 'Archived',
   };
 
+  const specialtyColors: Record<string, string> = {
+    ORAL: 'blue',
+    OPHTHALMIC: 'purple',
+    ORTHOPEDIC: 'cyan',
+    DERMATOLOGY: 'magenta',
+    TCM: 'green',
+  };
+
+  const specialtyLabels: Record<string, string> = {
+    ORAL: t('paths.oral') || '口腔',
+    OPHTHALMIC: t('paths.ophthalmic') || '眼科',
+    ORTHOPEDIC: t('paths.orthopedic') || '骨科',
+    DERMATOLOGY: t('paths.dermatology') || '皮肤科',
+    TCM: t('paths.tcm') || '中医科',
+    ALL: t('paths.allSpecialties') || '全部',
+  };
+
   const fetchTemplates = async () => {
     setLoading(true);
     try {
@@ -42,6 +63,7 @@ export default function PathTemplatesPage() {
         limit: pagination.pageSize,
         status: statusFilter,
         search: searchText || undefined,
+        specialty: activeSpecialty === 'ALL' ? undefined : activeSpecialty,
       });
       setTemplates(response.data);
       setPagination((prev) => ({ ...prev, total: response.pagination.total }));
@@ -54,7 +76,7 @@ export default function PathTemplatesPage() {
 
   useEffect(() => {
     fetchTemplates();
-  }, [pagination.current, pagination.pageSize, statusFilter, searchText]);
+  }, [pagination.current, pagination.pageSize, statusFilter, searchText, activeSpecialty]);
 
   const handleTableChange = (newPagination: any) => {
     setPagination((prev) => ({
@@ -71,6 +93,11 @@ export default function PathTemplatesPage() {
 
   const handleStatusChange = (value: string | undefined) => {
     setStatusFilter(value);
+    setPagination((prev) => ({ ...prev, current: 1 }));
+  };
+
+  const handleSpecialtyChange = (specialty: string) => {
+    setActiveSpecialty(specialty as Specialty | 'ALL');
     setPagination((prev) => ({ ...prev, current: 1 }));
   };
 
@@ -123,6 +150,15 @@ export default function PathTemplatesPage() {
       render: (name: string, record) => (
         <a onClick={() => handleView(record)}>{name}</a>
       ),
+    },
+    {
+      title: t('paths.specialty') || 'Specialty',
+      dataIndex: 'specialty',
+      key: 'specialty',
+      width: 100,
+      render: (specialty: string | null) => specialty ? (
+        <Tag color={specialtyColors[specialty]}>{specialtyLabels[specialty] || specialty}</Tag>
+      ) : '-',
     },
     {
       title: t('paths.diagnosisName') || 'Diagnosis',
@@ -200,11 +236,36 @@ export default function PathTemplatesPage() {
     },
   ];
 
+  const tabItems = [
+    {
+      key: 'ALL',
+      label: specialtyLabels['ALL'],
+      children: null,
+    },
+    ...SPECIALTIES.map((specialty) => ({
+      key: specialty,
+      label: (
+        <span>
+          {specialtyLabels[specialty]}
+        </span>
+      ),
+      children: null,
+    })),
+  ];
+
   return (
     <div style={{ padding: 24 }}>
       <div style={{ marginBottom: 24 }}>
         <Title level={4} style={{ margin: 0 }}>{t('paths.templates')}</Title>
       </div>
+
+      {/* Specialty Tabs */}
+      <Tabs
+        activeKey={activeSpecialty}
+        onChange={handleSpecialtyChange}
+        items={tabItems}
+        style={{ marginBottom: 16 }}
+      />
 
       {/* Filters and Actions */}
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 16 }}>
@@ -251,6 +312,7 @@ export default function PathTemplatesPage() {
       <PathTemplateFormModal
         visible={modalVisible}
         template={editingTemplate}
+        defaultSpecialty={activeSpecialty !== 'ALL' ? activeSpecialty : undefined}
         onOk={handleModalOk}
         onCancel={() => {
           setModalVisible(false);

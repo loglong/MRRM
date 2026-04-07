@@ -385,6 +385,7 @@ model Path {
   orgId        String    @map("org_id")
   version      String    @default("1.0")
   status       PathStatus @default(DRAFT)
+  specialty    Specialty? @map("specialty")     // 消费医疗专科分类
   icd10Code    String?   @map("icd10_code")    // ICD-10 诊断代码
   icd9Code     String?   @map("icd9_code")     // ICD-9 诊断代码
   diagnosisName String?  @map("diagnosis_name") // 诊断名称
@@ -398,9 +399,18 @@ model Path {
   organization Organization @relation(fields: [orgId], references: [id])
   instances    PathInstance[]
   demands      Demand[]
+  followupPlans FollowupPlan[]
 
   @@index([orgId])
   @@map("paths")
+}
+
+enum Specialty {
+  ORAL        // 口腔
+  OPHTHALMIC  // 眼科
+  ORTHOPEDIC  // 骨科
+  DERMATOLOGY // 皮肤科
+  TCM         // 中医科
 }
 
 enum PathStatus {
@@ -534,13 +544,18 @@ model Touchpoint {
   id            String         @id @default(uuid())
   patientId     String         @map("patient_id")
   orgId         String         @map("org_id")
+  demandId      String?        @map("demand_id")
   type          TouchpointType
   channel       TouchpointChannel
   title         String
   content       String?
   sentiment     Sentiment?
+  feedback      Feedback?      // PRD: 满意/一般/不满
+  satisfactionScore Int?       @map("satisfaction_score") // PRD: 满意度分值 1-10
   duration      Int?           // Duration in seconds
   outcome       String?
+  nextPlan      String?        @map("next_plan") // PRD: 下次跟进计划
+  nextPlanTime  DateTime?      @map("next_plan_time") // PRD: 计划跟进时间
   followupRequired Boolean      @default(false) @map("followup_required")
   followupDate  DateTime?      @map("followup_date")
   metadata      Json?
@@ -557,6 +572,7 @@ model Touchpoint {
 
   @@index([orgId])
   @@index([patientId])
+  @@index([demandId])
   @@index([type])
   @@index([createdAt])
   @@index([voidedAt])
@@ -587,6 +603,12 @@ enum Sentiment {
   NEGATIVE
 }
 
+enum Feedback {
+  SATISFIED   // 满意
+  NEUTRAL     // 一般
+  DISSATISFIED // 不满
+}
+
 // ============================================================================
 // Follow-up Management
 // ============================================================================
@@ -608,6 +630,10 @@ model FollowupPlan {
   // FOLLOW-01: assigned user for followup responsibility
   assignedUserId String?   @map("assigned_user_id")
   assignedUser   User?     @relation("FollowupAssignedUser", fields: [assignedUserId], references: [id])
+
+  // LINK-01: link to path template for path-based follow-up
+  pathId   String?   @map("path_id")
+  path      Path?     @relation(fields: [pathId], references: [id])
 
   // Relations
   patient   Patient   @relation(fields: [patientId], references: [id])

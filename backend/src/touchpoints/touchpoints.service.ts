@@ -24,14 +24,19 @@ export class TouchpointsService {
     const touchpoint = await this.prisma.touchpoint.create({
       data: {
         patientId: data.patientId,
+        demandId: data.demandId,
         orgId,
         type: data.type,
         channel: data.channel || 'OFFLINE',
         title: data.title,
         content: data.content,
         sentiment: data.sentiment,
+        feedback: data.feedback,
+        satisfactionScore: data.satisfactionScore,
         duration: data.duration,
         outcome: data.outcome,
+        nextPlan: data.nextPlan,
+        nextPlanTime: data.nextPlanTime ? new Date(data.nextPlanTime) : null,
         followupRequired: data.followupRequired || false,
         followupDate: data.followupDate ? new Date(data.followupDate) : null,
       },
@@ -121,6 +126,7 @@ export class TouchpointsService {
       data: {
         ...data,
         followupDate: data.followupDate ? new Date(data.followupDate) : undefined,
+        nextPlanTime: data.nextPlanTime ? new Date(data.nextPlanTime) : undefined,
       },
       include: {
         patient: { select: { id: true, name: true } },

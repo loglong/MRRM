@@ -8,6 +8,7 @@ export const CreateFollowupPlanSchema = z.object({
   startDate: z.string().datetime(),
   endDate: z.string().datetime().optional(),
   assignedUserId: z.string().uuid().optional(),
+  pathId: z.string().uuid().optional(),  // LINK-01: link to path template
   pathInstanceStepId: z.string().uuid().optional(),
 });
 

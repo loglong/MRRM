@@ -1,0 +1,45 @@
+import { z } from 'zod';
+export declare const UpdatePatientDto: z.ZodObject<{
+    name: z.ZodOptional<z.ZodString>;
+    phone: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    email: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    gender: z.ZodNullable<z.ZodOptional<z.ZodEnum<["MALE", "FEMALE", "OTHER", "UNKNOWN"]>>>;
+    birthDate: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    allergyHistory: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    pastHistory: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    address: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    tier: z.ZodOptional<z.ZodEnum<["HIGH_VALUE", "REGULAR", "LOST_RISK"]>>;
+    status: z.ZodOptional<z.ZodEnum<["ACTIVE", "INACTIVE", "CHURNED", "DECEASED"]>>;
+    assignedUserId: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    lastVisitAt: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+    nextVisitAt: z.ZodNullable<z.ZodOptional<z.ZodString>>;
+}, "strip", z.ZodTypeAny, {
+    name?: string | undefined;
+    phone?: string | null | undefined;
+    email?: string | null | undefined;
+    gender?: "MALE" | "FEMALE" | "OTHER" | "UNKNOWN" | null | undefined;
+    birthDate?: string | null | undefined;
+    allergyHistory?: string | null | undefined;
+    pastHistory?: string | null | undefined;
+    tier?: "HIGH_VALUE" | "REGULAR" | "LOST_RISK" | undefined;
+    status?: "ACTIVE" | "INACTIVE" | "CHURNED" | "DECEASED" | undefined;
+    assignedUserId?: string | null | undefined;
+    lastVisitAt?: string | null | undefined;
+    nextVisitAt?: string | null | undefined;
+    address?: string | null | undefined;
+}, {
+    name?: string | undefined;
+    phone?: string | null | undefined;
+    email?: string | null | undefined;
+    gender?: "MALE" | "FEMALE" | "OTHER" | "UNKNOWN" | null | undefined;
+    birthDate?: string | null | undefined;
+    allergyHistory?: string | null | undefined;
+    pastHistory?: string | null | undefined;
+    tier?: "HIGH_VALUE" | "REGULAR" | "LOST_RISK" | undefined;
+    status?: "ACTIVE" | "INACTIVE" | "CHURNED" | "DECEASED" | undefined;
+    assignedUserId?: string | null | undefined;
+    lastVisitAt?: string | null | undefined;
+    nextVisitAt?: string | null | undefined;
+    address?: string | null | undefined;
+}>;
+export type UpdatePatientDtoType = z.infer<typeof UpdatePatientDto>;

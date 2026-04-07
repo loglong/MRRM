@@ -12,7 +12,11 @@ export interface FollowupRecommendation {
 }
 
 export const followupRecommendationApi = {
-  get: (patientId: string): Promise<FollowupRecommendation> => {
-    return api.get(`/ai/followup-recommendations/${patientId}`).then(res => res.data);
+  get: (patientId: string, orgId?: string): Promise<FollowupRecommendation> => {
+    const headers: Record<string, string> = {};
+    if (orgId) {
+      headers['x-org-id'] = orgId;
+    }
+    return api.get(`/ai/followup-recommendations/${patientId}`, { headers }).then(res => res.data);
   },
 };

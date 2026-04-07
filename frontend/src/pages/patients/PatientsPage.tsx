@@ -51,6 +51,13 @@ export default function PatientsPage() {
     UNKNOWN: t('patients.unknown') || '未知',
   };
 
+  const statusLabels: Record<string, string> = {
+    ACTIVE: t('patients.active') || '活跃',
+    INACTIVE: t('patients.inactive') || '非活跃',
+    CHURNED: t('patients.churned') || '已流失',
+    DECEASED: t('patients.deceased') || '已故',
+  };
+
   const fetchPatients = async () => {
     setLoading(true);
     try {
@@ -163,7 +170,7 @@ export default function PatientsPage() {
       title: t('common.status') || 'Status',
       dataIndex: 'status',
       key: 'status',
-      render: (status: string) => <Tag color={statusColors[status]}>{status}</Tag>,
+      render: (status: string) => <Tag color={statusColors[status]}>{statusLabels[status] || status}</Tag>,
     },
     {
       title: t('common.createTime') || 'Created',

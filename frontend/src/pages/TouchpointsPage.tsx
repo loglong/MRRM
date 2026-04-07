@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Table, Tag, Space, Button, Input, Select, DatePicker, Modal, message, Card, Row, Col, Statistic } from 'antd';
-import { PlusOutlined, BarChartOutlined } from '@ant-design/icons';
+import { Table, Tag, Space, Button, Input, Select, DatePicker, Modal, message, Card, Row, Col, Statistic, Popconfirm } from 'antd';
+import { PlusOutlined, BarChartOutlined, EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslation } from 'react-i18next';
 import { touchpointsApi, Touchpoint, TouchpointFilters, TouchpointAnalytics } from '@/api/touchpoints';
@@ -16,8 +16,11 @@ export default function TouchpointsPage() {
   const [pagination, setPagination] = useState({ current: 1, pageSize: 20, total: 0 });
   const [filters, setFilters] = useState<TouchpointFilters>({});
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingTouchpoint, setEditingTouchpoint] = useState<Touchpoint | null>(null);
   const [voidModalOpen, setVoidModalOpen] = useState(false);
   const [selectedTouchpoint, setSelectedTouchpoint] = useState<Touchpoint | null>(null);
+  const [previewTouchpoint, setPreviewTouchpoint] = useState<Touchpoint | null>(null);
+  const [previewModalOpen, setPreviewModalOpen] = useState(false);
   const [voidReason, setVoidReason] = useState('');
   const [analytics, setAnalytics] = useState<TouchpointAnalytics | null>(null);
   const [showAnalytics, setShowAnalytics] = useState(false);
@@ -99,6 +102,16 @@ export default function TouchpointsPage() {
     setVoidModalOpen(true);
   };
 
+  const openEditModal = (touchpoint: Touchpoint) => {
+    setEditingTouchpoint(touchpoint);
+    setIsModalOpen(true);
+  };
+
+  const openPreviewModal = (touchpoint: Touchpoint) => {
+    setPreviewTouchpoint(touchpoint);
+    setPreviewModalOpen(true);
+  };
+
   const toggleAnalytics = () => {
     if (!showAnalytics) {
       fetchAnalytics();
@@ -151,22 +164,34 @@ export default function TouchpointsPage() {
       key: 'title',
     },
     {
-      title: t('touchpoints.sentiment') || 'Sentiment',
-      dataIndex: 'sentiment',
-      key: 'sentiment',
-      render: (sentiment?: string) => {
+      title: t('touchpoints.feedback') || 'Feedback',
+      dataIndex: 'feedback',
+      key: 'feedback',
+      render: (feedback?: string) => {
         const colors: Record<string, string> = {
-          POSITIVE: 'green',
+          SATISFIED: 'green',
           NEUTRAL: 'default',
-          NEGATIVE: 'red',
+          DISSATISFIED: 'red',
         };
         const labels: Record<string, string> = {
-          POSITIVE: t('touchpoints.positive') || 'Positive',
+          SATISFIED: t('touchpoints.satisfied') || 'Satisfied',
           NEUTRAL: t('touchpoints.neutral') || 'Neutral',
-          NEGATIVE: t('touchpoints.negative') || 'Negative',
+          DISSATISFIED: t('touchpoints.dissatisfied') || 'Dissatisfied',
         };
-        return sentiment ? <Tag color={colors[sentiment]}>{labels[sentiment] || sentiment}</Tag> : '-';
+        return feedback ? <Tag color={colors[feedback]}>{labels[feedback] || feedback}</Tag> : '-';
       },
+    },
+    {
+      title: t('touchpoints.satisfactionScore') || 'Score',
+      dataIndex: 'satisfactionScore',
+      key: 'satisfactionScore',
+      render: (score?: number) => score ? <span style={{ color: score >= 7 ? 'green' : score >= 4 ? 'orange' : 'red' }}>{score}</span> : '-',
+    },
+    {
+      title: t('touchpoints.nextPlan') || 'Next Plan',
+      dataIndex: 'nextPlan',
+      key: 'nextPlan',
+      render: (plan?: string) => plan || '-',
     },
     {
       title: t('touchpoints.duration') || 'Duration',
@@ -183,10 +208,20 @@ export default function TouchpointsPage() {
     {
       title: t('common.action') || 'Action',
       key: 'action',
+      width: 120,
       render: (_: any, record: Touchpoint) => (
-        <Button type="link" danger onClick={() => openVoidModal(record)}>
-          {t('touchpoints.void') || 'Void'}
-        </Button>
+        <Space size="small">
+          <Button type="text" icon={<EyeOutlined />} title={t('common.preview')} onClick={() => openPreviewModal(record)} />
+          <Button type="text" icon={<EditOutlined />} title={t('common.edit')} onClick={() => openEditModal(record)} />
+          <Popconfirm
+            title={t('touchpoints.voidWarning')}
+            onConfirm={() => openVoidModal(record)}
+            okText={t('common.confirm')}
+            cancelText={t('common.cancel')}
+          >
+            <Button type="text" danger icon={<DeleteOutlined />} title={t('touchpoints.void')} />
+          </Popconfirm>
+        </Space>
       ),
     },
   ];
@@ -297,10 +332,74 @@ export default function TouchpointsPage() {
         }}
       />
 
-      <TouchpointFormModal visible={isModalOpen} onOk={() => {
+      <TouchpointFormModal visible={isModalOpen} editingTouchpoint={editingTouchpoint} onOk={() => {
         setIsModalOpen(false);
+        setEditingTouchpoint(null);
         fetchData();
-      }} onCancel={() => setIsModalOpen(false)} />
+      }} onCancel={() => {
+        setIsModalOpen(false);
+        setEditingTouchpoint(null);
+      }} />
+
+      <Modal
+        title={t('common.preview') || 'Preview'}
+        open={previewModalOpen}
+        onCancel={() => {
+          setPreviewModalOpen(false);
+          setPreviewTouchpoint(null);
+        }}
+        footer={null}
+        width={600}
+      >
+        {previewTouchpoint && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <span style={{ fontWeight: 500 }}>{t('patients.patientName')}:</span>
+              <span>{previewTouchpoint.patient?.name || '-'}</span>
+            </div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <span style={{ fontWeight: 500 }}>{t('common.type')}:</span>
+              <span>{previewTouchpoint.type}</span>
+            </div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <span style={{ fontWeight: 500 }}>{t('common.name')}:</span>
+              <span>{previewTouchpoint.title}</span>
+            </div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <span style={{ fontWeight: 500 }}>{t('touchpoints.channel')}:</span>
+              <span>{previewTouchpoint.channel || '-'}</span>
+            </div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <span style={{ fontWeight: 500 }}>{t('touchpoints.feedback')}:</span>
+              <span>{previewTouchpoint.feedback || '-'}</span>
+            </div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <span style={{ fontWeight: 500 }}>{t('touchpoints.satisfactionScore')}:</span>
+              <span>{previewTouchpoint.satisfactionScore || '-'}</span>
+            </div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <span style={{ fontWeight: 500 }}>{t('touchpoints.durationMinutes')}:</span>
+              <span>{previewTouchpoint.duration ? `${Math.round(previewTouchpoint.duration / 60)} ${t('touchpoints.minutes')}` : '-'}</span>
+            </div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <span style={{ fontWeight: 500 }}>{t('touchpoints.outcome')}:</span>
+              <span>{previewTouchpoint.outcome || '-'}</span>
+            </div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <span style={{ fontWeight: 500 }}>{t('touchpoints.nextPlan')}:</span>
+              <span>{previewTouchpoint.nextPlan || '-'}</span>
+            </div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <span style={{ fontWeight: 500 }}>{t('touchpoints.nextPlanTime')}:</span>
+              <span>{previewTouchpoint.nextPlanTime ? dayjs(previewTouchpoint.nextPlanTime).format('YYYY-MM-DD HH:mm') : '-'}</span>
+            </div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <span style={{ fontWeight: 500 }}>{t('common.createTime')}:</span>
+              <span>{dayjs(previewTouchpoint.createdAt).format('YYYY-MM-DD HH:mm')}</span>
+            </div>
+          </div>
+        )}
+      </Modal>
 
       <Modal
         title={t('touchpoints.void') || 'Void Touchpoint'}

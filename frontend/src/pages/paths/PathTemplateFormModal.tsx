@@ -6,11 +6,12 @@ import { pathsApi, PathTemplate } from '@/api/paths';
 interface Props {
   visible: boolean;
   template: PathTemplate | null;
+  defaultSpecialty?: string;
   onOk: () => void;
   onCancel: () => void;
 }
 
-export default function PathTemplateFormModal({ visible, template, onOk, onCancel }: Props) {
+export default function PathTemplateFormModal({ visible, template, defaultSpecialty, onOk, onCancel }: Props) {
   const { t } = useTranslation();
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
@@ -21,6 +22,7 @@ export default function PathTemplateFormModal({ visible, template, onOk, onCance
         name: template.name,
         description: template.description,
         status: template.status,
+        specialty: template.specialty,
         icd10Code: template.icd10Code,
         icd9Code: template.icd9Code,
         diagnosisName: template.diagnosisName,
@@ -28,8 +30,11 @@ export default function PathTemplateFormModal({ visible, template, onOk, onCance
       });
     } else if (visible) {
       form.resetFields();
+      if (defaultSpecialty) {
+        form.setFieldsValue({ specialty: defaultSpecialty });
+      }
     }
-  }, [visible, template, form]);
+  }, [visible, template, defaultSpecialty, form]);
 
   const handleSubmit = async () => {
     try {
@@ -91,6 +96,16 @@ export default function PathTemplateFormModal({ visible, template, onOk, onCance
             <Select.Option value="DRAFT">{t('paths.draft') || 'Draft'}</Select.Option>
             <Select.Option value="ACTIVE">{t('paths.active') || 'Active'}</Select.Option>
             <Select.Option value="ARCHIVED">{t('paths.archived') || 'Archived'}</Select.Option>
+          </Select>
+        </Form.Item>
+
+        <Form.Item name="specialty" label={t('paths.specialty') || 'Specialty'}>
+          <Select allowClear placeholder={t('paths.selectSpecialty') || 'Select specialty'}>
+            <Select.Option value="ORAL">{t('paths.oral') || '口腔'}</Select.Option>
+            <Select.Option value="OPHTHALMIC">{t('paths.ophthalmic') || '眼科'}</Select.Option>
+            <Select.Option value="ORTHOPEDIC">{t('paths.orthopedic') || '骨科'}</Select.Option>
+            <Select.Option value="DERMATOLOGY">{t('paths.dermatology') || '皮肤科'}</Select.Option>
+            <Select.Option value="TCM">{t('paths.tcm') || '中医科'}</Select.Option>
           </Select>
         </Form.Item>
 

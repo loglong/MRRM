@@ -12,9 +12,51 @@ export interface FollowupPlan {
   endDate?: string;
   assignedUserId?: string;
   assignedUser?: { id: string; name: string };
+  pathId?: string;  // LINK-01
+  path?: { id: string; name: string; specialty?: string };  // LINK-01
   recordCount?: number;
   completedCount?: number;
   createdAt: string;
+}
+
+// LINK-01: Path-based follow-up interfaces
+export interface SuggestedPath {
+  id: string;
+  name: string;
+  description?: string;
+  specialty?: string;
+  diagnosisName?: string;
+  surgeryName?: string;
+  icd10Code?: string;
+  icd9Code?: string;
+  stepCount: number;
+  matchReason: string;
+}
+
+export interface PathSuggestion {
+  patient: {
+    id: string;
+    name: string;
+    specialty?: string;
+  };
+  demands: {
+    id: string;
+    title: string;
+    status: string;
+  }[];
+  suggestedPaths: SuggestedPath[];
+}
+
+export interface AvailablePath {
+  id: string;
+  name: string;
+  description?: string;
+  specialty?: string;
+  diagnosisName?: string;
+  surgeryName?: string;
+  icd10Code?: string;
+  icd9Code?: string;
+  stepCount: number;
 }
 
 export interface FollowupRecord {
@@ -82,4 +124,19 @@ export const followupsApi = {
   // Analytics
   getCompletionRate: (params?: { startDate?: string; endDate?: string; patientId?: string }): Promise<FollowupAnalytics> =>
     api.get('/followup-records/analytics', { params }).then(res => res.data),
+
+  // Path-based follow-up (LINK-01)
+  getAvailablePaths: (params?: { specialty?: string; search?: string }): Promise<AvailablePath[]> =>
+    api.get('/paths/available', { params }).then(res => res.data),
+
+  getSuggestedPathsForPatient: (patientId: string): Promise<PathSuggestion> =>
+    api.get(`/patients/${patientId}/suggested-paths`).then(res => res.data),
+
+  createPlanFromPath: (patientId: string, pathId: string, data: {
+    name?: string;
+    startDate: string;
+    endDate?: string;
+    assignedUserId?: string;
+  }): Promise<FollowupPlan> =>
+    api.post(`/patients/${patientId}/followup-plans/from-path/${pathId}`, data).then(res => res.data),
 };

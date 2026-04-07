@@ -11,6 +11,7 @@ import HealthTimeline from './components/HealthTimeline';
 import HealthReminderForm from './components/HealthReminderForm';
 import PatientFormModal from './PatientFormModal';
 import PatientTimeline from '@/components/PatientTimeline';
+import { FollowupRecommendationPanel } from '../ai/FollowupRecommendationPage';
 
 const { Title, Text } = Typography;
 
@@ -234,6 +235,16 @@ export default function PatientDetailPage() {
             <HealthReminderForm patientId={patient.id} onReminderCreated={() => {}} />
           </Card>
         </div>
+      ),
+    },
+    {
+      key: 'ai-recommendation',
+      label: 'AI随访推荐',
+      children: (
+        <FollowupRecommendationPanel
+          patientId={patient.id}
+          patientOrgId={patient.orgId}
+        />
       ),
     },
   ];

@@ -3,14 +3,19 @@ import api from './auth';
 export interface Touchpoint {
   id: string;
   patientId: string;
+  demandId?: string;
   patient: { id: string; name: string };
   type: 'VISIT' | 'CALL' | 'MESSAGE' | 'EMAIL' | 'WECHAT' | 'VIDEO' | 'SMS' | 'OTHER';
   channel?: 'OFFLINE' | 'ONLINE' | 'MOBILE' | 'PHONE';
   title: string;
   content?: string;
   sentiment?: 'POSITIVE' | 'NEUTRAL' | 'NEGATIVE';
+  feedback?: 'SATISFIED' | 'NEUTRAL' | 'DISSATISFIED'; // PRD: 满意/一般/不满
+  satisfactionScore?: number; // PRD: 满意度分值 1-10
   duration?: number;
   outcome?: string;
+  nextPlan?: string; // PRD: 下次跟进计划
+  nextPlanTime?: string; // PRD: 计划跟进时间
   followupRequired: boolean;
   followupDate?: string;
   createdAt: string;

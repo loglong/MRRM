@@ -40,11 +40,13 @@ export class PathsController {
     @Query('limit') limit = '20',
     @Query('status') status?: string,
     @Query('search') search?: string,
+    @Query('specialty') specialty?: string,
   ) {
     const orgId = req.user?.orgId || req.user?.user?.orgId;
     return this.pathsService.findAll(orgId, parseInt(page, 10), parseInt(limit, 10), {
       status,
       search,
+      specialty,
     });
   }
 
