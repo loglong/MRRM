@@ -271,7 +271,7 @@ export async function importDemands(
         continue;
       }
       patientId = patient.id;
-      patientCache.set(phone, patientId);
+      patientCache.set(phone, patientId as string);
     }
 
     const payload = {
