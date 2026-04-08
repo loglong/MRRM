@@ -185,7 +185,7 @@ Usage:
 Environment variables (for batch import):
   OPENCLAW_JWT       JWT token from login
   OPENCLAW_ORG_ID    Organization ID
-  API_BASE_URL       Backend URL (default: http://localhost:3000)
+  API_BASE_URL       Backend URL (default: http://localhost:3000/api/v1)
 
 CSV format — patients:
   name,phone,gender,age,tier
