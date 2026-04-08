@@ -17,6 +17,7 @@ import AdminPage from './pages/AdminPage';
 import RolesPage from './pages/admin/RolesPage';
 import PermissionsPage from './pages/admin/PermissionsPage';
 import UsersPage from './pages/admin/UsersPage';
+import OrganizationsPage from './pages/admin/OrganizationsPage';
 import ForbiddenPage from './pages/ForbiddenPage';
 import MobileHomePage from './pages/mobile/MobileHomePage';
 import MobilePatientsPage from './pages/mobile/MobilePatientsPage';
@@ -71,6 +72,7 @@ function App() {
           <Route path="admin/roles" element={<RolesPage />} />
           <Route path="admin/permissions" element={<PermissionsPage />} />
           <Route path="admin/users" element={<UsersPage />} />
+          <Route path="admin/organizations" element={<OrganizationsPage />} />
           <Route path="forbidden" element={<ForbiddenPage />} />
           <Route path="churn-risk" element={<ChurnRiskPage />} />
         </Route>

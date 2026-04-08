@@ -16,7 +16,9 @@
     "prisma:migrate": "prisma migrate dev",
     "prisma:push": "prisma db push",
     "prisma:validate": "prisma validate",
-    "db:seed": "ts-node prisma/seed.ts"
+    "db:seed": "ts-node prisma/seed.ts",
+    "cli:shell": "ts-node src/cli/openclaw.ts shell",
+    "cli:import": "ts-node src/cli/openclaw.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.4.15",

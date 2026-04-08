@@ -20,15 +20,18 @@ export default function ExperiencePage() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const filters: any = { granularity };
+      const trendFilters: any = { granularity };
+      const decliningFilters: any = {};
       if (dateRange) {
-        filters.startDate = dateRange[0].toISOString();
-        filters.endDate = dateRange[1].toISOString();
+        trendFilters.startDate = dateRange[0].toISOString();
+        trendFilters.endDate = dateRange[1].toISOString();
+        decliningFilters.startDate = dateRange[0].toISOString();
+        decliningFilters.endDate = dateRange[1].toISOString();
       }
 
       const [trendsData, decliningData] = await Promise.all([
-        experienceApi.getSatisfactionTrends(filters),
-        experienceApi.getDecliningPatients(filters),
+        experienceApi.getSatisfactionTrends(trendFilters),
+        experienceApi.getDecliningPatients(decliningFilters),
       ]);
 
       setTrends(trendsData);
