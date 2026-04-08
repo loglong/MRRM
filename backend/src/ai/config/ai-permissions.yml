@@ -1,0 +1,26 @@
+ai_employee:
+  # API Key 配置示例（实际运行时从环境变量或数据库加载）
+  keys:
+    - id: "clawith-key-001"
+      key: "sk-ai-clawith-xxxxx"  # 实际存储于环境变量
+      orgId: "default-org"
+      name: "Clawith AI Employee"
+      enabled: true
+      ipWhitelist: []  # 空数组表示不限制 IP
+
+  permissions:
+    - endpoint: "/api/v1/ai/patients/search"
+      methods: ["GET"]
+      rateLimit: "100/min"
+    - endpoint: "/api/v1/ai/patients/:id"
+      methods: ["GET"]
+      rateLimit: "200/min"
+    - endpoint: "/api/v1/ai/patients/:id/touchpoints"
+      methods: ["POST"]
+      rateLimit: "50/min"
+    - endpoint: "/api/v1/ai/patients/:id/followups"
+      methods: ["POST"]
+      rateLimit: "50/min"
+    - endpoint: "/api/v1/ai/health"
+      methods: ["GET"]
+      rateLimit: "1000/min"
