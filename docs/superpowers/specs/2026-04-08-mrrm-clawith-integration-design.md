@@ -46,7 +46,7 @@ Clawith 数字员工
 ### 安全架构
 
 ```
-API Key (独立密钥)
+API Key (独立密钥，绑定orgId)
        │
        ▼
 ┌─────────────────┐
@@ -60,6 +60,13 @@ API Key (独立密钥)
 └─────────────────┘
 ```
 
+### 多租户隔离
+
+每个 API Key 绑定到特定机构（orgId），通过 `x-org-id` 请求头传递。所有 AI 接口：
+- 校验请求中的 `x-org-id` 与 API Key 绑定的 orgId 一致
+- 仅返回该机构下的患者数据
+- 跨机构数据隔离保证
+
 ## 接口设计
 
 ### 1. 患者搜索
@@ -68,10 +75,16 @@ API Key (独立密钥)
 GET /api/v1/ai/patients/search
 ```
 
+**请求头**
+| 头信息 | 必填 | 说明 |
+|--------|------|------|
+| x-org-id | 是 | 机构ID，用于多租户隔离 |
+
 **请求参数**
 | 参数 | 类型 | 必填 | 说明 |
 |------|------|------|------|
-| query | string | 否 | 自然语言查询条件 |
+| q | string | 否 | 关键词搜索（支持姓名、手机号模糊匹配） |
+| tier | string | 否 | 患者等级筛选（HIGH_VALUE, REGULAR, LOST_RISK） |
 | page | number | 否 | 页码，默认1 |
 | limit | number | 否 | 每页数量，默认20 |
 
@@ -85,6 +98,7 @@ GET /api/v1/ai/patients/search
         "id": "uuid",
         "name": "张三",
         "phone": "138****8888",
+        "tier": "HIGH_VALUE",
         "lastVisit": "2026-04-01",
         "pendingDemands": 2,
         "tags": ["VIP", "种植牙意向"]
@@ -93,7 +107,8 @@ GET /api/v1/ai/patients/search
     "pagination": {
       "total": 100,
       "page": 1,
-      "limit": 20
+      "limit": 20,
+      "cursor": "optional-cursor-for-next-page"
     }
   },
   "meta": {
@@ -109,6 +124,11 @@ GET /api/v1/ai/patients/search
 GET /api/v1/ai/patients/:id
 ```
 
+**请求头**
+| 头信息 | 必填 | 说明 |
+|--------|------|------|
+| x-org-id | 是 | 机构ID，用于多租户隔离 |
+
 **路径参数**
 | 参数 | 类型 | 必填 | 说明 |
 |------|------|------|------|
@@ -123,8 +143,7 @@ GET /api/v1/ai/patients/:id
     "name": "张三",
     "gender": "男",
     "age": 45,
-    "phone": "13812348888",
-    "email": "zhangsan@example.com",
+    "phone": "138****8888",
     "tier": "HIGH_VALUE",
     "medicalInfo": {
       "allergy": "无",
@@ -146,21 +165,34 @@ GET /api/v1/ai/patients/:id
 }
 ```
 
+**说明**：手机号默认脱敏显示（138****8888格式），如需完整号码需更高权限。
+
 ### 3. 创建触点记录
 
 ```
 POST /api/v1/ai/patients/:id/touchpoints
 ```
 
+**请求头**
+| 头信息 | 必填 | 说明 |
+|--------|------|------|
+| x-org-id | 是 | 机构ID，用于多租户隔离 |
+
 **请求体**
 ```json
 {
-  "type": "CONSULTATION",
+  "type": "VISIT",
   "title": "术后回访",
   "content": "患者反映咀嚼时有轻微不适",
-  "channel": "PHONE"
+  "channel": "OFFLINE"
 }
 ```
+
+**枚举值说明**
+| 字段 | 可选值 |
+|------|--------|
+| type | VISIT, CALL, MESSAGE, EMAIL, WECHAT, VIDEO, SMS, OTHER |
+| channel | OFFLINE, ONLINE, MOBILE, PHONE |
 
 **响应格式**
 ```json
@@ -169,7 +201,7 @@ POST /api/v1/ai/patients/:id/touchpoints
   "data": {
     "id": "uuid",
     "patientId": "patient-uuid",
-    "type": "CONSULTATION",
+    "type": "VISIT",
     "title": "术后回访",
     "createdAt": "2026-04-08T12:00:00Z"
   },
@@ -186,15 +218,25 @@ POST /api/v1/ai/patients/:id/touchpoints
 POST /api/v1/ai/patients/:id/followups
 ```
 
+**请求头**
+| 头信息 | 必填 | 说明 |
+|--------|------|------|
+| x-org-id | 是 | 机构ID，用于多租户隔离 |
+
 **请求体**
 ```json
 {
-  "type": "PHONE",
+  "type": "POST_TREATMENT",
   "title": "术后一周回访",
   "content": "询问恢复情况，叮嘱注意事项",
   "plannedAt": "2026-04-15T10:00:00Z"
 }
 ```
+
+**枚举值说明**
+| 字段 | 可选值 |
+|------|--------|
+| type | ROUTINE, POST_TREATMENT, PRE_APPOINTMENT, CUSTOM |
 
 **响应格式**
 ```json
@@ -203,9 +245,9 @@ POST /api/v1/ai/patients/:id/followups
   "data": {
     "id": "uuid",
     "patientId": "patient-uuid",
-    "type": "PHONE",
+    "type": "POST_TREATMENT",
     "title": "术后一周回访",
-    "status": "PENDING",
+    "status": "ACTIVE",
     "plannedAt": "2026-04-15T10:00:00Z"
   },
   "meta": {
@@ -271,7 +313,19 @@ ai_employee:
 返回结果
 ```
 
+### 安全要求
+
+| 安全措施 | 说明 |
+|---------|------|
+| TLS 1.2+ | 生产环境必须使用 HTTPS |
+| API Key 轮换 | 建议每90天轮换一次 |
+| IP 白名单 | 可选配置，限制 API Key 只能从指定 IP 调用 |
+| 请求超时 | 统一超时时间：30秒 |
+| 重试策略 | 客户端建议指数退避，最多重试3次 |
+
 ## 操作日志
+
+**说明**：复用现有的 `AuditLog` 表，新增 `isAiCall` 字段标识是否为 AI 调用。
 
 ### 日志字段
 
@@ -285,11 +339,12 @@ ai_employee:
 | responseStatus | number | 响应状态码 |
 | responseTime | number | 响应时间(ms) |
 | ip | string | 调用方IP |
+| isAiCall | boolean | 是否为AI调用（固定为true） |
 | createdAt | datetime | 调用时间 |
 
 ### 日志存储
 
-- 存储至 `ai_audit_logs` 表
+- 存储至现有 `AuditLog` 表（扩展 `isAiCall` 字段）
 - 支持按时间范围、API Key、接口等条件查询
 - 日志保留期限：90天
 
@@ -297,13 +352,13 @@ ai_employee:
 
 ### 错误码定义
 
-| 错误码 | 说明 |
-|--------|------|
-| 401 | API Key 无效或已禁用 |
-| 403 | 接口不在白名单中 |
-| 404 | 患者不存在 |
-| 429 | 请求频率超限 |
-| 500 | 服务器内部错误 |
+| HTTP状态码 | 错误码 | 说明 |
+|-----------|--------|------|
+| 401 | UNAUTHORIZED | API Key 无效或已禁用 |
+| 403 | FORBIDDEN | 接口不在白名单中 |
+| 404 | NOT_FOUND | 患者不存在 |
+| 429 | RATE_LIMITED | 请求频率超限 |
+| 500 | INTERNAL_ERROR | 服务器内部错误 |
 
 ### 错误响应格式
 
@@ -322,6 +377,15 @@ ai_employee:
 }
 ```
 
+### 客户端重试建议
+
+| 错误类型 | 重试建议 |
+|---------|---------|
+| 429 Rate Limited | 等待后重试，建议指数退避 |
+| 500 Internal Error | 最多重试3次，间隔2^n秒 |
+| 5xx Server Error | 等待5秒后重试 |
+| 4xx Client Error | 不重试，检查请求格式 |
+
 ## 实施计划
 
 ### Phase 1: 基础建设
@@ -339,7 +403,8 @@ ai_employee:
 ### Phase 3: 安全加固
 - [ ] 完善限流机制
 - [ ] 增强日志分析能力
-- [ ] 添加健康检查接口
+- [ ] 添加健康检查接口 `GET /api/v1/ai/health`
+- [ ] 添加回调Webhook接口 `POST /api/v1/ai/callbacks`
 
 ### Phase 4: 文档与测试
 - [ ] 编写 API 文档
