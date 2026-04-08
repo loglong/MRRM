@@ -6,7 +6,7 @@
 
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
-const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:3000';
+const API_BASE_URL = process.env.API_BASE_URL || 'http://localhost:3000/api/v1';
 const REQUEST_TIMEOUT = 15000; // 15 seconds
 const MAX_RETRIES = 2;
 
