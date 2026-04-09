@@ -1,0 +1,230 @@
+{
+  "mcp_server": {
+    "name": "MRRM-Patient-Skill",
+    "version": "1.0.0",
+    "description": "MRRM 患者管理 MCP 服务",
+    "protocol": "http",
+    "url": "http://localhost:3001/mcp",
+    "health_url": "http://localhost:3001/health",
+    "tools_url": "http://localhost:3001/tools"
+  },
+  "stdio": {
+    "command": "mrrm-mcp",
+    "args": [],
+    "env": {
+      "MRRM_ORG_ID": "default-org",
+      "MRRM_API_KEY": "sk-ai-clawith-mrrm"
+    }
+  },
+  "tools": [
+    {
+      "name": "search_patients",
+      "description": "搜索患者列表，支持关键词搜索和等级筛选",
+      "category": "patient",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "q": {
+            "type": "string",
+            "description": "关键词搜索（支持姓名、手机号模糊匹配）",
+            "examples": ["张三", "13800001111"]
+          },
+          "tier": {
+            "type": "string",
+            "enum": ["HIGH_VALUE", "REGULAR", "LOST_RISK"],
+            "description": "患者等级筛选",
+            "examples": ["HIGH_VALUE"]
+          },
+          "page": {
+            "type": "number",
+            "description": "页码，默认1",
+            "default": 1,
+            "minimum": 1
+          },
+          "limit": {
+            "type": "number",
+            "description": "每页数量，默认20",
+            "default": 20,
+            "minimum": 1,
+            "maximum": 100
+          }
+        }
+      },
+      "responseSchema": {
+        "type": "object",
+        "properties": {
+          "patients": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string" },
+                "name": { "type": "string" },
+                "phone": { "type": "string" },
+                "tier": { "type": "string" },
+                "lastVisit": { "type": "string" },
+                "pendingDemands": { "type": "number" },
+                "tags": { "type": "array", "items": { "type": "string" } }
+              }
+            }
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "total": { "type": "number" },
+              "page": { "type": "number" },
+              "limit": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "get_patient_detail",
+      "description": "获取患者详细信息，包括医疗信息和需求统计",
+      "category": "patient",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "patient_id": {
+            "type": "string",
+            "description": "患者ID",
+            "examples": ["550e8400-e29b-41d4-a716-446655440000"]
+          }
+        },
+        "required": ["patient_id"]
+      },
+      "responseSchema": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "gender": { "type": "string" },
+          "age": { "type": "number" },
+          "phone": { "type": "string" },
+          "tier": { "type": "string" },
+          "medicalInfo": {
+            "type": "object",
+            "properties": {
+              "allergy": { "type": "string" },
+              "medicalHistory": { "type": "string" },
+              "lastVisit": { "type": "string" }
+            }
+          },
+          "summary": {
+            "type": "object",
+            "properties": {
+              "totalDemands": { "type": "number" },
+              "completedDemands": { "type": "number" },
+              "pendingDemands": { "type": "number" },
+              "totalTouchpoints": { "type": "number" },
+              "lastFollowup": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "create_touchpoint",
+      "description": "为患者创建触点记录",
+      "category": "touchpoint",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "patient_id": {
+            "type": "string",
+            "description": "患者ID",
+            "examples": ["550e8400-e29b-41d4-a716-446655440000"]
+          },
+          "type": {
+            "type": "string",
+            "enum": ["VISIT", "CALL", "MESSAGE", "EMAIL", "WECHAT", "VIDEO", "SMS", "OTHER"],
+            "description": "触点类型",
+            "examples": ["VISIT"]
+          },
+          "title": {
+            "type": "string",
+            "description": "触点标题",
+            "examples": ["术后回访", "电话随访"]
+          },
+          "content": {
+            "type": "string",
+            "description": "触点内容（可选）",
+            "examples": ["患者反映咀嚼时有轻微不适"]
+          },
+          "channel": {
+            "type": "string",
+            "enum": ["OFFLINE", "ONLINE", "MOBILE", "PHONE"],
+            "description": "沟通渠道（可选，默认OFFLINE）",
+            "default": "OFFLINE"
+          }
+        },
+        "required": ["patient_id", "type", "title"]
+      },
+      "responseSchema": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "patientId": { "type": "string" },
+          "type": { "type": "string" },
+          "title": { "type": "string" },
+          "createdAt": { "type": "string" }
+        }
+      }
+    },
+    {
+      "name": "create_followup",
+      "description": "为患者创建随访任务",
+      "category": "followup",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "patient_id": {
+            "type": "string",
+            "description": "患者ID",
+            "examples": ["550e8400-e29b-41d4-a716-446655440000"]
+          },
+          "type": {
+            "type": "string",
+            "enum": ["ROUTINE", "POST_TREATMENT", "PRE_APPOINTMENT", "CUSTOM"],
+            "description": "随访类型",
+            "examples": ["POST_TREATMENT"]
+          },
+          "title": {
+            "type": "string",
+            "description": "随访标题",
+            "examples": ["术后一周回访"]
+          },
+          "content": {
+            "type": "string",
+            "description": "随访内容（可选）",
+            "examples": ["询问恢复情况，叮嘱注意事项"]
+          },
+          "planned_at": {
+            "type": "string",
+            "description": "计划时间 (ISO8601格式)",
+            "examples": ["2026-04-15T10:00:00Z"]
+          }
+        },
+        "required": ["patient_id", "type", "title", "planned_at"]
+      },
+      "responseSchema": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "patientId": { "type": "string" },
+          "type": { "type": "string" },
+          "title": { "type": "string" },
+          "status": { "type": "string" },
+          "plannedAt": { "type": "string" }
+        }
+      }
+    }
+  ],
+  "enums": {
+    "PatientTier": ["HIGH_VALUE", "REGULAR", "LOST_RISK"],
+    "TouchpointType": ["VISIT", "CALL", "MESSAGE", "EMAIL", "WECHAT", "VIDEO", "SMS", "OTHER"],
+    "TouchpointChannel": ["OFFLINE", "ONLINE", "MOBILE", "PHONE"],
+    "FollowupType": ["ROUTINE", "POST_TREATMENT", "PRE_APPOINTMENT", "CUSTOM"]
+  }
+}
