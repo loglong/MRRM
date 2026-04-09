@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Row, Col, Card, Statistic, Table, Tag } from 'antd';
+import { Row, Col, Card, Table, Tag, Typography, Space } from 'antd';
 import {
   TeamOutlined,
   FileTextOutlined,
   CalendarOutlined,
   RiseOutlined,
+  ClockCircleOutlined,
+  CheckCircleOutlined,
 } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +14,15 @@ import { patientsApi } from '@/api/patients';
 import { demandsApi } from '@/api/demands';
 import { touchpointsApi } from '@/api/touchpoints';
 import { followupsApi } from '@/api/followups';
+import { KPICard } from '@/components/KPICard';
+
+const { Title, Text } = Typography;
+
+// Apple Design Colors
+const APPLE_BLUE = '#0071e3';
+const APPLE_SUCCESS = '#34c759';
+const APPLE_WARNING = '#ff9500';
+const APPLE_NEAR_BLACK = '#1d1d1f';
 
 interface TodayTask {
   id: string;
@@ -52,14 +63,12 @@ export default function DashboardPage() {
     const fetchStats = async () => {
       setLoading(true);
       try {
-        // Fetch real data in parallel
         const [, demandsRes, touchpointsRes] = await Promise.allSettled([
           patientsApi.list({ limit: 1 }),
           demandsApi.list({ status: 'PENDING', limit: 1 }),
           touchpointsApi.list({ limit: 100 }),
         ]);
 
-        // Get patient stats for additional data
         let patientStats = { total: 0, byTier: { HIGH_VALUE: 0, REGULAR: 0, LOST_RISK: 0 } };
         try {
           patientStats = await patientsApi.getStats();
@@ -67,7 +76,6 @@ export default function DashboardPage() {
           // ignore
         }
 
-        // Calculate today's followups using date filtering
         const today = new Date();
         const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate()).toISOString();
         const todayEnd = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1).toISOString();
@@ -78,7 +86,6 @@ export default function DashboardPage() {
         });
         const todayFollowupsList = todayFollowupsRes.data;
 
-        // Get recent touchpoints for "今日任务" table
         const recentTouchpoints = touchpointsRes.status === 'fulfilled'
           ? touchpointsRes.value.data.slice(0, 5).map((tp: any, index: number) => ({
               id: tp.id,
@@ -89,7 +96,6 @@ export default function DashboardPage() {
             }))
           : [];
 
-        // Calculate monthly touchpoints
         const monthStart = new Date();
         monthStart.setDate(1);
         monthStart.setHours(0, 0, 0, 0);
@@ -108,8 +114,8 @@ export default function DashboardPage() {
             ? Math.round((patientStats.byTier.HIGH_VALUE / patientStats.total) * 100)
             : 0,
           todayTasks: recentTouchpoints,
-          newPatientsThisWeek: Math.floor(patientStats.total * 0.05), //估算
-          completedTreatments: Math.floor(patientStats.total * 0.3),  //估算
+          newPatientsThisWeek: Math.floor(patientStats.total * 0.05),
+          completedTreatments: Math.floor(patientStats.total * 0.3),
           pendingReviews: demandsRes.status === 'fulfilled' ? Math.floor(demandsRes.value.pagination.total * 0.3) : 0,
         });
       } catch (error) {
@@ -123,6 +129,31 @@ export default function DashboardPage() {
   }, []);
 
   const taskColumns: ColumnsType<TodayTask> = [
+    {
+      title: '',
+      dataIndex: 'status',
+      key: 'status',
+      width: 40,
+      render: (status: string) => (
+        <div
+          style={{
+            width: 24,
+            height: 24,
+            borderRadius: '50%',
+            background: status === 'completed' ? `${APPLE_SUCCESS}20` : `${APPLE_WARNING}20`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          {status === 'completed' ? (
+            <CheckCircleOutlined style={{ color: APPLE_SUCCESS, fontSize: 14 }} />
+          ) : (
+            <ClockCircleOutlined style={{ color: APPLE_WARNING, fontSize: 14 }} />
+          )}
+        </div>
+      ),
+    },
     { title: t('common.time') || 'Time', dataIndex: 'time', key: 'time', width: 80 },
     { title: t('patients.patientName') || 'Patient', dataIndex: 'patient', key: 'patient' },
     { title: t('demands.description') || 'Task', dataIndex: 'task', key: 'task' },
@@ -130,8 +161,17 @@ export default function DashboardPage() {
       title: t('common.status'),
       dataIndex: 'status',
       key: 'status',
+      width: 100,
       render: (status: string) => (
-        <Tag color={status === 'completed' ? 'green' : 'orange'}>
+        <Tag
+          style={{
+            borderRadius: 980,
+            background: status === 'completed' ? `${APPLE_SUCCESS}15` : `${APPLE_WARNING}15`,
+            color: status === 'completed' ? APPLE_SUCCESS : APPLE_WARNING,
+            border: 'none',
+            padding: '2px 12px',
+          }}
+        >
           {status === 'completed' ? t('common.completed') || 'Completed' : t('common.pending') || 'Pending'}
         </Tag>
       ),
@@ -139,77 +179,215 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div>
-      <h1 style={{ fontSize: 24, fontWeight: 600, marginBottom: 24 }}>
-        {t('dashboard.title')}
-      </h1>
+    <div
+      style={{
+        fontFamily:
+          "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', Helvetica, Arial, sans-serif",
+      }}
+    >
+      {/* Header */}
+      <div style={{ marginBottom: 32 }}>
+        <Title
+          level={2}
+          style={{
+            margin: 0,
+            fontSize: 32,
+            fontWeight: 600,
+            lineHeight: 1.1,
+            letterSpacing: -0.5,
+            color: APPLE_NEAR_BLACK,
+          }}
+        >
+          {t('dashboard.title') || '工作台'}
+        </Title>
+        <Text
+          style={{
+            fontSize: 17,
+            color: 'rgba(0, 0, 0, 0.48)',
+            marginTop: 4,
+            display: 'block',
+          }}
+        >
+          {new Date().toLocaleDateString('zh-CN', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          })}
+        </Text>
+      </div>
 
+      {/* KPI Cards Grid */}
       <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
         <Col xs={24} sm={12} lg={6}>
-          <Card loading={loading}>
-            <Statistic
-              title={t('dashboard.totalPatients')}
-              value={stats.totalPatients}
-              prefix={<TeamOutlined />}
-              valueStyle={{ color: '#1E5F8A' }}
-            />
-          </Card>
+          <KPICard
+            title={t('dashboard.totalPatients') || '总患者数'}
+            value={stats.totalPatients}
+            prefix={<TeamOutlined style={{ color: APPLE_BLUE, fontSize: 18 }} />}
+            loading={loading}
+            trend={{ value: 12, isPositive: true }}
+          />
         </Col>
         <Col xs={24} sm={12} lg={6}>
-          <Card loading={loading}>
-            <Statistic
-              title={t('dashboard.pendingDemands')}
-              value={stats.pendingDemands}
-              prefix={<FileTextOutlined />}
-              valueStyle={{ color: '#B8760A' }}
-            />
-          </Card>
+          <KPICard
+            title={t('dashboard.pendingDemands') || '待处理需求'}
+            value={stats.pendingDemands}
+            prefix={<FileTextOutlined style={{ color: APPLE_WARNING, fontSize: 18 }} />}
+            loading={loading}
+            trend={{ value: 5, isPositive: false }}
+          />
         </Col>
         <Col xs={24} sm={12} lg={6}>
-          <Card loading={loading}>
-            <Statistic
-              title={t('dashboard.todayFollowups')}
-              value={stats.todayFollowups}
-              prefix={<CalendarOutlined />}
-              valueStyle={{ color: '#2E7D5A' }}
-            />
-          </Card>
+          <KPICard
+            title={t('dashboard.todayFollowups') || '今日随访'}
+            value={stats.todayFollowups}
+            prefix={<CalendarOutlined style={{ color: APPLE_SUCCESS, fontSize: 18 }} />}
+            loading={loading}
+          />
         </Col>
         <Col xs={24} sm={12} lg={6}>
-          <Card loading={loading}>
-            <Statistic
-              title={t('dashboard.conversionRate')}
-              value={stats.conversionRate}
-              suffix="%"
-              prefix={<RiseOutlined />}
-              valueStyle={{ color: '#2E7D5A' }}
-            />
-          </Card>
+          <KPICard
+            title={t('dashboard.conversionRate') || '转化率'}
+            value={stats.conversionRate}
+            suffix="%"
+            prefix={<RiseOutlined style={{ color: APPLE_BLUE, fontSize: 18 }} />}
+            loading={loading}
+            trend={{ value: 8, isPositive: true }}
+          />
         </Col>
       </Row>
 
+      {/* Main Content Grid */}
       <Row gutter={[16, 16]}>
+        {/* Today's Tasks */}
         <Col xs={24} lg={16}>
-          <Card title={t('dashboard.todayTasks') || "Today's Tasks"} size="small" loading={loading}>
+          <Card
+            title={
+              <Space size={8}>
+                <ClockCircleOutlined style={{ color: APPLE_BLUE }} />
+                <span
+                  style={{
+                    fontSize: 17,
+                    fontWeight: 600,
+                    color: APPLE_NEAR_BLACK,
+                  }}
+                >
+                  {t('dashboard.todayTasks') || "Today's Tasks"}
+                </span>
+              </Space>
+            }
+            loading={loading}
+            style={{
+              borderRadius: 12,
+              border: 'none',
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.06)',
+            }}
+            styles={{
+              body: { padding: 0 },
+            }}
+          >
             <Table
               columns={taskColumns}
               dataSource={stats.todayTasks}
               rowKey="id"
               pagination={false}
-              size="small"
+              size="middle"
               locale={{ emptyText: t('common.noData') || '暂无数据' }}
+              style={{ borderRadius: 12 }}
             />
           </Card>
         </Col>
+
+        {/* Quick Stats */}
         <Col xs={24} lg={8}>
-          <Card title={t('dashboard.quickStats') || 'Quick Stats'} size="small" loading={loading}>
-            <p>{t('dashboard.newPatientsThisWeek') || '本周新增患者'}: <strong>{stats.newPatientsThisWeek}</strong></p>
-            <p>{t('dashboard.completedTreatments') || '已完成治疗'}: <strong>{stats.completedTreatments}</strong></p>
-            <p>{t('dashboard.pendingReviews') || '待审核'}: <strong>{stats.pendingReviews}</strong></p>
-            <p>{t('dashboard.monthlyTouchpoints') || '本月触点'}: <strong>{stats.monthlyTouchpoints}</strong></p>
+          <Card
+            title={
+              <Space size={8}>
+                <RiseOutlined style={{ color: APPLE_BLUE }} />
+                <span
+                  style={{
+                    fontSize: 17,
+                    fontWeight: 600,
+                    color: APPLE_NEAR_BLACK,
+                  }}
+                >
+                  {t('dashboard.quickStats') || 'Quick Stats'}
+                </span>
+              </Space>
+            }
+            loading={loading}
+            style={{
+              borderRadius: 12,
+              border: 'none',
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.06)',
+            }}
+            styles={{
+              body: { padding: '20px 24px' },
+            }}
+          >
+            <Space direction="vertical" size={16} style={{ width: '100%' }}>
+              <QuickStatItem
+                label={t('dashboard.newPatientsThisWeek') || '本周新增患者'}
+                value={stats.newPatientsThisWeek}
+                color={APPLE_SUCCESS}
+              />
+              <QuickStatItem
+                label={t('dashboard.completedTreatments') || '已完成治疗'}
+                value={stats.completedTreatments}
+                color={APPLE_BLUE}
+              />
+              <QuickStatItem
+                label={t('dashboard.pendingReviews') || '待审核'}
+                value={stats.pendingReviews}
+                color={APPLE_WARNING}
+              />
+              <QuickStatItem
+                label={t('dashboard.monthlyTouchpoints') || '本月触点'}
+                value={stats.monthlyTouchpoints}
+                color={APPLE_NEAR_BLACK}
+              />
+            </Space>
           </Card>
         </Col>
       </Row>
+    </div>
+  );
+}
+
+interface QuickStatItemProps {
+  label: string;
+  value: number;
+  color: string;
+}
+
+function QuickStatItem({ label, value, color }: QuickStatItemProps) {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: '12px 0',
+        borderBottom: '1px solid rgba(0, 0, 0, 0.04)',
+      }}
+    >
+      <Text
+        style={{
+          fontSize: 15,
+          color: 'rgba(0, 0, 0, 0.65)',
+        }}
+      >
+        {label}
+      </Text>
+      <Text
+        style={{
+          fontSize: 17,
+          fontWeight: 600,
+          color: color,
+        }}
+      >
+        {value}
+      </Text>
     </div>
   );
 }

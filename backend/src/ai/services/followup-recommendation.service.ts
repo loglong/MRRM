@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../common/prisma/prisma.service';
 import { Logger } from '../../common/logger';
+import { LlmService } from './llm.service';
 
 export interface FollowupRecommendation {
   recommendedContent: string[];
@@ -42,7 +43,10 @@ interface TouchpointInfo {
 export class FollowupRecommendationService {
   private logger = new Logger('FollowupRecommendationService');
 
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private llmService: LlmService,
+  ) {}
 
   async getRecommendation(patientId: string, orgId: string): Promise<FollowupRecommendation | null> {
     this.logger.log(`Getting followup recommendation for patient ${patientId}`);
@@ -71,7 +75,7 @@ export class FollowupRecommendationService {
       take: 20,
     });
 
-    // Generate recommendation
+    // Build patient info
     const patientInfo: PatientInfo = {
       id: patient.id,
       name: patient.name,
@@ -97,6 +101,33 @@ export class FollowupRecommendationService {
       sentiment: t.sentiment || null,
     }));
 
+    // Try LLM first, fallback to rules engine
+    process.stderr.write(`[DEBUG] LLM isAvailable: ${this.llmService.isAvailable}\n`);
+    if (this.llmService.isAvailable) {
+      try {
+        this.logger.debug(`Calling LLM for patient ${patientId}...`);
+        const llmResult = await this.llmService.generateFollowupRecommendation({
+          patientId: patient.id,
+          patientName: patient.name,
+          age: this.calculateAge(patient.birthDate),
+          tier: patient.tier,
+          allergyHistory: patient.allergyHistory,
+          pastHistory: patient.pastHistory,
+          demands: demandInfos,
+          touchpoints: touchpointInfos,
+        });
+
+        if (llmResult) {
+          this.logger.log(`LLM recommendation for patient ${patientId}: confidence=${llmResult.confidence}`);
+          return llmResult;
+        }
+      } catch (err) {
+        this.logger.warn(`LLM recommendation failed, falling back to rules: ${(err as Error).message}`);
+      }
+    }
+
+    // Fallback: rules-based engine
+    this.logger.log(`Using rules engine for patient ${patientId}`);
     const recommendedContent = this.generateContent(patientInfo, demandInfos);
     const optimalTime = this.calculateOptimalTime(patientInfo, touchpointInfos);
     const seasonalAdjustment = this.getSeasonalAdjustment();

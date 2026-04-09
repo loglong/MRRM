@@ -4,7 +4,7 @@ import { ChurnPredictionService } from './services/churn-prediction.service';
 import { FollowupRecommendationService, FollowupRecommendation } from './services/followup-recommendation.service';
 import { GetHighRiskPatientsDto } from './dto/churn-prediction.dto';
 
-@Controller('api/ai')
+@Controller('ai')
 export class AiController {
   constructor(
     private readonly churnPredictionService: ChurnPredictionService,

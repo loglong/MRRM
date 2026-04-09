@@ -249,3 +249,215 @@
 {"context":"PatientsService","level":"info","message":"Patient created: uuid-2 (Li Ming)","service":"mrrm-backend","timestamp":"2026-04-06 10:58:15.324"}
 {"context":"PatientsService","level":"info","message":"Patient updated: uuid-1","service":"mrrm-backend","timestamp":"2026-04-06 10:58:15.346"}
 {"context":"PatientsService","level":"info","message":"Patient soft-deleted: uuid-1","service":"mrrm-backend","timestamp":"2026-04-06 10:58:15.355"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.511"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.560"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.565"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.553"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.539"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.545"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.570"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.578"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.533"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.562"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.566"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.555"}
+{"context":"TenantMiddleware","level":"debug","message":"Tenant filter applied: model=Patient, action=findMany, orgId=org-1","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.556"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.547"}
+{"context":"TenantMiddleware","level":"debug","message":"Tenant filter applied: model=User, action=findMany, orgId=org-1","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.548"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.572"}
+{"context":"TenantMiddleware","level":"debug","message":"Tenant filter applied: model=User, action=findMany, orgId=org-1","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.573"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.542"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.579"}
+{"context":"TenantMiddleware","level":"debug","message":"Tenant filter applied: model=User, action=findMany, orgId=org-1","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.581"}
+{"context":"PermissionsService","level":"info","message":"Seeded 38 default permissions","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.722"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (1)","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.748"}
+{"context":"AuditService","level":"error","message":"Failed to write audit log","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.729","trace":"Error: DB error\n    at Object.<anonymous> (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/src/audit/audit.service.spec.ts:102:58)\n    at Promise.then.completed (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/utils.js:298:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/utils.js:231:10)\n    at _callCircusTest (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:316:40)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at _runTest (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:252:3)\n    at _runTestsForDescribeBlock (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:126:9)\n    at _runTestsForDescribeBlock (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:121:9)\n    at _runTestsForDescribeBlock (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:121:9)\n    at run (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:71:3)\n    at runAndTransformResultsToJestFormat (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)\n    at jestAdapter (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)\n    at runTestInternal (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-runner/build/runTest.js:367:16)\n    at runTest (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-runner/build/runTest.js:444:34)\n    at Object.worker (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-runner/build/testWorker.js:106:12)"}
+{"context":"RolesService","level":"info","message":"Role created: DOCTOR","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.818"}
+{"context":"RolesService","level":"info","message":"Role updated: undefined","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.845"}
+{"context":"RolesService","level":"info","message":"Role deleted: TEST","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.849"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.870"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.871"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.872"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.872"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-08 17:53:37.873"}
+{"context":"PatientsService","level":"info","message":"Patient created: uuid-1 (Zhang Wei)","service":"mrrm-backend","timestamp":"2026-04-08 17:53:38.131"}
+{"context":"PatientsService","level":"info","message":"Patient created: uuid-2 (Li Ming)","service":"mrrm-backend","timestamp":"2026-04-08 17:53:38.152"}
+{"context":"PatientsService","level":"info","message":"Patient updated: uuid-1","service":"mrrm-backend","timestamp":"2026-04-08 17:53:38.165"}
+{"context":"PatientsService","level":"info","message":"Patient soft-deleted: uuid-1","service":"mrrm-backend","timestamp":"2026-04-08 17:53:38.168"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.263"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.289"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.292"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.299"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.305"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.308"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.316"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.320"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.284"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.290"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.294"}
+{"context":"TenantMiddleware","level":"debug","message":"Tenant filter applied: model=User, action=findMany, orgId=org-1","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.295"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.301"}
+{"context":"TenantMiddleware","level":"debug","message":"Tenant filter applied: model=Patient, action=findMany, orgId=org-1","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.302"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.306"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.309"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.317"}
+{"context":"TenantMiddleware","level":"debug","message":"Tenant filter applied: model=User, action=findMany, orgId=org-1","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.318"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.321"}
+{"context":"TenantMiddleware","level":"debug","message":"Tenant filter applied: model=User, action=findMany, orgId=org-1","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.322"}
+{"context":"PermissionsService","level":"info","message":"Seeded 38 default permissions","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.533"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (1)","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.560"}
+{"context":"AuditService","level":"error","message":"Failed to write audit log","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.557","trace":"Error: DB error\n    at Object.<anonymous> (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/src/audit/audit.service.spec.ts:102:58)\n    at Promise.then.completed (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/utils.js:298:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/utils.js:231:10)\n    at _callCircusTest (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:316:40)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at _runTest (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:252:3)\n    at _runTestsForDescribeBlock (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:126:9)\n    at _runTestsForDescribeBlock (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:121:9)\n    at _runTestsForDescribeBlock (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:121:9)\n    at run (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:71:3)\n    at runAndTransformResultsToJestFormat (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)\n    at jestAdapter (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)\n    at runTestInternal (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-runner/build/runTest.js:367:16)\n    at runTest (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-runner/build/runTest.js:444:34)\n    at Object.worker (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-runner/build/testWorker.js:106:12)"}
+{"context":"RolesService","level":"info","message":"Role created: DOCTOR","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.530"}
+{"context":"RolesService","level":"info","message":"Role updated: undefined","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.560"}
+{"context":"RolesService","level":"info","message":"Role deleted: TEST","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.567"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.598"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.600"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.601"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.602"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.603"}
+{"context":"PatientsService","level":"info","message":"Patient created: uuid-1 (Zhang Wei)","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.613"}
+{"context":"PatientsService","level":"info","message":"Patient created: uuid-2 (Li Ming)","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.646"}
+{"context":"PatientsService","level":"info","message":"Patient updated: uuid-1","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.669"}
+{"context":"PatientsService","level":"info","message":"Patient soft-deleted: uuid-1","service":"mrrm-backend","timestamp":"2026-04-08 17:53:58.673"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.114"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.143"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.147"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.153"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.160"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.164"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.168"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.172"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.144"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.135"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.148"}
+{"context":"TenantMiddleware","level":"debug","message":"Tenant filter applied: model=User, action=findMany, orgId=org-1","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.149"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.155"}
+{"context":"TenantMiddleware","level":"debug","message":"Tenant filter applied: model=Patient, action=findMany, orgId=org-1","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.157"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.165"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.161"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.174"}
+{"context":"TenantMiddleware","level":"debug","message":"Tenant filter applied: model=User, action=findMany, orgId=org-1","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.174"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.169"}
+{"context":"TenantMiddleware","level":"debug","message":"Tenant filter applied: model=User, action=findMany, orgId=org-1","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.170"}
+{"context":"PermissionsService","level":"info","message":"Seeded 38 default permissions","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.346"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (1)","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.365"}
+{"context":"AuditService","level":"error","message":"Failed to write audit log","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.367","trace":"Error: DB error\n    at Object.<anonymous> (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/src/audit/audit.service.spec.ts:102:58)\n    at Promise.then.completed (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/utils.js:298:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/utils.js:231:10)\n    at _callCircusTest (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:316:40)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at _runTest (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:252:3)\n    at _runTestsForDescribeBlock (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:126:9)\n    at _runTestsForDescribeBlock (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:121:9)\n    at _runTestsForDescribeBlock (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:121:9)\n    at run (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:71:3)\n    at runAndTransformResultsToJestFormat (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)\n    at jestAdapter (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)\n    at runTestInternal (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-runner/build/runTest.js:367:16)\n    at runTest (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-runner/build/runTest.js:444:34)\n    at Object.worker (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-runner/build/testWorker.js:106:12)"}
+{"context":"RolesService","level":"info","message":"Role created: DOCTOR","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.344"}
+{"context":"RolesService","level":"info","message":"Role updated: undefined","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.365"}
+{"context":"RolesService","level":"info","message":"Role deleted: TEST","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.369"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.395"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.396"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.397"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.397"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.398"}
+{"context":"PatientsService","level":"info","message":"Patient created: uuid-1 (Zhang Wei)","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.407"}
+{"context":"PatientsService","level":"info","message":"Patient created: uuid-2 (Li Ming)","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.431"}
+{"context":"PatientsService","level":"info","message":"Patient updated: uuid-1","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.447"}
+{"context":"PatientsService","level":"info","message":"Patient soft-deleted: uuid-1","service":"mrrm-backend","timestamp":"2026-04-08 18:33:37.450"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 18:33:53.884"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 18:33:53.913"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 18:33:53.916"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 18:33:53.922"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 18:33:53.926"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 18:33:53.930"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 18:33:53.933"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 18:33:53.937"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 18:33:53.908"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 18:33:53.914"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 18:33:53.917"}
+{"context":"TenantMiddleware","level":"debug","message":"Tenant filter applied: model=User, action=findMany, orgId=org-1","service":"mrrm-backend","timestamp":"2026-04-08 18:33:53.918"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 18:33:53.923"}
+{"context":"TenantMiddleware","level":"debug","message":"Tenant filter applied: model=Patient, action=findMany, orgId=org-1","service":"mrrm-backend","timestamp":"2026-04-08 18:33:53.924"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 18:33:53.927"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 18:33:53.934"}
+{"context":"TenantMiddleware","level":"debug","message":"Tenant filter applied: model=User, action=findMany, orgId=org-1","service":"mrrm-backend","timestamp":"2026-04-08 18:33:53.935"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 18:33:53.931"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 18:33:53.938"}
+{"context":"TenantMiddleware","level":"debug","message":"Tenant filter applied: model=User, action=findMany, orgId=org-1","service":"mrrm-backend","timestamp":"2026-04-08 18:33:53.938"}
+{"context":"PermissionsService","level":"info","message":"Seeded 38 default permissions","service":"mrrm-backend","timestamp":"2026-04-08 18:33:54.130"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (1)","service":"mrrm-backend","timestamp":"2026-04-08 18:33:54.150"}
+{"context":"AuditService","level":"error","message":"Failed to write audit log","service":"mrrm-backend","timestamp":"2026-04-08 18:33:54.151","trace":"Error: DB error\n    at Object.<anonymous> (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/src/audit/audit.service.spec.ts:102:58)\n    at Promise.then.completed (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/utils.js:298:28)\n    at new Promise (<anonymous>)\n    at callAsyncCircusFn (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/utils.js:231:10)\n    at _callCircusTest (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:316:40)\n    at processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at _runTest (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:252:3)\n    at _runTestsForDescribeBlock (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:126:9)\n    at _runTestsForDescribeBlock (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:121:9)\n    at _runTestsForDescribeBlock (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:121:9)\n    at run (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/run.js:71:3)\n    at runAndTransformResultsToJestFormat (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapterInit.js:122:21)\n    at jestAdapter (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-circus/build/legacy-code-todo-rewrite/jestAdapter.js:79:19)\n    at runTestInternal (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-runner/build/runTest.js:367:16)\n    at runTest (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-runner/build/runTest.js:444:34)\n    at Object.worker (/Users/wangyinglong/Desktop/git源码/claudeskills/MRRM/backend/node_modules/jest-runner/build/testWorker.js:106:12)"}
+{"context":"RolesService","level":"info","message":"Role created: DOCTOR","service":"mrrm-backend","timestamp":"2026-04-08 18:33:54.126"}
+{"context":"RolesService","level":"info","message":"Role updated: undefined","service":"mrrm-backend","timestamp":"2026-04-08 18:33:54.151"}
+{"context":"RolesService","level":"info","message":"Role deleted: TEST","service":"mrrm-backend","timestamp":"2026-04-08 18:33:54.156"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-08 18:33:54.177"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-08 18:33:54.177"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-08 18:33:54.178"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-08 18:33:54.179"}
+{"context":"RolesService","level":"info","message":"Seeded role: SYSTEM_ADMIN","service":"mrrm-backend","timestamp":"2026-04-08 18:33:54.179"}
+{"context":"PatientsService","level":"info","message":"Patient created: uuid-1 (Zhang Wei)","service":"mrrm-backend","timestamp":"2026-04-08 18:33:54.184"}
+{"context":"PatientsService","level":"info","message":"Patient created: uuid-2 (Li Ming)","service":"mrrm-backend","timestamp":"2026-04-08 18:33:54.207"}
+{"context":"PatientsService","level":"info","message":"Patient updated: uuid-1","service":"mrrm-backend","timestamp":"2026-04-08 18:33:54.226"}
+{"context":"PatientsService","level":"info","message":"Patient soft-deleted: uuid-1","service":"mrrm-backend","timestamp":"2026-04-08 18:33:54.230"}
+{"context":"PrismaService","level":"info","message":"Connecting to database...","service":"mrrm-backend","timestamp":"2026-04-08 18:40:23.931"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 18:40:23.933"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 18:40:23.934"}
+{"context":"PrismaService","level":"info","message":"Database connected","service":"mrrm-backend","timestamp":"2026-04-08 18:40:23.969"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (38)","service":"mrrm-backend","timestamp":"2026-04-08 18:40:23.978"}
+{"context":"RolesService","level":"info","message":"Roles already seeded (5)","service":"mrrm-backend","timestamp":"2026-04-08 18:40:23.982"}
+{"context":"PrismaService","level":"info","message":"Connecting to database...","service":"mrrm-backend","timestamp":"2026-04-08 18:47:25.131"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 18:47:25.133"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 18:47:25.133"}
+{"context":"PrismaService","level":"info","message":"Database connected","service":"mrrm-backend","timestamp":"2026-04-08 18:47:25.157"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (38)","service":"mrrm-backend","timestamp":"2026-04-08 18:47:25.163"}
+{"context":"RolesService","level":"info","message":"Roles already seeded (5)","service":"mrrm-backend","timestamp":"2026-04-08 18:47:25.167"}
+{"context":"PrismaService","level":"info","message":"Connecting to database...","service":"mrrm-backend","timestamp":"2026-04-08 18:50:22.689"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 18:50:22.691"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 18:50:22.692"}
+{"context":"PrismaService","level":"info","message":"Database connected","service":"mrrm-backend","timestamp":"2026-04-08 18:50:22.716"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (38)","service":"mrrm-backend","timestamp":"2026-04-08 18:50:22.722"}
+{"context":"RolesService","level":"info","message":"Roles already seeded (5)","service":"mrrm-backend","timestamp":"2026-04-08 18:50:22.726"}
+{"context":"PrismaService","level":"info","message":"Connecting to database...","service":"mrrm-backend","timestamp":"2026-04-08 18:55:52.033"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 18:55:52.035"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 18:55:52.035"}
+{"context":"PrismaService","level":"info","message":"Database connected","service":"mrrm-backend","timestamp":"2026-04-08 18:55:52.067"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (38)","service":"mrrm-backend","timestamp":"2026-04-08 18:55:52.072"}
+{"context":"RolesService","level":"info","message":"Roles already seeded (5)","service":"mrrm-backend","timestamp":"2026-04-08 18:55:52.076"}
+{"context":"PrismaService","level":"info","message":"Connecting to database...","service":"mrrm-backend","timestamp":"2026-04-08 18:57:20.431"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 18:57:20.433"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 18:57:20.434"}
+{"context":"PrismaService","level":"info","message":"Database connected","service":"mrrm-backend","timestamp":"2026-04-08 18:57:20.458"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (38)","service":"mrrm-backend","timestamp":"2026-04-08 18:57:20.464"}
+{"context":"RolesService","level":"info","message":"Roles already seeded (5)","service":"mrrm-backend","timestamp":"2026-04-08 18:57:20.469"}
+{"context":"PrismaService","level":"info","message":"Connecting to database...","service":"mrrm-backend","timestamp":"2026-04-08 18:58:24.205"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 18:58:24.207"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 18:58:24.208"}
+{"context":"PrismaService","level":"info","message":"Database connected","service":"mrrm-backend","timestamp":"2026-04-08 18:58:24.233"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (38)","service":"mrrm-backend","timestamp":"2026-04-08 18:58:24.239"}
+{"context":"RolesService","level":"info","message":"Roles already seeded (5)","service":"mrrm-backend","timestamp":"2026-04-08 18:58:24.243"}
+{"context":"PrismaService","level":"info","message":"Connecting to database...","service":"mrrm-backend","timestamp":"2026-04-08 18:59:24.906"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 18:59:24.908"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 18:59:24.908"}
+{"context":"PrismaService","level":"info","message":"Database connected","service":"mrrm-backend","timestamp":"2026-04-08 18:59:24.934"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (38)","service":"mrrm-backend","timestamp":"2026-04-08 18:59:24.940"}
+{"context":"RolesService","level":"info","message":"Roles already seeded (5)","service":"mrrm-backend","timestamp":"2026-04-08 18:59:24.945"}
+{"context":"PrismaService","level":"info","message":"Connecting to database...","service":"mrrm-backend","timestamp":"2026-04-08 19:57:42.473"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 19:57:42.476"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 19:57:42.476"}
+{"context":"PrismaService","level":"info","message":"Database connected","service":"mrrm-backend","timestamp":"2026-04-08 19:57:42.510"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (38)","service":"mrrm-backend","timestamp":"2026-04-08 19:57:42.518"}
+{"context":"RolesService","level":"info","message":"Roles already seeded (5)","service":"mrrm-backend","timestamp":"2026-04-08 19:57:42.523"}
+{"context":"PrismaService","level":"info","message":"Connecting to database...","service":"mrrm-backend","timestamp":"2026-04-08 20:01:06.295"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 20:01:06.297"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 20:01:06.297"}
+{"context":"PrismaService","level":"info","message":"Database connected","service":"mrrm-backend","timestamp":"2026-04-08 20:01:06.331"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (38)","service":"mrrm-backend","timestamp":"2026-04-08 20:01:06.341"}
+{"context":"RolesService","level":"info","message":"Roles already seeded (5)","service":"mrrm-backend","timestamp":"2026-04-08 20:01:06.345"}
+{"context":"PrismaService","level":"info","message":"Connecting to database...","service":"mrrm-backend","timestamp":"2026-04-08 20:05:33.593"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 20:05:33.595"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 20:05:33.595"}
+{"context":"PrismaService","level":"info","message":"Database connected","service":"mrrm-backend","timestamp":"2026-04-08 20:05:33.635"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (38)","service":"mrrm-backend","timestamp":"2026-04-08 20:05:33.647"}
+{"context":"RolesService","level":"info","message":"Roles already seeded (5)","service":"mrrm-backend","timestamp":"2026-04-08 20:05:33.652"}
+{"context":"PrismaService","level":"info","message":"Connecting to database...","service":"mrrm-backend","timestamp":"2026-04-08 20:08:08.052"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 20:08:08.054"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 20:08:08.055"}
+{"context":"PrismaService","level":"info","message":"Database connected","service":"mrrm-backend","timestamp":"2026-04-08 20:08:08.089"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (38)","service":"mrrm-backend","timestamp":"2026-04-08 20:08:08.097"}
+{"context":"RolesService","level":"info","message":"Roles already seeded (5)","service":"mrrm-backend","timestamp":"2026-04-08 20:08:08.102"}
+{"context":"PrismaService","level":"info","message":"Connecting to database...","service":"mrrm-backend","timestamp":"2026-04-08 20:09:45.598"}
+{"context":"TenantMiddleware","level":"info","message":"Initializing tenant middleware","service":"mrrm-backend","timestamp":"2026-04-08 20:09:45.600"}
+{"context":"TenantMiddleware","level":"info","message":"Tenant middleware registered","service":"mrrm-backend","timestamp":"2026-04-08 20:09:45.602"}
+{"context":"PrismaService","level":"info","message":"Database connected","service":"mrrm-backend","timestamp":"2026-04-08 20:09:45.638"}
+{"context":"PermissionsService","level":"info","message":"Permissions already seeded (38)","service":"mrrm-backend","timestamp":"2026-04-08 20:09:45.649"}
+{"context":"RolesService","level":"info","message":"Roles already seeded (5)","service":"mrrm-backend","timestamp":"2026-04-08 20:09:45.655"}
