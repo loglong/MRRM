@@ -118,12 +118,14 @@ export class FollowupRecommendationService {
         });
 
         if (llmResult) {
-          this.logger.log(`LLM recommendation for patient ${patientId}: confidence=${llmResult.confidence}`);
+          this.logger.log(`LLM recommendation for patient ${patientId}: confidence=${llmResult.confidence}, content=${JSON.stringify(llmResult.recommendedContent).substring(0, 100)}`);
           return llmResult;
         }
       } catch (err) {
         this.logger.warn(`LLM recommendation failed, falling back to rules: ${(err as Error).message}`);
       }
+    } else {
+      this.logger.warn(`LLM not available, using rules engine for patient ${patientId}`);
     }
 
     // Fallback: rules-based engine

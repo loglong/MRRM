@@ -31,24 +31,23 @@ function isRecommendedObject(item: any): item is RecommendedItem {
 
 interface Props {
   patientId: string;
-  patientOrgId?: string;
   onCreateFollowup?: () => void;
 }
 
-export default function FollowupRecommendationPage({ patientId, patientOrgId, onCreateFollowup }: Props) {
+export default function FollowupRecommendationPage({ patientId, onCreateFollowup }: Props) {
   const [recommendation, setRecommendation] = useState<FollowupRecommendation | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     loadRecommendation();
-  }, [patientId, patientOrgId]);
+  }, [patientId]);
 
   const loadRecommendation = async () => {
     try {
       setLoading(true);
       setError(null);
-      const data = await followupRecommendationApi.get(patientId, patientOrgId);
+      const data = await followupRecommendationApi.get(patientId);
       setRecommendation(data);
     } catch (err: any) {
       console.error('Failed to load recommendation', err);

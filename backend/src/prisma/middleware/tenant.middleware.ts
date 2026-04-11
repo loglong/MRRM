@@ -5,22 +5,29 @@ import { Logger } from '../../common/logger';
 import { Prisma } from '@prisma/client';
 
 // Models that are tenant-aware (have orgId field)
+// NOTE: PathStep and PathInstanceStep don't have orgId - they inherit via relations
 const TENANT_MODELS = [
   'User',
   'Patient',
   'Demand',
   'Path',
-  'PathStep',
   'Touchpoint',
   'FollowupPlan',
   'FollowupRecord',
   'JourneyMilestone',
   'AuditLog',
   'Role',
+  'PathInstance',
+  'Notification',
+  'HealthRecord',
+  'HealthReminder',
 ];
 
 // Models that are NOT tenant-aware (system-level)
 const SYSTEM_MODELS = ['Organization', 'Permission'];
+
+// Models schema defines with orgId but are NOT in TENANT_MODELS (should not happen - indicates a bug)
+const BUG_DETECTION_MODELS: string[] = [];
 
 @Injectable()
 export class TenantMiddleware implements OnModuleInit {
@@ -61,8 +68,9 @@ export class TenantMiddleware implements OnModuleInit {
   }
 
   private addTenantFilter(params: Prisma.MiddlewareParams, next: Function, orgId: string): Promise<any> {
-    // Only add orgId filter for read operations that support WHERE clause
+    // Only add orgId filter for operations that support WHERE clause
     const readActions = ['findMany', 'findFirst', 'findUnique', 'count', 'updateMany', 'deleteMany'];
+    const writeActions = ['create', 'update', 'upsert'];
 
     if (readActions.includes(params.action)) {
       if (params.args.where) {
@@ -74,8 +82,20 @@ export class TenantMiddleware implements OnModuleInit {
       }
     }
 
-    // For create/update - the orgId should come from the data payload, not the query
-    // Skip for create as Prisma doesn't support where clause in create
+    // Validate write operations have correct orgId
+    if (writeActions.includes(params.action) && params.args.data) {
+      const data = params.args.data;
+      if (data.orgId && data.orgId !== orgId) {
+        this.logger.error(
+          `Tenant violation: user attempted to write to different org. ` +
+          `User orgId=${orgId}, attempted orgId=${data.orgId}, model=${params.model}`,
+          'TenantMiddleware',
+        );
+        throw new Error(`Access denied: cannot create/modify resources in another organization`);
+      }
+      // Force correct orgId on write operations
+      data.orgId = orgId;
+    }
 
     // Log in development
     if (process.env.NODE_ENV !== 'production') {

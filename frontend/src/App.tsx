@@ -13,6 +13,8 @@ import TouchpointsPage from './pages/TouchpointsPage';
 import FollowupsPage from './pages/FollowupsPage';
 import ReportsPage from './pages/ReportsPage';
 import ExperiencePage from './pages/ExperiencePage';
+import JourneyCenterPage from './pages/JourneyCenterPage';
+import HealthArchivePage from './pages/HealthArchivePage';
 import AdminPage from './pages/AdminPage';
 import RolesPage from './pages/admin/RolesPage';
 import PermissionsPage from './pages/admin/PermissionsPage';
@@ -68,6 +70,8 @@ function App() {
           <Route path="followups" element={<FollowupsPage />} />
           <Route path="reports" element={<ReportsPage />} />
           <Route path="experience" element={<ExperiencePage />} />
+          <Route path="journey-center" element={<JourneyCenterPage />} />
+          <Route path="health-archive" element={<HealthArchivePage />} />
           <Route path="admin" element={<AdminPage />} />
           <Route path="admin/roles" element={<RolesPage />} />
           <Route path="admin/permissions" element={<PermissionsPage />} />

@@ -117,6 +117,34 @@ export class ReportsService {
     };
   }
 
+  async getDemandAnalysis(
+    orgId: string,
+    filters: KpiFilters,
+  ): Promise<{ status: string; count: number }[]> {
+    const where: any = { orgId };
+
+    if (filters.startDate || filters.endDate) {
+      where.createdAt = {};
+      if (filters.startDate) {
+        where.createdAt.gte = filters.startDate;
+      }
+      if (filters.endDate) {
+        where.createdAt.lte = filters.endDate;
+      }
+    }
+
+    const demandStats = await this.prisma.demand.groupBy({
+      by: ['status'],
+      where,
+      _count: true,
+    });
+
+    return demandStats.map((stat) => ({
+      status: stat.status,
+      count: stat._count,
+    }));
+  }
+
   async getKPITrends(
     orgId: string,
     filters: KpiFilters,

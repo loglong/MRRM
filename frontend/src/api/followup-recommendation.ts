@@ -12,11 +12,8 @@ export interface FollowupRecommendation {
 }
 
 export const followupRecommendationApi = {
-  get: (patientId: string, orgId?: string): Promise<FollowupRecommendation> => {
-    const headers: Record<string, string> = {};
-    if (orgId) {
-      headers['x-org-id'] = orgId;
-    }
-    return api.get(`/ai/followup-recommendations/${patientId}`, { headers }).then(res => res.data);
+  // Use internal AI endpoint with JWT auth (no API key required)
+  get: (patientId: string): Promise<FollowupRecommendation> => {
+    return api.get(`/ai-internal/followup-recommendations/${patientId}`).then(res => res.data);
   },
 };

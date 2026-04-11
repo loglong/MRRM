@@ -25,6 +25,13 @@ export class ReportsController {
     return this.reportsService.getKPITrends(orgId, filters);
   }
 
+  @Get('demand-analysis')
+  async getDemandAnalysis(@Query() query: KpiFiltersDto, @Request() req: any) {
+    const orgId = req.user?.orgId;
+    const filters = this.parseFilters(query);
+    return this.reportsService.getDemandAnalysis(orgId, filters);
+  }
+
   @Get('export/kpi')
   async exportKPI(
     @Query() query: ExportKpiDto,

@@ -3,8 +3,8 @@
  * Provides MCP protocol over HTTP
  */
 
-import express, { Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+const express = require('express');
+const { PrismaClient } = require('@prisma/client');
 
 const prisma = new PrismaClient();
 
@@ -75,16 +75,16 @@ const tools = [
 ];
 
 // Tool Handlers
-async function handleSearchPatients(args: any) {
+async function handleSearchPatients(args) {
   const orgId = args.orgId || DEFAULT_ORG;
-  const page = (args.page as number) || 1;
-  const limit = (args.limit as number) || 20;
-  const where: any = { orgId };
+  const page = (args.page) || 1;
+  const limit = (args.limit) || 20;
+  const where = { orgId };
 
   if (args.q) {
     where.OR = [
-      { name: { contains: args.q as string } },
-      { phone: { contains: args.q as string } },
+      { name: { contains: args.q } },
+      { phone: { contains: args.q } },
     ];
   }
   if (args.tier) {
@@ -112,9 +112,9 @@ async function handleSearchPatients(args: any) {
   return { patients, pagination: { total, page, limit } };
 }
 
-async function handleGetPatientDetail(args: any) {
+async function handleGetPatientDetail(args) {
   const orgId = args.orgId || DEFAULT_ORG;
-  const patientId = args.patient_id as string;
+  const patientId = args.patient_id;
 
   const patient = await prisma.patient.findFirst({
     where: { id: patientId, orgId, deletedAt: null },
@@ -130,9 +130,9 @@ async function handleGetPatientDetail(args: any) {
   return patient;
 }
 
-async function handleCreateTouchpoint(args: any) {
+async function handleCreateTouchpoint(args) {
   const orgId = args.orgId || DEFAULT_ORG;
-  const patientId = args.patient_id as string;
+  const patientId = args.patient_id;
 
   const patient = await prisma.patient.findFirst({ where: { id: patientId, orgId, deletedAt: null } });
   if (!patient) {
@@ -153,10 +153,10 @@ async function handleCreateTouchpoint(args: any) {
   return touchpoint;
 }
 
-async function handleCreateFollowup(args: any) {
+async function handleCreateFollowup(args) {
   const orgId = args.orgId || DEFAULT_ORG;
-  const patientId = args.patient_id as string;
-  const plannedAt = new Date(args.planned_at as string);
+  const patientId = args.patient_id;
+  const plannedAt = new Date(args.planned_at);
 
   const patient = await prisma.patient.findFirst({ where: { id: patientId, orgId, deletedAt: null } });
   if (!patient) {
@@ -167,7 +167,7 @@ async function handleCreateFollowup(args: any) {
     data: {
       patientId,
       orgId,
-      name: args.title as string,
+      name: args.title,
       type: args.type,
       startDate: plannedAt,
       status: 'ACTIVE',
@@ -188,17 +188,17 @@ async function handleCreateFollowup(args: any) {
 }
 
 // Routes
-app.get('/health', (_req: Request, res: Response) => {
+app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'MRRM-Patient-Skill', version: '1.0.0', url: `${BASE_URL}/mcp` });
 });
 
-app.get('/tools', (_req: Request, res: Response) => {
+app.get('/tools', (req, res) => {
   res.json({ tools });
 });
 
 // MCP JSON-RPC endpoint
-app.all('/mcp', async (req: Request, res: Response) => {
-  const apiKey = req.headers['x-api-key'] as string;
+app.all('/mcp', async (req, res) => {
+  const apiKey = req.headers['x-api-key'];
 
   // Simple auth check
   if (apiKey && apiKey !== API_KEY) {
@@ -213,7 +213,7 @@ app.all('/mcp', async (req: Request, res: Response) => {
       res.json({ jsonrpc, id, result: { tools } });
     } else if (method === 'tools/call') {
       const { name, arguments: args } = params;
-      let result: any;
+      let result;
 
       switch (name) {
         case 'search_patients':
@@ -245,7 +245,7 @@ app.all('/mcp', async (req: Request, res: Response) => {
       jsonrpc: '2.0',
       id: req.body?.id,
       result: {
-        content: [{ type: 'text', text: `Error: ${error instanceof Error ? error.message : String(error)}` }],
+        content: [{ type: 'text', text: `Error: ${error.message}` }],
         isError: true,
       },
     });
@@ -259,4 +259,4 @@ app.listen(PORT, () => {
   console.log(`Health: ${BASE_URL}/health`);
 });
 
-export default app;
+module.exports = app;

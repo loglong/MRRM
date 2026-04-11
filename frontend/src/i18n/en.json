@@ -47,6 +47,8 @@
     "touchpoints": "Touchpoints",
     "followups": "Follow-ups",
     "reports": "Reports",
+    "journeyCenter": "Journey Center",
+    "healthArchive": "Health Archive",
     "experience": "Experience",
     "admin": "Admin"
   },
@@ -131,6 +133,12 @@
     "journey": "Journey",
     "health": "Health Archive"
   },
+  "patient": {
+    "name": "Name",
+    "phone": "Phone",
+    "tier": "Tier",
+    "searchPlaceholder": "Search by name or phone"
+  },
   "patientDetail": {
     "name": "Name",
     "gender": "Gender",
@@ -199,7 +207,13 @@
     "maintenancePlanId": "Maintenance Plan ID",
     "maintenancePlanIdPlaceholder": "Enter maintenance plan ID",
     "demandEndDate": "Demand End Date",
-    "selectDate": "Select date"
+    "selectDate": "Select date",
+    "statusOPEN": "Open",
+    "statusIN_PROGRESS": "In Progress",
+    "statusPENDING": "Pending",
+    "statusFULFILLED": "Fulfilled",
+    "statusCANCELLED": "Cancelled",
+    "statusLOST": "Lost"
   },
   "paths": {
     "title": "Path Management",
@@ -498,12 +512,14 @@
   },
   "journey": {
     "title": "Patient Journey",
+    "viewJourney": "View Journey",
     "timeline": "Timeline",
     "noEvents": "No events recorded",
     "events": "Events",
     "page": "Page",
     "of": "of",
     "loadMore": "Load More",
+    "filterByType": "Filter by type",
     "eventType": {
       "TOUCHPOINT": "Touchpoint",
       "DEMAND": "Demand",
@@ -517,6 +533,49 @@
       "POSITIVE": "Positive",
       "NEUTRAL": "Neutral",
       "NEGATIVE": "Negative"
+    },
+    "status": {
+      "PENDING": "Pending",
+      "IN_PROGRESS": "In Progress",
+      "COMPLETED": "Completed",
+      "SKIPPED": "Skipped",
+      "OVERDUE": "Overdue",
+      "CANCELLED": "Cancelled"
     }
+  },
+  "health": {
+    "title": "Health Archive",
+    "viewArchive": "View Archive",
+    "archiveSummary": "Health Archive Summary",
+    "archive": "Health Summary",
+    "timeline": "Health Timeline",
+    "reminders": "Health Reminders",
+    "allergies": "Allergies",
+    "pastHistory": "Past History",
+    "examResults": "Exam Results",
+    "diagnosis": "Diagnosis",
+    "treatment": "Treatment",
+    "archiveEmpty": "No health archive data",
+    "timelineEmpty": "No health records",
+    "noReminders": "No pending reminders",
+    "pendingReminders": "Pending Reminders",
+    "reminderCreated": "Reminder created",
+    "reminderError": "Failed to create reminder",
+    "reminderCompleted": "Reminder completed",
+    "reminderDeleted": "Reminder deleted",
+    "reminderType": "Reminder Type",
+    "review": "Review",
+    "medication": "Medication",
+    "reminderTitle": "Title",
+    "reminderContent": "Content",
+    "remindAt": "Remind At",
+    "titleRequired": "Please enter title",
+    "dateRequired": "Please select date",
+    "loadMore": "Load More",
+    "empty": "No data",
+    "noArchive": "No health archive",
+    "noAllergies": "No allergy records",
+    "noPastHistory": "No past history records",
+    "noExamResults": "No exam result records"
   }
 }

@@ -2,7 +2,6 @@
   "name": "mrrm-backend",
   "version": "1.0.0",
   "description": "MRRM Backend API - Medical Patient Relationship Management",
-  "type": "module",
   "bin": {
     "mrrm-mcp": "./dist/ai/mcp/index.js",
     "mrrm-mcp-http": "./dist/ai/mcp/mcp-server-http.js"

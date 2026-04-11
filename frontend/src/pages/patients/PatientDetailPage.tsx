@@ -243,7 +243,6 @@ export default function PatientDetailPage() {
       children: (
         <FollowupRecommendationPanel
           patientId={patient.id}
-          patientOrgId={patient.orgId}
         />
       ),
     },

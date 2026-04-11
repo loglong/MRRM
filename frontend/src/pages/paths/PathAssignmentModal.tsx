@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import dayjs from 'dayjs';
 import { pathsApi, PathTemplate } from '@/api/paths';
 import { patientsApi, Patient, Demand } from '@/api/patients';
+import { demandStatusLabels, DemandStatus } from '@/api/demands';
 
 const { Text } = Typography;
 
@@ -150,7 +151,7 @@ export default function PathAssignmentModal({ visible, template, onOk, onCancel 
           >
             {demands.map((demand) => (
               <Select.Option key={demand.id} value={demand.id}>
-                {demand.title} - {demand.status}
+                {demand.title} - {demandStatusLabels[demand.status as DemandStatus]}
               </Select.Option>
             ))}
           </Select>

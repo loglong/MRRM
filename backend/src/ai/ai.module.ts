@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { PrismaModule } from '../common/prisma/prisma.module';
 import { AiController } from './ai.controller';
+import { AiInternalController } from './ai-internal.controller';
 import { ChurnPredictionService } from './services/churn-prediction.service';
 import { FollowupRecommendationService } from './services/followup-recommendation.service';
 import { LlmService } from './services/llm.service';
@@ -10,6 +11,7 @@ import { MiniMaxProvider } from './services/llm.service';
 import { LlmCache } from './services/llm.service';
 import { PatientSkillService } from './services/patient-skill.service';
 import { ApiKeyGuard } from './guards/api-key.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AiAuditInterceptor } from './interceptors/ai-audit.interceptor';
 
 @Module({
@@ -21,7 +23,7 @@ import { AiAuditInterceptor } from './interceptors/ai-audit.interceptor';
       limit: 100,  // 100 requests per minute
     }]),
   ],
-  controllers: [AiController],
+  controllers: [AiController, AiInternalController],
   providers: [
     ChurnPredictionService,
     FollowupRecommendationService,
@@ -30,6 +32,7 @@ import { AiAuditInterceptor } from './interceptors/ai-audit.interceptor';
     LlmCache,
     PatientSkillService,
     ApiKeyGuard,
+    JwtAuthGuard,
     AiAuditInterceptor,
   ],
   exports: [

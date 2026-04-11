@@ -63,6 +63,50 @@ describe('TenantMiddleware', () => {
         expect.objectContaining({ args: expect.objectContaining({ where: { orgId: 'org-1' } }) }),
       );
     });
+
+    it('should apply filter to PathInstance (tenant-aware model)', () => {
+      AuthContext.set(mockUser);
+      middleware.onModuleInit();
+      const registeredUse = (prismaService.$use as jest.Mock).mock.calls[0][0];
+      const params = { action: 'findMany', model: 'PathInstance', args: {} } as any;
+      registeredUse(params, nextMock);
+      expect(nextMock).toHaveBeenCalledWith(
+        expect.objectContaining({ args: expect.objectContaining({ where: { orgId: 'org-1' } }) }),
+      );
+    });
+
+    it('should apply filter to Notification (tenant-aware model)', () => {
+      AuthContext.set(mockUser);
+      middleware.onModuleInit();
+      const registeredUse = (prismaService.$use as jest.Mock).mock.calls[0][0];
+      const params = { action: 'findMany', model: 'Notification', args: {} } as any;
+      registeredUse(params, nextMock);
+      expect(nextMock).toHaveBeenCalledWith(
+        expect.objectContaining({ args: expect.objectContaining({ where: { orgId: 'org-1' } }) }),
+      );
+    });
+
+    it('should apply filter to HealthRecord (tenant-aware model)', () => {
+      AuthContext.set(mockUser);
+      middleware.onModuleInit();
+      const registeredUse = (prismaService.$use as jest.Mock).mock.calls[0][0];
+      const params = { action: 'findMany', model: 'HealthRecord', args: {} } as any;
+      registeredUse(params, nextMock);
+      expect(nextMock).toHaveBeenCalledWith(
+        expect.objectContaining({ args: expect.objectContaining({ where: { orgId: 'org-1' } }) }),
+      );
+    });
+
+    it('should apply filter to HealthReminder (tenant-aware model)', () => {
+      AuthContext.set(mockUser);
+      middleware.onModuleInit();
+      const registeredUse = (prismaService.$use as jest.Mock).mock.calls[0][0];
+      const params = { action: 'findMany', model: 'HealthReminder', args: {} } as any;
+      registeredUse(params, nextMock);
+      expect(nextMock).toHaveBeenCalledWith(
+        expect.objectContaining({ args: expect.objectContaining({ where: { orgId: 'org-1' } }) }),
+      );
+    });
   });
 
   describe('context sensitivity', () => {
@@ -109,6 +153,38 @@ describe('TenantMiddleware', () => {
       registeredUse(params, nextMock);
       expect(nextMock).toHaveBeenCalledWith(
         expect.objectContaining({ args: { where: { orgId: 'org-1' } } }),
+      );
+    });
+  });
+
+  describe('write operation validation', () => {
+    it('should force correct orgId on create operations', async () => {
+      AuthContext.set(mockUser);
+      middleware.onModuleInit();
+      const registeredUse = (prismaService.$use as jest.Mock).mock.calls[0][0];
+      const params = { action: 'create', model: 'Patient', args: { data: { name: 'John', phone: '123' } } } as any;
+      await registeredUse(params, nextMock);
+      expect(nextMock).toHaveBeenCalledWith(
+        expect.objectContaining({ args: expect.objectContaining({ data: expect.objectContaining({ orgId: 'org-1' }) }) }),
+      );
+    });
+
+    it('should throw error when attempting to create resource in different org', async () => {
+      AuthContext.set(mockUser);
+      middleware.onModuleInit();
+      const registeredUse = (prismaService.$use as jest.Mock).mock.calls[0][0];
+      const params = { action: 'create', model: 'Patient', args: { data: { name: 'John', orgId: 'different-org' } } } as any;
+      await expect(registeredUse(params, nextMock)).rejects.toThrow('Access denied: cannot create/modify resources in another organization');
+    });
+
+    it('should force correct orgId on update operations', async () => {
+      AuthContext.set(mockUser);
+      middleware.onModuleInit();
+      const registeredUse = (prismaService.$use as jest.Mock).mock.calls[0][0];
+      const params = { action: 'update', model: 'Patient', args: { where: { id: 'patient-1' }, data: { name: 'Jane' } } } as any;
+      await registeredUse(params, nextMock);
+      expect(nextMock).toHaveBeenCalledWith(
+        expect.objectContaining({ args: expect.objectContaining({ data: expect.objectContaining({ orgId: 'org-1' }) }) }),
       );
     });
   });

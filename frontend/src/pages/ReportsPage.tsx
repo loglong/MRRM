@@ -4,7 +4,16 @@ import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import { KPICard } from '../components/KPICard';
-import { reportsApi } from '../api/reports';
+import { reportsApi, KPITrend, DemandAnalysis } from '../api/reports';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+
+const STATUS_COLORS: Record<string, string> = {
+  OPEN: '#1890ff',
+  IN_PROGRESS: '#faad14',
+  PENDING: '#722ed1',
+  FULFILLED: '#52c41a',
+  CANCELLED: '#ff4d4f',
+};
 
 const { RangePicker } = DatePicker;
 
@@ -17,7 +26,12 @@ export default function ReportsPage() {
     conversionRate: 0,
     followupCompletionRate: 0,
   });
-  const [dateRange, setDateRange] = useState<[Dayjs, Dayjs] | null>(null);
+  const [dateRange, setDateRange] = useState<[Dayjs, Dayjs] | null>([
+    dayjs().subtract(30, 'day'),
+    dayjs(),
+  ]);
+  const [trends, setTrends] = useState<KPITrend[]>([]);
+  const [demandAnalysis, setDemandAnalysis] = useState<DemandAnalysis[]>([]);
 
   const fetchKPIs = async () => {
     setLoading(true);
@@ -28,12 +42,18 @@ export default function ReportsPage() {
         filters.endDate = dateRange[1].toISOString();
       }
 
-      const data = await reportsApi.getKPIs(filters);
+      const [data, trendsData, demandData] = await Promise.all([
+        reportsApi.getKPIs(filters),
+        reportsApi.getKPITrends(filters),
+        reportsApi.getDemandAnalysis(filters),
+      ]);
       setKpis({
         newPatients: data.newPatients,
         conversionRate: data.conversionRate,
         followupCompletionRate: data.followupCompletionRate,
       });
+      setTrends(trendsData);
+      setDemandAnalysis(demandData);
     } catch (error) {
       message.error('Failed to load KPI data');
     } finally {
@@ -116,12 +136,48 @@ export default function ReportsPage() {
       <Row gutter={[16, 16]}>
         <Col xs={24} lg={12}>
           <Card title={t('reports.patientTrends')}>
-            <p style={{ color: '#999', textAlign: 'center', padding: 40 }}>{t('reports.chartPlaceholder')}</p>
+            {trends.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={trends}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" />
+                  <YAxis yAxisId="left" />
+                  <YAxis yAxisId="right" orientation="right" />
+                  <Tooltip />
+                  <Legend />
+                  <Line yAxisId="left" type="monotone" dataKey="newPatients" stroke="#1890ff" name={t('reports.newPatients')} />
+                  <Line yAxisId="right" type="monotone" dataKey="conversionRate" stroke="#52c41a" name={t('reports.conversionRate')} />
+                  <Line yAxisId="right" type="monotone" dataKey="followupCompletionRate" stroke="#722ed1" name={t('reports.followupCompletionRate')} />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+              <p style={{ color: '#999', textAlign: 'center', padding: 40 }}>{t('reports.chartPlaceholder')}</p>
+            )}
           </Card>
         </Col>
         <Col xs={24} lg={12}>
           <Card title={t('reports.demandAnalysis')}>
-            <p style={{ color: '#999', textAlign: 'center', padding: 40 }}>{t('reports.chartPlaceholder')}</p>
+            {demandAnalysis.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={demandAnalysis}
+                    dataKey="count"
+                    nameKey="status"
+                    cx="50%"
+                    cy="50%"
+                  >
+                    {demandAnalysis.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={STATUS_COLORS[entry.status] || '#999'} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <p style={{ color: '#999', textAlign: 'center', padding: 40 }}>{t('reports.chartPlaceholder')}</p>
+            )}
           </Card>
         </Col>
       </Row>

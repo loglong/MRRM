@@ -209,7 +209,7 @@ export default function PathTemplateDetailDrawer({ visible, template, onClose, o
               <Text type="secondary">{t('common.status') || 'Status'}</Text>
               <div>
                 <Tag color={templateData.status === 'ACTIVE' ? 'green' : templateData.status === 'DRAFT' ? 'orange' : 'default'}>
-                  {templateData.status}
+                  {templateData.status === 'ACTIVE' ? t('paths.active') : templateData.status === 'DRAFT' ? t('paths.draft') : templateData.status === 'ARCHIVED' ? t('paths.archived') : templateData.status}
                 </Tag>
               </div>
             </div>

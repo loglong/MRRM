@@ -2,11 +2,11 @@ ai_employee:
   # API Key 配置示例（实际运行时从环境变量或数据库加载）
   keys:
     - id: "clawith-key-001"
-      key: "sk-ai-clawith-xxxxx"  # 实际存储于环境变量
+      key: "sk-ai-clawith-mrrm" # 实际存储于环境变量
       orgId: "default-org"
       name: "Clawith AI Employee"
       enabled: true
-      ipWhitelist: []  # 空数组表示不限制 IP
+      ipWhitelist: [] # 空数组表示不限制 IP
 
   permissions:
     - endpoint: "/api/v1/ai/patients/search"

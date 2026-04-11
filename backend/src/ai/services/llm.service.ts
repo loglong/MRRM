@@ -26,32 +26,45 @@ export interface LlmResponse {
 export class MiniMaxProvider {
   name = 'minimax';
   private readonly apiKey: string;
+  private readonly groupId: string;
   private readonly model: string;
   private readonly baseUrl = 'https://api.minimaxi.com/v1';
 
   get isConfigured(): boolean {
-    return !!this.apiKey;
+    return !!this.apiKey && !!this.groupId;
   }
 
   constructor(private configService: ConfigService) {
     this.apiKey = this.configService.get<string>('MINIMAX_API_KEY') || '';
-    // Default to MiniMax-M2.7, can be overridden via MINIMAX_MODEL env
-    this.model = this.configService.get<string>('MINIMAX_MODEL') || 'MiniMax-M2.7';
-    process.stderr.write(`[STARTUP] MiniMaxProvider init: apiKey=${this.apiKey.substring(0, 10)}... isConfigured=${this.apiKey.length > 0}\n`);
+    this.groupId = this.configService.get<string>('MINIMAX_GROUP_ID') || '';
+    // Default to abab6.5s, can be overridden via MINIMAX_MODEL env
+    this.model = this.configService.get<string>('MINIMAX_MODEL') || 'abab6.5s';
+    const configured = this.apiKey.length > 0 && this.groupId.length > 0;
+    process.stderr.write(`[STARTUP] MiniMaxProvider init: apiKey=${this.apiKey.substring(0, Math.min(10, this.apiKey.length))}... groupId=${this.groupId.substring(0, 8)}... isConfigured=${configured}\n`);
+    if (!configured) {
+      process.stderr.write(`[STARTUP] WARNING: MINIMAX_API_KEY or MINIMAX_GROUP_ID not configured in environment\n`);
+    }
   }
 
   async generate(prompt: string): Promise<LlmResponse> {
-    if (!this.apiKey) {
-      throw new Error('MiniMax API key not configured');
+    if (!this.apiKey || !this.groupId) {
+      const err = new Error('MiniMax API key or group ID not configured');
+      process.stderr.write(`[MiniMax] ERROR: ${err.message}\n`);
+      throw err;
     }
 
     const url = `${this.baseUrl}/chat/completions`;
+    const logger = new Logger('MiniMaxProvider');
+    logger.log(`[MiniMax] Calling API at ${url} with model ${this.model}`);
+    logger.log(`[MiniMax] Prompt length: ${prompt.length} chars`);
+    process.stderr.write(`[MiniMax] Calling API at ${url} with model ${this.model}\n`);
 
     try {
       const response = await axios.post(
         url,
         {
           model: this.model,
+          group_id: this.groupId,
           messages: [
             {
               role: 'system',
@@ -72,6 +85,8 @@ export class MiniMaxProvider {
           timeout: 60000,
         },
       );
+      logger.log(`[MiniMax] Response received successfully`);
+      process.stderr.write(`[MiniMax] Response received\n`);
 
       const data = response.data as {
         choices?: Array<{
@@ -175,10 +190,12 @@ export class LlmService {
     // Check cache
     const cached = this.llmCache.get<FollowupRecommendation>(cacheKey);
     if (cached) {
-      this.logger.debug(`Cache hit for patient ${params.patientId}`);
+      this.logger.debug(`Cache hit for patient ${params.patientId}, key=${cacheKey}`);
       return cached;
     }
 
+    this.logger.log(`[LLM] Cache miss for patient ${params.patientId}, calling MiniMax API...`);
+    this.logger.log(`[LLM] isConfigured=${this.minimaxProvider.isConfigured}, apiKey length=${this.minimaxProvider['apiKey']?.length || 0}`);
     process.stderr.write(`[DEBUG] MiniMax isConfigured: ${this.minimaxProvider.isConfigured}\n`);
 
     // Build prompt

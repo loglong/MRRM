@@ -75,7 +75,7 @@ export function PatientTimeline({
             {event.sentiment && (
               <Tag color={sentimentColors[event.sentiment]}>{t(`journey.sentiment.${event.sentiment}`, event.sentiment)}</Tag>
             )}
-            {event.status && <Tag color="blue">{event.status}</Tag>}
+            {event.status && <Tag color="blue">{t(`journey.status.${event.status}`, event.status)}</Tag>}
           </Space>
           <Text type="secondary" style={{ fontSize: 12 }}>
             {new Date(event.occurredAt).toLocaleString()}

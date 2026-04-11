@@ -14,6 +14,8 @@ import {
   LogoutOutlined,
   UserOutlined,
   ExperimentOutlined,
+  MedicineBoxOutlined,
+  CustomerServiceOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../hooks/useAuth';
@@ -226,6 +228,8 @@ export default function MainLayout() {
     { key: '/touchpoints', icon: <ContactsOutlined />, label: t('menu.touchpoints') },
     { key: '/followups', icon: <CalendarOutlined />, label: t('menu.followups') },
     { key: '/reports', icon: <BarChartOutlined />, label: t('menu.reports') },
+    { key: '/journey-center', icon: <CustomerServiceOutlined />, label: t('menu.journeyCenter') },
+    { key: '/health-archive', icon: <MedicineBoxOutlined />, label: t('menu.healthArchive') },
     { key: '/experience', icon: <ExperimentOutlined />, label: t('menu.experience') },
     { key: '/admin', icon: <SettingOutlined />, label: t('menu.admin') },
   ];
