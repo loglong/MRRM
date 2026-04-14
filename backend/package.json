@@ -21,6 +21,7 @@
     "prisma:push": "prisma db push",
     "prisma:validate": "prisma validate",
     "db:seed": "ts-node prisma/seed.ts",
+    "seed:tag-rules": "ts-node prisma/seed-tag-rules.ts"
     "cli:shell": "ts-node src/cli/openclaw.ts shell",
     "cli:import": "ts-node src/cli/openclaw.ts"
   },
