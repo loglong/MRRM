@@ -223,6 +223,30 @@ model Patient {
   assignedUserId  String?   @map("assigned_user_id")
   lastVisitAt     DateTime? @map("last_visit_at")
   nextVisitAt     DateTime? @map("next_visit_at")
+
+  // RFM fields
+  lastOrderAt        DateTime?  @map("last_order_at")
+  orderCount         Int        @default(0) @map("order_count")
+  totalAmount        Decimal    @default(0) @db.Decimal(12,2) @map("total_amount")
+  avgAmount          Decimal    @default(0) @db.Decimal(12,2) @map("avg_amount")
+
+  // Behavior stats
+  totalVisits        Int        @default(0) @map("total_visits")
+  lastContactAt      DateTime?  @map("last_contact_at")
+  touchpointCount    Int        @default(0) @map("touchpoint_count")
+  avgSatisfaction    Decimal?   @map("avg_satisfaction")
+
+  // Lifecycle
+  lifecycleStage     LifecycleStage @default(DEVELOPMENT) @map("lifecycle_stage")
+  stageEnteredAt     DateTime   @default(now()) @map("stage_entered_at")
+  stageUpdatedAt     DateTime   @updatedAt @map("stage_updated_at")
+
+  // AI scores (0-100)
+  churnRiskScore     Decimal    @default(0) @map("churn_risk_score")
+  engagementScore    Decimal    @default(0) @map("engagement_score")
+  valueScore         Decimal    @default(0) @map("value_score")
+  aiRecommendation   String?    @map("ai_recommendation")
+
   tags            String[]  @default([]) // Array of tag strings
   metadata        Json?
   encryptedFields Json?     @map("encrypted_fields") // AES-256 encrypted sensitive data
@@ -241,6 +265,7 @@ model Patient {
   healthRecords    HealthRecord[]
   healthReminders  HealthReminder[]
   pathInstances    PathInstance[]
+  patientTags      PatientTag[]
 
   @@index([orgId])
   @@index([status])
@@ -249,6 +274,33 @@ model Patient {
   @@index([orgId, name])
   @@index([tier])
   @@map("patients")
+}
+
+// ============================================================================
+// Patient Tag (Detailed tagging with metadata)
+// ============================================================================
+
+model PatientTag {
+  id          String      @id @default(uuid())
+  patientId   String      @map("patient_id")
+  tagCode     String      @map("tag_code")
+  tagName     String      @map("tag_name")
+  category    TagCategory
+
+  source      TagSource
+  generatedBy String?     @map("generated_by")
+  confidence  Decimal?    @default(1)
+
+  status      TagStatus   @default(ACTIVE)
+  expiredAt   DateTime?   @map("expired_at")
+  createdAt   DateTime    @default(now()) @map("created_at")
+
+  patient     Patient     @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  @@unique([patientId, tagCode])
+  @@index([patientId, category])
+  @@index([status, expiredAt])
+  @@map("patient_tags")
 }
 
 enum Gender {
@@ -269,6 +321,78 @@ enum PatientTier {
   HIGH_VALUE
   REGULAR
   LOST_RISK
+}
+
+enum LifecycleStage {
+  DEVELOPMENT
+  PRE_TREATMENT
+  TREATMENT
+  MAINTENANCE
+}
+
+enum TagCategory {
+  BEHAVIOR
+  VALUE
+  PREFERENCE
+  STATUS
+  CUSTOM
+}
+
+enum TagSource {
+  AUTO
+  MANUAL
+  AI
+}
+
+enum TagStatus {
+  ACTIVE
+  PENDING
+  EXPIRED
+}
+
+enum RuleStatus {
+  ACTIVE
+  INACTIVE
+}
+
+// ============================================================================
+// Tag Rule (Auto-tagging rules)
+// ============================================================================
+
+model TagRule {
+  id          String   @id @default(uuid())
+  name        String
+  code        String   @unique
+  category    TagCategory
+  condition   Json
+  priority    Int      @default(0)
+  status      RuleStatus @default(ACTIVE)
+  autoGenerate Boolean @default(true) @map("auto_generate")
+  expireDays  Int?     @map("expire_days")
+
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([status, priority])
+  @@map("tag_rules")
+}
+
+// ============================================================================
+// Score History (AI score change tracking)
+// ============================================================================
+
+model ScoreHistory {
+  id          String    @id @default(uuid())
+  patientId   String    @map("patient_id")
+  scoreType   String    @map("score_type")
+  oldValue    Decimal?  @map("old_value")
+  newValue    Decimal   @map("new_value")
+  reason      String?
+  calculatedBy String    @map("calculated_by")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  @@index([patientId, scoreType, createdAt])
+  @@map("score_history")
 }
 
 // ============================================================================
