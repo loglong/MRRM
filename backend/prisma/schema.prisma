@@ -44,6 +44,8 @@ model Organization {
   journeyMilestones JourneyMilestone[]
   healthRecords     HealthRecord[]
   healthReminders   HealthReminder[]
+  tagRules          TagRule[]
+  scoreHistories    ScoreHistory[]
 
   @@index([code])
   @@index([status])
@@ -369,10 +371,15 @@ model TagRule {
   status      RuleStatus @default(ACTIVE)
   autoGenerate Boolean @default(true) @map("auto_generate")
   expireDays  Int?     @map("expire_days")
+  orgId       String   @map("org_id")
 
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
+  // Relations
+  organization Organization @relation(fields: [orgId], references: [id])
+
+  @@index([orgId])
   @@index([status, priority])
   @@map("tag_rules")
 }
@@ -384,6 +391,7 @@ model TagRule {
 model ScoreHistory {
   id          String    @id @default(uuid())
   patientId   String    @map("patient_id")
+  orgId       String    @map("org_id")
   scoreType   String    @map("score_type")
   oldValue    Decimal?  @map("old_value")
   newValue    Decimal   @map("new_value")
@@ -391,6 +399,10 @@ model ScoreHistory {
   calculatedBy String    @map("calculated_by")
   createdAt   DateTime  @default(now()) @map("created_at")
 
+  // Relations
+  organization Organization @relation(fields: [orgId], references: [id])
+
+  @@index([orgId])
   @@index([patientId, scoreType, createdAt])
   @@map("score_history")
 }
