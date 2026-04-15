@@ -241,7 +241,7 @@ model Patient {
   // Lifecycle
   lifecycleStage     LifecycleStage @default(DEVELOPMENT) @map("lifecycle_stage")
   stageEnteredAt     DateTime   @default(now()) @map("stage_entered_at")
-  stageUpdatedAt     DateTime   @updatedAt @map("stage_updated_at")
+  stageUpdatedAt     DateTime?  @updatedAt @map("stage_updated_at")
 
   // AI scores (0-100)
   churnRiskScore     Decimal    @default(0) @map("churn_risk_score")
