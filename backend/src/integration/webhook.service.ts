@@ -1,5 +1,6 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { Body, Injectable, Logger, OnModuleInit, Post } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { PrismaService } from '../common/prisma/prisma.service';
 import { WebhookPayloadDto } from './dto/webhook-payload.dto';
 import * as amqp from 'amqplib';
 
@@ -17,7 +18,10 @@ export class WebhookService implements OnModuleInit {
   // Simple webhook URL registry (MVP: stored in memory/ConfigService)
   private webhookUrls: Map<string, string[]> = new Map();
 
-  constructor(private configService: ConfigService) {}
+  constructor(
+    private configService: ConfigService,
+    private prisma: PrismaService,
+  ) {}
 
   async onModuleInit() {
     await this.connectIntegrationExchange();
@@ -151,5 +155,58 @@ export class WebhookService implements OnModuleInit {
    */
   getWebhookUrls(eventType: string): string[] {
     return this.webhookUrls.get(eventType) || [];
+  }
+
+  @Post('his/patient')
+  async syncHisPatient(@Body() data: {
+    action: 'create' | 'update' | 'delete';
+    patient: {
+      patient_id: string;
+      patient_name: string;
+      mobile?: string;
+      phone?: string;
+      gender?: string;
+      birthday?: string;
+      last_visit_date?: string;
+      consume_total?: number;
+      order_count?: number;
+      last_order_date?: string;
+      vip_flag?: string;
+      consume_level?: string;
+    };
+    timestamp: string;
+  }) {
+    const { action, patient } = data;
+
+    if (action === 'delete') {
+      await this.prisma.patient.update({
+        where: { id: patient.patient_id },
+        data: { deletedAt: new Date() },
+      });
+      return { received: true, action: 'deleted' };
+    }
+
+    const patientData: any = {
+      id: patient.patient_id,
+      name: patient.patient_name,
+      phone: patient.mobile || patient.phone,
+      gender: patient.gender ? patient.gender.toUpperCase() as any : null,
+      birthDate: patient.birthday ? new Date(patient.birthday) : null,
+      lastVisitAt: patient.last_visit_date ? new Date(patient.last_visit_date) : null,
+      totalAmount: patient.consume_total || 0,
+      orderCount: patient.order_count || 0,
+      lastOrderAt: patient.last_order_date ? new Date(patient.last_order_date) : null,
+    };
+
+    if (action === 'create') {
+      await this.prisma.patient.create({ data: patientData });
+    } else {
+      await this.prisma.patient.update({
+        where: { id: patient.patient_id },
+        data: patientData,
+      });
+    }
+
+    return { received: true, action };
   }
 }
