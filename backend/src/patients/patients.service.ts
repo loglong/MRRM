@@ -4,6 +4,11 @@ import { EncryptionService } from '../common/encryption/encryption.service';
 import { Logger } from '../common/logger';
 import { CreatePatientDtoType } from './dto/create-patient.dto';
 import { UpdatePatientDtoType } from './dto/update-patient.dto';
+import { PatientProfileResponseDto } from './dto/patient-profile.dto';
+import { TaggingService } from '../portrait/services/tagging.service';
+import { AiTaggingService } from '../portrait/services/ai-tagging.service';
+import { MiniMaxProvider } from '../ai/services/llm.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class PatientsService {
@@ -178,6 +183,77 @@ export class PatientsService {
       byTier: byTierMap,
       byGender: byGenderMap,
     };
+  }
+
+  async getPatientPortrait(patientId: string): Promise<PatientProfileResponseDto> {
+    const patient = await this.prisma.patient.findUnique({
+      where: { id: patientId },
+      include: { patientTags: { where: { status: 'ACTIVE' } } },
+    });
+
+    if (!patient) throw new NotFoundException('Patient not found');
+
+    return {
+      id: patient.id,
+      name: patient.name,
+      phone: patient.phone || '',
+      lifecycle: {
+        stage: patient.lifecycleStage,
+        enteredAt: patient.stageEnteredAt,
+        updatedAt: patient.stageUpdatedAt,
+      },
+      rfm: {
+        lastOrderAt: patient.lastOrderAt,
+        orderCount: patient.orderCount,
+        totalAmount: Number(patient.totalAmount),
+        avgAmount: Number(patient.avgAmount),
+      },
+      stats: {
+        totalVisits: patient.totalVisits,
+        lastContactAt: patient.lastContactAt,
+        touchpointCount: patient.touchpointCount,
+        avgSatisfaction: patient.avgSatisfaction ? Number(patient.avgSatisfaction) : null,
+      },
+      scores: {
+        churnRisk: Number(patient.churnRiskScore),
+        engagement: Number(patient.engagementScore),
+        value: Number(patient.valueScore),
+      },
+      tags: patient.patientTags.map((t) => ({
+        code: t.tagCode,
+        name: t.tagName,
+        category: t.category,
+        source: t.source,
+        confidence: t.confidence ? Number(t.confidence) : null,
+        status: t.status,
+      })),
+      aiRecommendation: patient.aiRecommendation,
+    };
+  }
+
+  async getPatientTags(patientId: string, category?: string, status?: string) {
+    const where: any = { patientId };
+    if (category) where.category = category;
+    if (status) where.status = status;
+    return this.prisma.patientTag.findMany({ where });
+  }
+
+  async addManualTag(patientId: string, tagCode: string, tagName: string, category: string) {
+    const taggingService = new TaggingService(this.prisma);
+    return taggingService.addManualTag(patientId, tagCode, tagName, category as any);
+  }
+
+  async updateTagStatus(tagId: string, status: string) {
+    return this.prisma.patientTag.update({
+      where: { id: tagId },
+      data: { status: status as any },
+    });
+  }
+
+  async triggerAiAnalysis(patientId: string) {
+    const minimaxProvider = new MiniMaxProvider(new ConfigService());
+    const aiTaggingService = new AiTaggingService(this.prisma, minimaxProvider);
+    return aiTaggingService.analyzePatient(patientId);
   }
 
   private encryptSensitiveFields(data: any): any {

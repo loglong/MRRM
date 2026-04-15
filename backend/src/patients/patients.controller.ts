@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Put,
+  Patch,
   Delete,
   Body,
   Param,
@@ -62,6 +63,41 @@ export class PatientsController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.patientsService.findById(id);
+  }
+
+  @Get(':id/profile')
+  async getPatientProfile(@Param('id') id: string) {
+    return this.patientsService.getPatientPortrait(id);
+  }
+
+  @Get(':id/tags')
+  async getPatientTags(
+    @Param('id') id: string,
+    @Query('category') category?: string,
+    @Query('status') status?: string,
+  ) {
+    return this.patientsService.getPatientTags(id, category, status);
+  }
+
+  @Post(':id/tags')
+  async addPatientTag(
+    @Param('id') id: string,
+    @Body() body: { tagCode: string; tagName: string; category: string },
+  ) {
+    return this.patientsService.addManualTag(id, body.tagCode, body.tagName, body.category);
+  }
+
+  @Patch(':id/tags/:tagId')
+  async updateTagStatus(
+    @Param('tagId') tagId: string,
+    @Body() body: { status: string },
+  ) {
+    return this.patientsService.updateTagStatus(tagId, body.status);
+  }
+
+  @Post(':id/analyze')
+  async triggerAiAnalysis(@Param('id') id: string) {
+    return this.patientsService.triggerAiAnalysis(id);
   }
 
   @Put(':id')
