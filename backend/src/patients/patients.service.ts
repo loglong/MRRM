@@ -200,7 +200,7 @@ export class PatientsService {
       lifecycle: {
         stage: patient.lifecycleStage,
         enteredAt: patient.stageEnteredAt,
-        updatedAt: patient.stageUpdatedAt,
+        updatedAt: patient.stageUpdatedAt || null,
       },
       rfm: {
         lastOrderAt: patient.lastOrderAt,

@@ -5,7 +5,7 @@ export class PatientProfileResponseDto {
   lifecycle: {
     stage: string;
     enteredAt: Date;
-    updatedAt: Date;
+    updatedAt: Date | null;
   };
   rfm: {
     lastOrderAt: Date | null;

@@ -1,5 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe, Logger } from '@nestjs/common';
+
+// Polyfill for crypto.randomUUID() (Node.js 18 doesn't have global crypto)
+if (typeof globalThis.crypto === 'undefined') {
+  globalThis.crypto = require('crypto');
+}
+if (!globalThis.crypto.randomUUID) {
+  globalThis.crypto.randomUUID = () => require('crypto').randomBytes(16).toString('hex');
+}
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';

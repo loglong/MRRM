@@ -45,7 +45,7 @@ export class TaggingService {
 
     for (const rule of rules) {
       const condition = rule.condition as unknown as TagCondition;
-      if (this.evaluateCondition(condition, patient)) {
+      if (await this.evaluateCondition(condition, patient)) {
         await this.prisma.patientTag.upsert({
           where: { patientId_tagCode: { patientId, tagCode: rule.code } },
           update: { status: TagStatus.ACTIVE, expiredAt: rule.expireDays ? new Date(Date.now() + rule.expireDays * 24 * 60 * 60 * 1000) : null },

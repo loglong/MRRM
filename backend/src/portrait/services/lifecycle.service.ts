@@ -29,13 +29,15 @@ export class LifecycleService {
     }
 
     if (currentStage === 'PRE_TREATMENT') {
+      const latestDemand = patient.demands[0];
       const hasActivePath = patient.pathInstances.length > 0;
-      if (hasActivePath && patient.preTreatmentStartDate) newStage = 'TREATMENT';
+      if (hasActivePath && latestDemand?.preTreatmentStartDate) newStage = 'TREATMENT';
     }
 
     if (currentStage === 'TREATMENT') {
-      if (patient.treatmentEndDate) {
-        const daysSinceEnd = (Date.now() - patient.treatmentEndDate.getTime()) / (1000 * 60 * 60 * 24);
+      const latestDemand = patient.demands[0];
+      if (latestDemand?.treatmentEndDate) {
+        const daysSinceEnd = (Date.now() - latestDemand.treatmentEndDate.getTime()) / (1000 * 60 * 60 * 24);
         if (daysSinceEnd >= 90) newStage = 'MAINTENANCE';
       }
     }
