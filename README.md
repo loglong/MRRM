@@ -1,7 +1,8 @@
 MRRM - 医疗患者关系管理系统
 Medical Patient Relationship Management System
 MRRM 是一款面向医疗机构的多租户患者关系管理平台，涵盖患者档案管理、需求追踪、路径执行、触点管理、随访计划、健康档案及 AI 驱动的患者洞察能力。
-技术栈
+
+#技术栈
 层级	技术
 前端	React 19 + Ant Design 5 + React Router 7 + TanStack Query + Recharts + i18next
 后端	NestJS + Prisma ORM + PostgreSQL + Redis + RabbitMQ
@@ -11,7 +12,7 @@ AI	Model Context Protocol (MCP) Server + Clawith AI 集成
 CLI	OpenClaw Shell (mrrm-mcp)
 项目结构
 
-MRRM/
+#MRRM/
 ├── backend/           # NestJS 后端
 │   ├── src/
 │   │   ├── ai/mcp/     # MCP Server 实现
@@ -25,8 +26,10 @@ MRRM/
 ├── docs/superpowers/   # 系统增强设计文档
 │   └── specs/          # 患者画像等详细规格
 └── .planning/          # 需求、路线图、执行状态
-核心功能
+
+#核心功能
 已完成 (Phase 1–6)
+
 多租户隔离 — 机构级 Row-Level Security，数据完全隔离
 身份认证与权限 — JWT 会话、账户锁定、SSO 支持、菜单 / 按钮级 RBAC
 审计日志 — 全操作可追溯，保留至少 1 年
